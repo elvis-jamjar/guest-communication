@@ -4,31 +4,31 @@ import React from "react";
 
 export default function Home() {
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
+  // const [isClicked, setIsClicked] = React.useState<boolean>(false);
   function scrollToSection(id: string) {
+    // setIsClicked(true);
     setIsSelectedSection(id);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+    // setTimeout(() => setIsClicked(false), 1000);
   }
 
   // listen for scroll events to update the selected section
   React.useEffect(() => {
     function handleScroll() {
-      const scrollPosition = window.scrollY;
+      // check if the section is in view at least 20% to select it
       const sections = ["about", "program", "contact"];
-      for (let i = 0; i < sections.length; i++) {
-        const section = sections[i];
+      const selectedSection = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
-          const offset = element.offsetTop;
-          const height = element.offsetHeight;
-          if (scrollPosition >= offset && scrollPosition < offset + height) {
-            setIsSelectedSection(section);
-            break;
-          }
+          const rect = element.getBoundingClientRect();
+          return rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
         }
-      }
+        return false;
+      });
+      setTimeout(() => selectedSection && setIsSelectedSection(selectedSection), 50);
     }
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -39,7 +39,7 @@ export default function Home() {
       {/* Navbar */}
       <header className="bg-black text-white py-4 sticky top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">ACGC Guest Communication</h1>
+          <h1 className="text-2xl font-bold">ACGC</h1>
           <nav>
             {
               ["about", "program", "contact"].map((section) => {
@@ -47,8 +47,7 @@ export default function Home() {
                   <button
                     key={section}
                     onClick={() => scrollToSection(section)}
-                    className={"ml-4 px-2 py-1 rounded-md hover:bg-gray-800" + (isSelectedSection === section ? " bg-gray-800" : "")}
-                  >
+                    className={"ml-4 px-2 py-1 rounded-md hover:opacity-80 transition-all duration-500 hover:bg-gray-300 hover:text-gray-800" + (isSelectedSection === section ? " bg-gray-300 text-gray-800" : "")}>
                     {section.charAt(0).toUpperCase() + section.slice(1)}
                   </button>
                 )
@@ -93,7 +92,7 @@ export default function Home() {
       </section>
 
       {/* Speakers Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-black mb-4">Meet the Speakers</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -114,7 +113,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-white">
+      <section id="contact" className="py-44 bg-white">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-black mb-4">Get in Touch</h2>
           <p className="text-gray-700">For more information about the conference, feel free to reach out.</p>
