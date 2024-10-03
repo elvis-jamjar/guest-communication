@@ -54,9 +54,21 @@ export default function Home() {
                 <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules} />
             </div>
             <div className="sticky top-6 h-fit bg-gray-100">
+                <div className="px-8 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
+                    <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
+                    <Button
+                        onClick={mutateSchedules}
+                        size={"sm"}
+                        variant={"default"}
+                        disabled={!schedules?.length || mutate?.isPending}
+                        className="bg-primary-main text-white rounded-lg">
+                        <Save className="w-4 h-4 mr-2 " />
+                        {mutate.isPending ? "Saving..." : "Save changes"}
+                    </Button>
+                </div>
                 {/* time line preview */}
                 <div className="p-4 flex-col">
-                    {schedules.map((schedule, index) => (
+                    {schedules?.map((schedule, index) => (
                         <ConferenceSchedule
                             key={index}
                             {...schedule}
@@ -64,7 +76,7 @@ export default function Home() {
                     ))}
                 </div>
                 {/* save button */}
-                <div className="p-4 flex justify-center">
+                {/* <div className="p-4 flex justify-center">
                     <Button
                         onClick={mutateSchedules}
                         size={"lg"}
@@ -74,7 +86,7 @@ export default function Home() {
                         <Save className="w-4 h-4 mr-2" />
                         {mutate.isPending ? "Saving..." : "Save changes"}
                     </Button>
-                </div>
+                </div> */}
             </div>
         </div>
     )

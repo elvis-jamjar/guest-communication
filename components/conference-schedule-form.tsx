@@ -431,8 +431,8 @@ export function ConferenceScheduleForms({ schedules, onChange }: { schedules: Co
   return (
     <div className="space-y-8 p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Daily Schedules</h1>
-        <Button onClick={() => onChange([...schedules, { day: '', title: '', timeLineItems: [] }])}>
+        <h1 className="text-xl font-bold">Daily Schedules</h1>
+        <Button size={"sm"} onClick={() => onChange([...schedules, { day: '', title: '', timeLineItems: [] }])}>
           <PlusCircle className="mr-2 h-4 w-4" /> Add Schedule
         </Button>
       </div>

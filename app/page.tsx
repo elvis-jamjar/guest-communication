@@ -7,6 +7,8 @@ import { Separator } from "@/components/ui/separator"
 import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getConferenceSchedule } from "./actions/timeline";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const textIconData = [
   {
@@ -28,6 +30,7 @@ const textIconData = [
   }
 ]
 
+const sections = ["about", "program", "sponsors", "partners"];
 export default function Home() {
   const { data, isLoading } = useQuery({
     queryKey: ['conference-schedules'],
@@ -58,7 +61,6 @@ export default function Home() {
   React.useEffect(() => {
     function handleScroll() {
       // check if the section is in view at least 20% to select it
-      const sections = ["about", "program", "contact"];
       const selectedSection = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
@@ -76,19 +78,22 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
-      <header className="bg-black text-white py-4 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
+      <header className="bg-white py-4 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">ACGC</h1>
-          <nav>
+          {/* <h1 className="text-2xl font-bold">ACGC</h1> */}
+          <Image src="/images/logo.png" width={60} height={60} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
+          <nav className="flex items-center gap-2">
             {
-              ["about", "program", "contact"].map((section) => {
+              sections?.map((section, index) => {
                 return (
-                  <button
+                  <Button
                     key={section}
+                    size={"sm"}
+                    variant={"ghost"}
                     onClick={() => scrollToSection(section)}
-                    className={"ml-4 px-2 py-1 rounded-md hover:opacity-80 transition-all duration-500 hover:bg-primary-main hover:text-gray-100" + (isSelectedSection === section ? " bg-primary-main text-gray-100" : "")}>
+                    className={cn("px-2 py-1 text-xs font-semibold rounded-md hover:opacity-80 transition-all duration-500 hover:bg-primary-main hover:text-gray-100" + (isSelectedSection === section ? " bg-primary-main text-gray-100" : ""), (index > 2) && 'hidden md:flex')}>
                     {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </button>
+                  </Button>
                 )
               })
             }
@@ -105,7 +110,7 @@ export default function Home() {
           <a href="#program" className="mt-8 inline-block px-8 py-4 bg-white text-black rounded-md shadow-md hover:bg-gray-200">Explore the Program</a>
         </div> */}
         <div className="min-h-screen bg-gray-200 py-0 relative">
-          <div className="max-w-5xl flex flex-col gap-6 mx-auto p-2 md:p-4">
+          <div className="max-w-5xl flex flex-col gap-6 mx-auto p-4">
             {/* Header Section */}
             <header className="flex items-center py-4">
               <div className="flex flex-wrap items-center md:px-8">
@@ -124,7 +129,7 @@ export default function Home() {
             </header>
 
             {/* Conference Title */}
-            <section className="flex-col flex-wrap w-full rounded-lg text-center mb-8 ">
+            <section className="flex-col flex-wrap w-full rounded-lg text-center mb-8 px-4">
               <div className="grid grid-cols-1 gap-0 space-y-0 w-fit md:px-9">
                 <h2 className="bg-primary-main col-span-2 px-2 w-fit leading-relaxed font-extrabold text-2xl md:text-5xl">
                   6th Annual
@@ -161,7 +166,7 @@ export default function Home() {
               </div>
             </section>
             {/* social media */}
-            <div className="mt-6 flex gap-10 flex-wrap justify-between md:px-8">
+            <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 md:px-8">
               {
                 textIconData.map((social, index) => (
                   <TextIcon key={index} text={social?.text} icon={social?.icon} />
@@ -237,35 +242,25 @@ export default function Home() {
           </div>
         </div> */}
       </section>
-
-
-      {/* Speakers Section */}
-      {/* <section className="py-16 bg-gray-50">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold text-black mb-4">Meet the Speakers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-black">Speaker 1</h3>
-              <p className="text-gray-700">Expert in communication strategies.</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-black">Speaker 2</h3>
-              <p className="text-gray-700">Innovator in guest experience technologies.</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-black">Speaker 3</h3>
-              <p className="text-gray-700">Specialist in hospitality communication.</p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
       {/* Contact Section */}
-      <section id="contact" className="py-44 bg-white md:min-h-screen">
+      {/* <section id="contact" className="py-44 bg-white md:min-h-screen">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-black mb-4">Get in Touch</h2>
           <p className="text-gray-700">For more information about the conference, feel free to reach out.</p>
           <a href="mailto:info@acgc-conference.com" className="mt-4 inline-block px-8 py-4 bg-[#EC128F] text-white rounded-md shadow-md hover:bg-pink-700">Contact Us</a>
+        </div>
+      </section> */}
+
+      {/* sponsors */}
+      <section id="sponsors" className="py-16 bg-white">
+        <div className="mx-auto container">
+          <Image src="/images/sponsors.png" width={1000} height={200} alt="Sponsors" className="w-full h-auto object-contain" />
+        </div>
+      </section>
+      {/* partners */}
+      <section id="partners" className="py-16 bg-white mx-auto">
+        <div className="mx-auto container">
+          <Image src="/images/partners.png" width={1000} height={200} alt="partners" className="w-full h-auto" />
         </div>
       </section>
 
