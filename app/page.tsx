@@ -5,6 +5,8 @@ import Image from "next/image";
 import React from "react";
 import { Separator } from "@/components/ui/separator"
 import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getConferenceSchedule } from "./actions/timeline";
 
 const textIconData = [
   {
@@ -27,6 +29,11 @@ const textIconData = [
 ]
 
 export default function Home() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['conference-schedules'],
+    queryFn: async () => await getConferenceSchedule(),
+    staleTime: 1000 * 60 * 10 //  10 minutes
+  });
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
   // const [isClicked, setIsClicked] = React.useState<boolean>(false);
   function scrollToSection(id: string) {
@@ -38,6 +45,14 @@ export default function Home() {
     }
     // setTimeout(() => setIsClicked(false), 1000);
   }
+
+  // scroll to program section on load
+  React.useEffect(() => {
+    const element = document.getElementById("program");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   // listen for scroll events to update the selected section
   React.useEffect(() => {
@@ -139,7 +154,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="bg-primary-main rounded-bl-xl text-white top-0 right-0 h-96 w-16 absolute flex items-center justify-center">
+              <div className="bg-primary-main hidden md:flex rounded-bl-xl text-white top-0 right-0 h-96 w-16 absolute items-center justify-center">
                 <p className="transform -rotate-90 text-xl whitespace-nowrap font-bold">
                   Conference Programme
                 </p>
@@ -169,7 +184,7 @@ export default function Home() {
 
       {/* Program Section */}
       <section id="program" className="py-20 bg-[#F5F5F5] md:min-h-screen">
-        <ConferenceSchedule
+        {/* <ConferenceSchedule
           day="Day 1: 9th Oct"
           title="Leadership & Resilience"
           timeLineItems={[
@@ -194,7 +209,14 @@ export default function Home() {
               description: "Insights into guest communication strategies",
             }
           ]}
-        />
+        /> */
+          data && data.map((schedule, index) => (
+            <ConferenceSchedule
+              key={index}
+              {...schedule}
+            />
+          ))
+        }
         {/* <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-black mb-4">Conference Program</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
