@@ -184,6 +184,11 @@ export default function Home() {
 
       {/* Program Section */}
       <section id="program" className="py-20 bg-[#F5F5F5] md:min-h-screen">
+        {
+          isLoading && <div className="text-center">
+            <p>Loading...</p>
+          </div>
+        }
         {/* <ConferenceSchedule
           day="Day 1: 9th Oct"
           title="Leadership & Resilience"
@@ -210,6 +215,7 @@ export default function Home() {
             }
           ]}
         /> */
+
           data && data.map((schedule, index) => (
             <ConferenceSchedule
               key={index}
