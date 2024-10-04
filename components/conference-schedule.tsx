@@ -156,7 +156,7 @@ function Sponsor({ sponsors }: { sponsors: Array<string> }) {
       <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
         {sponsors.map((sponsor, index) => (
           <Image
-            className='w-24 h-10 rounded-md ring-2'
+            className='w-24 h-10 rounded-md shadow-sm'
             key={index} src={sponsor} alt={sponsor} width={100} height={50} />
         ))}
       </div>
