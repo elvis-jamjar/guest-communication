@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getConferenceSchedule } from "./actions/timeline";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { ScheduleList } from "@/components/schedule-list";
 
 const textIconData = [
   {
@@ -102,7 +103,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id={"about"} className="bg-[#EC128F] text-white h-fit w-full">
+      <section id={"about"} className="text-white h-fit w-full">
         {/* <Image src="/images/image.png" alt="Conference" layout="fill" objectFit="cover" /> */}
         {/* <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold">Welcome to ACGC Guest Communication</h2>
@@ -188,7 +189,7 @@ export default function Home() {
       </section> */}
 
       {/* Program Section */}
-      <section id="program" className="py-20 bg-[#F5F5F5] md:min-h-screen">
+      <section id="program" className="py-20 bg-[#F5F5F5] md:min-h-[50dvh]">
         {
           isLoading && <div className="text-center">
             <p>Loading...</p>
@@ -221,12 +222,14 @@ export default function Home() {
           ]}
         /> */
 
-          data && data.map((schedule, index) => (
-            <ConferenceSchedule
-              key={index}
-              {...schedule}
-            />
-          ))
+          data &&
+          // data.map((schedule, index) => (
+          //   <ConferenceSchedule
+          //     key={index}
+          //     {...schedule}
+          //   />
+          // ))
+          <ScheduleList schedules={data} columns={2} />
         }
         {/* <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-black mb-4">Conference Program</h2>

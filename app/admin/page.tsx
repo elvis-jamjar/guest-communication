@@ -5,14 +5,20 @@ import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
 import { useEffect, useState } from "react";
 import { ConferenceScheduleProps } from "../types";
 import { Button } from "@/components/ui/button";
-import { Save } from "lucide-react";
+import { Flag, Grid2X2, Rows3, Save } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createConferenceSchedules, getConferenceSchedule } from "../actions/timeline";
+import { Toggle } from "@/components/ui/toggle";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { ScheduleList } from "@/components/schedule-list";
 
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
+    const [columns, setColumns] = useState<number>(2);
     const { data, refetch } = useQuery({
         queryKey: ['conference-schedules'],
         queryFn: async () => await getConferenceSchedule(),
@@ -53,9 +59,22 @@ export default function Home() {
             <div>
                 <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules} />
             </div>
-            <div className="sticky top-6 h-fit bg-gray-100">
-                <div className="px-8 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
-                    <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
+            <div className="sticky top-0 h-fit ">
+                <div className="px-8 bg-gray-100 flex justify-between items-center sticky top-0 z-20 w-full">
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
+                        {/* toggle 2 column and 1 */}
+                        <div className="flex gap-0 ring-1 ring-primary-main rounded-md p-0.5">
+                            <Button size="sm" variant={columns === 2 ? "default" : "secondary"}
+                                onClick={() => setColumns(2)} className="">
+                                <Grid2X2 className="w-4 h-4 " />
+                            </Button>
+                            <Button size="sm" variant={columns === 1 ? "default" : "secondary"}
+                                onClick={() => setColumns(1)} className="">
+                                <Rows3 className="w-4 h-4 " />
+                            </Button>
+                        </div>
+                    </div>
                     <Button
                         onClick={mutateSchedules}
                         size={"sm"}
@@ -66,27 +85,7 @@ export default function Home() {
                         {mutate.isPending ? "Saving..." : "Save changes"}
                     </Button>
                 </div>
-                {/* time line preview */}
-                <div className="p-4 flex-col">
-                    {schedules?.map((schedule, index) => (
-                        <ConferenceSchedule
-                            key={index}
-                            {...schedule}
-                        />
-                    ))}
-                </div>
-                {/* save button */}
-                {/* <div className="p-4 flex justify-center">
-                    <Button
-                        onClick={mutateSchedules}
-                        size={"lg"}
-                        variant={"default"}
-                        disabled={!schedules?.length || mutate?.isPending}
-                        className="w-full" type="submit">
-                        <Save className="w-4 h-4 mr-2" />
-                        {mutate.isPending ? "Saving..." : "Save changes"}
-                    </Button>
-                </div> */}
+                <ScheduleList schedules={schedules} columns={columns} />
             </div>
         </div>
     )

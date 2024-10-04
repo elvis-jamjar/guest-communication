@@ -2,8 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'satoshi-black';
+  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Black.woff') format('woff')
+}
+
+@font-face {
+  font-family: 'satoshi-light';
+  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'satoshi-medium';
+  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Medium.woff') format('woff');
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
 }
 
 @layer utilities {
@@ -40,6 +55,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -72,7 +88,9 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
   }
 }
