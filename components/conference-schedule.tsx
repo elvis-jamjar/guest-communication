@@ -14,6 +14,7 @@ import {
   Flag
 } from 'lucide-react'
 import Image from 'next/image'
+import { DynamicImage } from './ui/dynamic-image';
 
 export const icons = {
   coffee: <Coffee className='w-4 h-4' />,
@@ -28,21 +29,20 @@ export const icons = {
 }
 
 export function ConferenceSchedule(
-  { className, day, title, timeLineItems, columns = 2 }: ConferenceScheduleProps & { columns?: number }
+  { className, timeLineItems, columns = 2 }: ConferenceScheduleProps & { columns?: number }
 ) {
   // check if timeLineItems items is more than 3 then split it into two halves
   const firstHalf = timeLineItems?.length > 6 ? timeLineItems.slice(0, Math.ceil(timeLineItems.length / 2)) : timeLineItems;
   const secondHalf = timeLineItems?.length > 6 ? timeLineItems.slice(Math.ceil(timeLineItems.length / 2)) : [];
 
   return (
-    <div className={cn("bg-transparent p-8 mx-auto w-full", className)}>
+    <div className={cn("bg-transparent p-8 py-4 mx-auto w-full", className)}>
       {/* <div className="flex items-center mb-6 gap-4 flex-wrap">
         <div className={cn("text-primary-purple w-fit h-10 font-bold py-2 px-4 rounded-full", day && 'bg-primary-main')}>
           {day}
         </div>
         <h1 className="text-primary-purple text-2xl font-bold">{title}</h1>
       </div> */}
-
       <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 w-full", columns === 1 && 'md:grid-cols-1')}>
         <div className="w-full">
           {firstHalf.map((item, index, arr) => (
@@ -84,7 +84,7 @@ function Banner({ banners }: { banners: string[] }) {
 
 function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems }: TimelineItemProps) {
   return (
-    <div className={cn("flex flex-wrap w-full my-4 mt-0  rounded-2xl relative p-2.5 md:p-4", (trackLabel || icon || title) && 'bg-white',
+    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-4 md:p-4", (trackLabel || icon || title) && 'bg-white',
       className)}>
       <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
         <div className={cn("text-white w-8 h-8 z-10 rounded-full flex p-2 mt-[3.8rem]", icon && 'w-fit h-fit', isTrack && '-ms-1  mt-[5rem] w-fit h-fit', 'bg-primary-main', iconColor)}>
@@ -155,11 +155,15 @@ function Sponsor({ sponsors }: { sponsors: Array<string> }) {
       {/* sponsor images */}
       <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
         {sponsors.map((sponsor, index) => (
-          <Image
-            className='w-24 h-10 rounded-md shadow-sm'
-            key={index} src={sponsor} alt={sponsor} width={100} height={50} />
+          <DynamicImage key={index} src={sponsor} alt={sponsor} />
+          // <Image
+          //   className='w-24 h-10 rounded-md shadow-sm'
+          //   key={index} src={sponsor} alt={sponsor} width={100} height={50} />
         ))}
       </div>
     </div>
   )
 }
+
+
+

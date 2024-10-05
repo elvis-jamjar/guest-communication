@@ -429,8 +429,8 @@ export function ConferenceScheduleForm(
 // list of conference schedule forms
 export function ConferenceScheduleForms({ schedules, onChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void }) {
   return (
-    <div className="space-y-8 p-6 max-w-4xl mx-auto">
-      <div className="px-8 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
+    <div className="px-4 max-w-4xl mx-auto">
+      <div className="px-8 py-4 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
         <h1 className="text-xl font-bold">Daily Schedules</h1>
         <Button size={"sm"} onClick={() => onChange([...schedules, { day: '', title: '', timeLineItems: [] }])}>
           <PlusCircle className="mr-2 h-4 w-4" /> Add Schedule
