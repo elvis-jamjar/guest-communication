@@ -37,15 +37,9 @@ export function ConferenceSchedule(
 
   return (
     <div className={cn("bg-transparent p-8 py-4 mx-auto w-full", className)}>
-      {/* <div className="flex items-center mb-6 gap-4 flex-wrap">
-        <div className={cn("text-primary-purple w-fit h-10 font-bold py-2 px-4 rounded-full", day && 'bg-primary-main')}>
-          {day}
-        </div>
-        <h1 className="text-primary-purple text-2xl font-bold">{title}</h1>
-      </div> */}
       <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 w-full", columns === 1 && 'md:grid-cols-1')}>
         <div className="w-full">
-          {firstHalf.map((item, index, arr) => (
+          {firstHalf.map((item, index) => (
             <TimelineItem
               {...item}
               key={index}
@@ -84,7 +78,7 @@ function Banner({ banners }: { banners: string[] }) {
 
 function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems }: TimelineItemProps) {
   return (
-    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-4 md:p-4", (trackLabel || icon || title) && 'bg-white',
+    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", (trackLabel || icon || title) && 'bg-white',
       className)}>
       <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
         <div className={cn("text-white w-8 h-8 z-10 rounded-full flex p-2 mt-[3.8rem]", icon && 'w-fit h-fit', isTrack && '-ms-1  mt-[5rem] w-fit h-fit', 'bg-primary-main', iconColor)}>
@@ -99,8 +93,8 @@ function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine,
       </div>
       <div className={cn('ps-10 w-full')}>
         {time && <p className={cn("text-xs font-bold whitespace-normal tracking-tight", isTrack && 'pb-2')}>{time}</p>}
-        {sectionTitle && <h4 className={cn("text-sm tracking-widest uppercase font-mono py-2", isTrack && "mt-14")}>{sectionTitle}</h4>}
-        <h3 className={cn("font-bold text-sm text-primary-purple", (isTrack && !sectionTitle) && "mt-1")}>{title}</h3>
+        {sectionTitle && <h4 className={cn("text-sm tracking-widest uppercase font-mono py-1", isTrack && "mt-12")}>{sectionTitle}</h4>}
+        <h3 className={cn("font-bold text-sm text-primary-purple py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
         {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
         {description && <p className="text-sm text-gray-600">{description}</p>}
         {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
@@ -133,32 +127,18 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
           {speaker?.bio}
         </p>
       ))}
-      {/* {moderator && (
-        <p className="text-sm">
-          <span className="font-semibold">Moderator: {moderator.name}</span>, {moderator.title}
-        </p>
-      )}
-      {host && (
-        <p className="text-sm">
-          <span className="font-semibold">Host: {host.name}</span>, {host.title}
-        </p>
-      )} */}
     </div>
   )
 }
 
 function Sponsor({ sponsors }: { sponsors: Array<string> }) {
-  // const gridClass = sponsors?.length === 1 ? 'grid-cols-1' : 'grid-cols-2';
   return (
     <div className="mt-2">
-      {(Number(sponsors?.length || 0) > 0) && <h2 className="text-xs text-primary-main font-mono">SPONSORED BY</h2>}
+      {(Number(sponsors?.length || 0) > 0) && <h2 className="text-xs text-primary-main py-2 font-mono">SPONSORED BY</h2>}
       {/* sponsor images */}
       <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
         {sponsors.map((sponsor, index) => (
           <DynamicImage key={index} src={sponsor} alt={sponsor} />
-          // <Image
-          //   className='w-24 h-10 rounded-md shadow-sm'
-          //   key={index} src={sponsor} alt={sponsor} width={100} height={50} />
         ))}
       </div>
     </div>
