@@ -180,8 +180,8 @@ export default function Home() {
       </section>
       {/* partners */}
       <section id="partners" className="py-16 bg-white mx-auto">
-        <div className="mx-auto container  max-w-5xl">
-          <Image src="/images/partners.png" width={1000} height={200} alt="partners" className="w-full h-auto" />
+        <div className="mx-auto container max-w-5xl">
+          <Image src="/images/partners.png" width={1000} height={200} alt="partners" className="w-full h-auto object-contain" />
         </div>
       </section>
 
