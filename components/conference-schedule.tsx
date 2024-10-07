@@ -137,24 +137,21 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
 }
 
 function Sponsor({ sponsors }: { sponsors: Array<string> }) {
-  const isUrlSponsor = (sponsor: string) => {
-    try {
-      new URL(sponsor)
-      return true
-    } catch (error) {
-      return false
-    }
-  }
+  const urlList = sponsors.filter((sponsor) => sponsor.startsWith('http'));
+  const nonUrlList = sponsors.filter((sponsor) => !sponsor.startsWith('http'));
   return (
     <div className="mt-2">
       {(Number(sponsors?.length || 0) > 0) && <h2 className="text-xs text-primary-main py-2 font-mono">SPONSORED BY</h2>}
       {/* sponsor images */}
       <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
-        {sponsors.map((sponsor, index) => (
-          isUrlSponsor(sponsor) ?
-            <DynamicImage key={index} src={sponsor} alt={sponsor} />
-            : <span key={index} className="text-lg font-semibold font-mono px-2 py-1 rounded-md">{sponsor}</span>
+        {urlList.map((sponsor, index) => (
+          <DynamicImage key={index} src={sponsor} alt={sponsor} />
         ))}
+      </div>
+      <div className='pt-2'>
+        {Number(nonUrlList?.length || 0) > 0 && <span className="text-xs font-mono px-0 rounded-md">{
+          nonUrlList.join(', ')
+        }</span>}
       </div>
     </div>
   )

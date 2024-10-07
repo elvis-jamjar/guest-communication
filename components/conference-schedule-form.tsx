@@ -14,7 +14,7 @@ import { icons } from './conference-schedule'
 import { UploadDropzone } from '@/lib/utils'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
-import SortableList, { SortableItem } from "react-easy-sort";
+import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -394,7 +394,6 @@ export function ConferenceScheduleForm(
     const [removed] = newItems.splice(oldIndex, 1)
     newItems.splice(newIndex, 0, removed)
     setSchedule({ ...schedule, timeLineItems: newItems })
-
   }
   return (
     <form onSubmit={handleSubmit} className="space-y-8 p-6 max-w-4xl mx-auto">
@@ -424,17 +423,25 @@ export function ConferenceScheduleForm(
             <PlusCircle className="mr-2 h-4 w-4" /> Add Timeline Item
           </Button>
         </div>
-        <Accordion type="single" collapsible>
+        <Accordion
+          type="single"
+          collapsible
+
+        >
           <SortableList
             onSortEnd={onSortEnd}
-          // className='list'
+          // lockAxis="y"
+          // allowDrag={false}
           >
             {schedule?.timeLineItems?.map((item, index) => (
-              <SortableItem key={index}>
+              <SortableItem
+                key={index}>
                 <AccordionItem value={`${index}`} className='hover:bg-primary-purple/5 hover:shadow-md rounded-md px-2'>
                   <AccordionTrigger className='decoration-transparent flex justify-start'>
                     <div className="flex cursor-grab items-center mr-2">
-                      <GripVertical className="w-4 h-4" />
+                      <SortableKnob>
+                        <GripVertical className="w-4 h-4" />
+                      </SortableKnob>
                     </div>
                     <div className="flex items-center justify-between bg-primary-main rounded-2xl p-1">
                       <h3 className="text-xs px-1 text-white font-semibold">{`Timeline (${item?.time || (index + 1)})`}</h3>
@@ -460,10 +467,7 @@ export function ConferenceScheduleForm(
             ))}
           </SortableList>
         </Accordion>
-
-
       </div>
-
     </form>
   )
 }
