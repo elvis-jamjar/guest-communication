@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { DynamicImage } from './ui/dynamic-image';
+import React from 'react';
 
 export const icons = {
   coffee: <Coffee className='w-4 h-4' />,
@@ -31,13 +32,17 @@ export const icons = {
 export function ConferenceSchedule(
   { className, timeLineItems, columns = 2 }: ConferenceScheduleProps & { columns?: number }
 ) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
   // check if timeLineItems items is more than 3 then split it into two halves
   const firstHalf = timeLineItems?.length > 6 ? timeLineItems.slice(0, Math.ceil(timeLineItems.length / 2)) : timeLineItems;
   const secondHalf = timeLineItems?.length > 6 ? timeLineItems.slice(Math.ceil(timeLineItems.length / 2)) : [];
 
+
   return (
-    <div className={cn("bg-transparent p-8 py-4 mx-auto w-full", className)}>
-      <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 w-full", columns === 1 && 'md:grid-cols-1')}>
+    <div
+      ref={containerRef}
+      className={cn("bg-transparent p-8 py-4 mx-auto w-full", className)}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 w-full", (columns === 1) && 'md:grid-cols-1')}>
         <div className="w-full">
           {firstHalf.map((item, index) => (
             <TimelineItem
@@ -132,13 +137,23 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
 }
 
 function Sponsor({ sponsors }: { sponsors: Array<string> }) {
+  const isUrlSponsor = (sponsor: string) => {
+    try {
+      new URL(sponsor)
+      return true
+    } catch (error) {
+      return false
+    }
+  }
   return (
     <div className="mt-2">
       {(Number(sponsors?.length || 0) > 0) && <h2 className="text-xs text-primary-main py-2 font-mono">SPONSORED BY</h2>}
       {/* sponsor images */}
       <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
         {sponsors.map((sponsor, index) => (
-          <DynamicImage key={index} src={sponsor} alt={sponsor} />
+          isUrlSponsor(sponsor) ?
+            <DynamicImage key={index} src={sponsor} alt={sponsor} />
+            : <span key={index} className="text-lg font-semibold font-mono px-2 py-1 rounded-md">{sponsor}</span>
         ))}
       </div>
     </div>

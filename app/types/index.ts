@@ -34,3 +34,7 @@ export interface ConferenceScheduleProps {
   title: string;
   timeLineItems: TimelineItemProps[];
 }
+
+export interface Settings {
+  columns?: number;
+}

@@ -1,6 +1,10 @@
 "use server";
 import { redis } from "@/lib/db";
-import { ConferenceScheduleProps, TimelineItemProps } from "@/app/types";
+import {
+  ConferenceScheduleProps,
+  Settings,
+  TimelineItemProps,
+} from "@/app/types";
 
 /**
  * create new timeline item
@@ -56,4 +60,19 @@ export async function getTimelineItems(): Promise<TimelineItemProps[]> {
   const items = await redis.get("timeline-items");
   if (!items) return [];
   return JSON.parse(items);
+}
+
+// create setting for the conference
+export async function createConferenceSettings(settings: Settings) {
+  await redis.set("conference-settings", JSON.stringify(settings));
+}
+
+// get settings for the conference
+export async function getConferenceSettings(): Promise<Settings> {
+  const settings = await redis.get("conference-settings");
+  if (!settings)
+    return {
+      columns: 1,
+    };
+  return JSON.parse(settings);
 }

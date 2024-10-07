@@ -6,7 +6,7 @@ import React from "react";
 import { Separator } from "@/components/ui/separator"
 import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getConferenceSchedule } from "./actions/timeline";
+import { getConferenceSchedule, getConferenceSettings } from "./actions/timeline";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScheduleList } from "@/components/schedule-list";
@@ -32,11 +32,17 @@ const textIconData = [
 ]
 
 const sections = ["about", "program", "sponsors", "partners"];
+const INTERVAL = 60000; // 1 minute
 export default function Home() {
   const { data, isLoading } = useQuery({
     queryKey: ['conference-schedules'],
     queryFn: async () => await getConferenceSchedule(),
-    staleTime: 1000 * 60 * 10 //  10 minutes
+    refetchInterval: INTERVAL,
+  });
+  const { data: settings } = useQuery({
+    queryKey: ['conference-settings'],
+    queryFn: async () => await getConferenceSettings(),
+    refetchInterval: INTERVAL,
   });
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
   // const [isClicked, setIsClicked] = React.useState<boolean>(false);
@@ -169,7 +175,7 @@ export default function Home() {
         }
         {
           data &&
-          <ScheduleList schedules={data} columns={2} />
+          <ScheduleList schedules={data} columns={settings?.columns} />
         }
       </section>
       {/* sponsors */}

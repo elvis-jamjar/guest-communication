@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { PlusCircle } from 'lucide-react'
+import { GripVertical, PlusCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,6 +14,7 @@ import { icons } from './conference-schedule'
 import { UploadDropzone } from '@/lib/utils'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
+import SortableList, { SortableItem } from "react-easy-sort";
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -41,7 +42,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
   const [showSpeakers, setShowSpeakers] = useState(Number(item.speakers?.length) > 0)
   const [showHost, setShowHost] = useState(!!item.host)
   const [showFacilitators, setShowFacilitators] = useState(Number(item.facilitators?.length) > 0)
-  const [showModerators, setShowModerators] = useState(Number(item.moderators?.length) > 0)
+  const [showModerators, setShowModerators] = useState(Number(item.moderators?.length) > 0);
+
   return (
     <div className="space-y-4 p-4 border rounded-md">
       <Input
@@ -197,24 +199,47 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         />
         <div className="flex items-center flex-wrap gap-2">
           {item?.sponsors?.map((sponsor, index) => (
-            <div className='flex flex-col shadow-lg p-2 rounded-lg gap-1' key={index}>
-              <Image
-                key={index}
-                src={sponsor}
-                alt={sponsor}
-                width={100}
-                height={50}
-                className='rounded-md w-24 h-12 object-contain'
-              />
-              <Button size={"sm"} variant="destructive" onClick={() => {
-                const newSponsors = [...(item.sponsors || [])]
-                newSponsors.splice(index, 1)
-                onChange({ ...item, sponsors: newSponsors })
-              }}>Remove</Button>
-            </div>
+            sponsor.startsWith('http') ?
+              <div className='flex flex-col shadow-lg p-2 rounded-lg gap-1' key={index}>
+                <Image
+                  key={index}
+                  src={sponsor}
+                  alt={sponsor}
+                  width={100}
+                  height={50}
+                  className='rounded-md w-24 h-12 object-contain'
+                />
+                <Button size={"sm"} variant="destructive" onClick={() => {
+                  const newSponsors = [...(item.sponsors || [])]
+                  newSponsors.splice(index, 1)
+                  onChange({ ...item, sponsors: newSponsors })
+                }}>Remove</Button>
+              </div>
+              : <div className='grid grid-cols-1 gap-2 w-full flex-col shadow-lg p-2 rounded-lg' key={index}>
+                <div className='w-full h-12 bg-gray-100 rounded-md flex gap-2 items-center justify-center'>
+                  <Input
+                    value={sponsor}
+                    onChange={(e) => {
+                      const newSponsors = [...(item.sponsors || [])]
+                      newSponsors[index] = e.target.value
+                      onChange({ ...item, sponsors: newSponsors })
+                    }}
+                  />
+                  <Button size={"sm"} variant="destructive" onClick={() => {
+                    const newSponsors = [...(item.sponsors || [])]
+                    newSponsors.splice(index, 1)
+                    onChange({ ...item, sponsors: newSponsors })
+                  }}>Remove</Button>
+                </div>
+              </div>
           ))}
         </div>
+        {/*  add named sponsors */}
+        <Button size={"sm"} onClick={() => {
+          onChange({ ...item, sponsors: [...(item.sponsors || []), 'Sponsor name'] })
+        }}>Add Named Sponsor</Button>
       </div>
+
 
       <div className="space-y-2">
         <div className="flex items-center space-x-2">
@@ -364,6 +389,13 @@ export function ConferenceScheduleForm(
     e.preventDefault()
     // console.log(JSON.stringify(schedule, null, 2))
   }
+  const onSortEnd = (oldIndex: number, newIndex: number) => {
+    const newItems = [...schedule.timeLineItems]
+    const [removed] = newItems.splice(oldIndex, 1)
+    newItems.splice(newIndex, 0, removed)
+    setSchedule({ ...schedule, timeLineItems: newItems })
+
+  }
   return (
     <form onSubmit={handleSubmit} className="space-y-8 p-6 max-w-4xl mx-auto">
       {/* <h1 className="text-3xl font-bold">Conference Schedule Form</h1> */}
@@ -393,30 +425,40 @@ export function ConferenceScheduleForm(
           </Button>
         </div>
         <Accordion type="single" collapsible>
-          {schedule.timeLineItems.map((item, index) => (
-            <AccordionItem key={index} value={`${index}`} className='hover:bg-primary-purple/5 rounded-md px-2'>
-              <AccordionTrigger className='decoration-transparent'>
-                <div className="flex items-center justify-between bg-primary-main rounded-2xl p-1">
-                  <h3 className="text-xs px-1 text-white font-semibold">{`Timeline (${item?.time || (index + 1)})`}</h3>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <TimelineItemForm
-                  item={item}
-                  onChange={(updatedItem) => {
-                    const newItems = [...schedule.timeLineItems]
-                    newItems[index] = updatedItem
-                    setSchedule({ ...schedule, timeLineItems: newItems })
-                  }}
-                  onRemove={() => {
-                    const newItems = [...schedule.timeLineItems]
-                    newItems.splice(index, 1)
-                    setSchedule({ ...schedule, timeLineItems: newItems })
-                  }}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          ))}
+          <SortableList
+            onSortEnd={onSortEnd}
+          // className='list'
+          >
+            {schedule?.timeLineItems?.map((item, index) => (
+              <SortableItem key={index}>
+                <AccordionItem value={`${index}`} className='hover:bg-primary-purple/5 hover:shadow-md rounded-md px-2'>
+                  <AccordionTrigger className='decoration-transparent flex justify-start'>
+                    <div className="flex cursor-grab items-center mr-2">
+                      <GripVertical className="w-4 h-4" />
+                    </div>
+                    <div className="flex items-center justify-between bg-primary-main rounded-2xl p-1">
+                      <h3 className="text-xs px-1 text-white font-semibold">{`Timeline (${item?.time || (index + 1)})`}</h3>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <TimelineItemForm
+                      item={item}
+                      onChange={(updatedItem) => {
+                        const newItems = [...schedule.timeLineItems]
+                        newItems[index] = updatedItem
+                        setSchedule({ ...schedule, timeLineItems: newItems })
+                      }}
+                      onRemove={() => {
+                        const newItems = [...schedule.timeLineItems]
+                        newItems.splice(index, 1)
+                        setSchedule({ ...schedule, timeLineItems: newItems })
+                      }}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </SortableItem>
+            ))}
+          </SortableList>
         </Accordion>
 
 

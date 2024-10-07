@@ -25,3 +25,10 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: "/admin/:path*",
 };
+
+/*
+ *  Grid/row view vissible on both customer and admin
+ *  Tittle should be in the dropdown trigger
+ *  Sponsors should have label as well
+ *  Allow movement of the timeline up and down
+ */
