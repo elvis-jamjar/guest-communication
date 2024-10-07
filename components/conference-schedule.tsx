@@ -52,8 +52,18 @@ export function ConferenceSchedule(
             // hideLine={arr.length === 1}
             />
           ))}
+          {
+            (columns === 1) && secondHalf.map((item, index) => (
+              <TimelineItem
+                {...item}
+                key={`second-${index}`}
+              // isFirst={index === 0}
+              // hideLine={arr.length === 1}
+              />
+            ))
+          }
         </div>
-        <div className="w-full">
+        {(columns === 2) && <div className="w-full">
           {secondHalf.map((item, index, arr) => (
             <TimelineItem
               key={index}
@@ -62,7 +72,7 @@ export function ConferenceSchedule(
               hideLine={arr.length === 1}
             />
           ))}
-        </div>
+        </div>}
       </div>
 
     </div>
@@ -83,7 +93,8 @@ function Banner({ banners }: { banners: string[] }) {
 
 function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems }: TimelineItemProps) {
   return (
-    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", (trackLabel || icon || title) && 'bg-white',
+    // (trackLabel || icon || title) && 
+    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white',
       className)}>
       <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
         <div className={cn("text-white w-8 h-8 z-10 rounded-full flex p-2 mt-[3.8rem]", icon && 'w-fit h-fit', isTrack && '-ms-1  mt-[5rem] w-fit h-fit', 'bg-primary-main', iconColor)}>
