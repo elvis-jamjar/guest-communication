@@ -32,7 +32,7 @@ const textIconData = [
 ]
 
 const sections = ["about", "program", "sponsors", "partners"];
-const INTERVAL = 60000; // 1 minute
+// const INTERVAL = 60000; // 1 minute
 export default function Home() {
   const { data, isLoading } = useQuery({
     queryKey: ['conference-schedules'],
@@ -65,12 +65,12 @@ export default function Home() {
   }
 
   // scroll to program section on load
-  React.useEffect(() => {
-    const element = document.getElementById("program");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   const element = document.getElementById("program");
+  //   if (element) {
+  //     element.scrollIntoView({ behavior: "smooth", block: "start" });
+  //   }
+  // }, []);
 
   // listen for scroll events to update the selected section
   React.useEffect(() => {
@@ -189,7 +189,7 @@ export default function Home() {
         }
       </section>
       {/* quick links */}
-      <section id="quick-links" className="py-16 bg-white">
+      <section id="quick-links" className="py-16 bg-white px-6">
         <PageQuickLinks
           pageContent={pageContent || {}}
           className={cn("container mx-auto max-w-5xl")}

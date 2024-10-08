@@ -15,7 +15,7 @@ export function ScheduleList(
     // const isSingle = userId ? 'single' : 'multiple';
     // const defaultValue = userId ? [`item-0`] : ["item-0"];
     return (
-        <Accordion type={'multiple'} defaultValue={['item-0']} className="mx-auto max-w-5xl">
+        <Accordion type={'multiple'} className="mx-auto max-w-5xl">
             {schedules?.map((schedule, index) => (
                 <AccordionItem value={`item-${index}`} key={index} className="my-1 border-none p-2">
                     <AccordionTrigger className="decoration-transparent rounded-md py-1 flex justify-start">
