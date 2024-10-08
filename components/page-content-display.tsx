@@ -25,7 +25,7 @@ export function PageContentDisplayComponent({ aboutSection, quickLinksTitle, qui
 export function PageQuickLinks({ pageContent, className }: { pageContent: PageContent, className?: string }) {
   return (
     <section className={cn(className)}>
-      <h2 className="text-3xl font-semibold mb-6">{pageContent?.quickLinksTitle}</h2>
+      <h2 className="text-2xl font-semibold mb-6">{pageContent?.quickLinksTitle}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {pageContent?.quickLinks?.map((link, index) => (
           <Card key={index} className="flex flex-col shadow-none border-2 bg-transparent border-primary-main">

@@ -96,7 +96,7 @@ export default function Home() {
       <header className="bg-white py-4 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto  max-w-5xl md:px-8 flex justify-between items-center">
           {/* <h1 className="text-2xl font-bold">ACGC</h1> */}
-          <Image src="/images/logo.png" width={60} height={60} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
+          <Image src="/images/logo.png" width={400} height={400} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
           <nav className="flex items-center gap-2">
             {
               sections?.map((section, index) => {
@@ -122,7 +122,7 @@ export default function Home() {
           {/* Header Section */}
           <header className="flex items-center py-4">
             <div className="flex flex-wrap items-center md:px-8">
-              <Image src="/images/logo.png" width={100} height={100} alt="ACGC Logo" className="w-64 h-auto rounded-xl" />
+              <Image src="/images/logo.png" width={400} height={400} alt="ACGC Logo" className="w-64 h-auto rounded-xl" />
             </div>
           </header>
           {/* Conference Title */}
@@ -137,7 +137,7 @@ export default function Home() {
             </div>
             <div className="w-full flex flex-wrap justify-between gap-8">
               <div>
-                <Image src="/images/ACGC_text.png" width={200} height={200} alt="ACGC Logo" className="w-[500px] h-auto rounded-xl" />
+                <Image src="/images/ACGC_text.png" width={400} height={400} alt="ACGC Logo" className="w-[500px] h-auto rounded-xl" />
               </div>
               <Separator orientation="vertical" className="bg-slate-900 h-72 hidden md:flex" />
               <Separator orientation="horizontal" className="bg-slate-900 w-full my-4 flex md:hidden" />
