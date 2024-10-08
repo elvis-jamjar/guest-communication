@@ -85,10 +85,10 @@ export default function Home() {
     return (
         <ResizablePanelGroup
             direction="horizontal"
-            className="min-h-[200px] max-w-full rounded-lg border md:min-w-[450px]"
+            className="min-h-[200px] h-screen max-w-full rounded-lg border md:min-w-[450px]"
         >
             <ResizablePanel defaultSize={40} minSize={20}>
-                <ScrollArea className="h-screen">
+                <ScrollArea className="h-[99dvh]">
                     <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules} />
                 </ScrollArea>
             </ResizablePanel>
@@ -97,7 +97,7 @@ export default function Home() {
                 defaultSize={60}
                 minSize={60}
             >
-                <ScrollArea className="h-screen bg-gray-100 relative">
+                <ScrollArea className="h-[99dvh] bg-gray-100 relative">
                     <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
                         <div className="flex items-center gap-4">
                             <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
