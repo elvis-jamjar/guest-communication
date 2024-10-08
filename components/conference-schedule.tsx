@@ -83,7 +83,7 @@ function Banner({ banners }: { banners: string[] }) {
   // if banners is one then display it as a single image else display as a grid of two images
   const gridClass = banners?.length === 1 ? 'grid-cols-1' : 'grid-cols-2';
   return (
-    <div className={cn('grid gap-2 mt-2', gridClass)}>
+    <div className={cn('grid gap-2 my-2', gridClass)}>
       {banners.map((banner, index) => (
         <Image className='w-full h-auto object-cover rounded-md' key={index} src={banner} alt={"Image"} width={500} height={500} />
       ))}
