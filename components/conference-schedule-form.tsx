@@ -248,7 +248,12 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             checked={showSpeakers}
             onCheckedChange={(isChecked) => {
               setShowSpeakers(isChecked)
-              onChange({ ...item, speakers: [] })
+              // onChange({ ...item, speakers: [] })
+              if (!isChecked) {
+                onChange({ ...item, removedData: { ...(item?.removedData || {}), speakers: item.speakers }, speakers: [] })
+              } else {
+                onChange({ ...item, speakers: item?.removedData?.speakers || [], removedData: { ...(item?.removedData || {}), speakers: [] } })
+              }
             }}
           />
           <Label htmlFor="show-speakers">Add Speakers</Label>
@@ -282,7 +287,12 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             checked={showHost}
             onCheckedChange={(isChecked) => {
               setShowHost(isChecked)
-              onChange({ ...item, host: undefined })
+              // onChange({ ...item, host: undefined })
+              if (!isChecked) {
+                onChange({ ...item, removedData: { ...(item?.removedData || {}), host: item?.host }, host: undefined })
+              } else {
+                onChange({ ...item, host: item?.removedData?.host || undefined, removedData: { ...(item?.removedData || {}), host: undefined } })
+              }
             }}
           />
           <Label htmlFor="show-host">Add Host</Label>
@@ -305,7 +315,11 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             checked={showFacilitators}
             onCheckedChange={(isChecked) => {
               setShowFacilitators(isChecked)
-              onChange({ ...item, facilitators: [] })
+              if (!isChecked) {
+                onChange({ ...item, removedData: { ...(item?.removedData || {}), facilitators: item.facilitators }, facilitators: [] })
+              } else {
+                onChange({ ...item, facilitators: item?.removedData?.facilitators || [], removedData: { ...(item?.removedData || {}), facilitators: [] } })
+              }
             }}
           />
           <Label htmlFor="show-facilitators">Add Facilitators</Label>
@@ -339,7 +353,13 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             checked={showModerators}
             onCheckedChange={(isChecked) => {
               setShowModerators(isChecked)
-              onChange({ ...item, moderators: [] })
+              // move moderators to removed data if unchecked
+              if (!isChecked) {
+                onChange({ ...item, removedData: { ...(item?.removedData || {}), moderators: item.moderators }, moderators: [] })
+              } else {
+                onChange({ ...item, moderators: item?.removedData?.moderators || [], removedData: { ...(item?.removedData || {}), moderators: [] } })
+              }
+
             }}
           />
           <Label htmlFor="show-moderators">Add Moderators</Label>
@@ -357,7 +377,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
                 }}
                 onRemove={() => {
                   const newModerators = [...(item.moderators || [])]
-                  newModerators.splice(index, 1)
+                  newModerators.splice(index, 1);
                   onChange({ ...item, moderators: newModerators })
                 }}
               />
