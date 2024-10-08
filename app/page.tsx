@@ -189,10 +189,10 @@ export default function Home() {
         }
       </section>
       {/* quick links */}
-      <section id="quick-links" className="py-16 bg-white px-6">
+      <section id="quick-links" className="py-16 bg-white">
         <PageQuickLinks
           pageContent={pageContent || {}}
-          className={cn("container mx-auto max-w-5xl")}
+          className={cn("container mx-auto max-w-5xl px-5 md:px-2")}
         />
       </section>
       {/* sponsors */}
