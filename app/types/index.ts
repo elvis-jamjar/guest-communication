@@ -26,6 +26,13 @@ export interface TimelineItemProps {
   host?: Speaker;
   facilitators?: Array<Speaker>;
   moderators?: Array<Speaker>;
+  removedData?: {
+    sponsors?: Array<string>;
+    speakers?: Array<Speaker>;
+    host?: Speaker;
+    facilitators?: Array<Speaker>;
+    moderators?: Array<Speaker>;
+  };
 }
 
 export interface ConferenceScheduleProps {

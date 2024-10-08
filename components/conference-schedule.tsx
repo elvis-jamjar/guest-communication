@@ -113,13 +113,13 @@ function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine,
         <h3 className={cn("font-bold text-sm text-primary-purple py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
         {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
         {description && <p className="text-sm text-gray-600">{description}</p>}
-        {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
         {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' />}
         {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' />}
         {host && <SpeakerList speakers={[host]} title='Host' />}
         {(Number(moderators?.length || 0) > 0) && <SpeakerList speakers={moderators || []} title='moderator' />}
         {children}
         {(bannerPosition === 'bottom') && <Banner banners={banners || []} />}
+        {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
       </div>
       {(Number(subItems?.length || 0) > 0) &&
         subItems?.map((item, index) => (
