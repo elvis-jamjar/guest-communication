@@ -1,6 +1,5 @@
 "use client"
 
-import { ConferenceSchedule } from "@/components/conference-schedule";
 import Image from "next/image";
 import React from "react";
 import { Separator } from "@/components/ui/separator"
