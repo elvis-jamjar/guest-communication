@@ -37,19 +37,19 @@ export default function Home() {
   const { data, isLoading } = useQuery({
     queryKey: ['conference-schedules'],
     queryFn: async () => await getConferenceSchedule(),
-    refetchInterval: INTERVAL,
+    refetchInterval: 65000, // 1 minute 5 seconds
   });
   const { data: settings } = useQuery({
     queryKey: ['conference-settings'],
     queryFn: async () => await getConferenceSettings(),
-    refetchInterval: INTERVAL,
+    refetchInterval: 80000, // 1 minute 20 seconds
   });
 
   // get page content
   const { data: pageContent } = useQuery({
     queryKey: ['page-content'],
     queryFn: async () => await getPageContent(),
-    refetchInterval: INTERVAL,
+    refetchInterval: 90000, // 15 minutes
   });
 
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
