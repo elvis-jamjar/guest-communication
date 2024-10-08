@@ -30,15 +30,15 @@ export function PageQuickLinks({ pageContent, className }: { pageContent: PageCo
         {pageContent?.quickLinks?.map((link, index) => (
           <Card key={index} className="flex flex-col shadow-none border-2 bg-transparent border-primary-main">
             <CardHeader>
-              <CardTitle>{link.title || 'Quick Link'}</CardTitle>
+              <CardTitle className="font-bold text-sm text-primary-purple py-2 break-words">{link?.title || 'Quick Link'}</CardTitle>
             </CardHeader>
             <CardContent className="flex-grow">
               <p className="text-muted-foreground">{link.description || 'No description available.'}</p>
             </CardContent>
             <CardFooter>
-              <Button asChild className="w-full bg-primary-main">
-                <a href={link.link || '#'} target="_blank" rel="noopener noreferrer">
-                  {link.buttonLabel || 'Learn More'}
+              <Button asChild className="w-full bg-primary-main hover:bg-primary-main/80">
+                <a href={link?.link || '#'} target="_blank" rel="noopener noreferrer">
+                  {link?.buttonLabel || 'Learn More'}
                   <ArrowUpRight className="w-4 h-4 ml-2" />
                 </a>
               </Button>

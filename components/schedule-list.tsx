@@ -4,14 +4,14 @@ import { ConferenceScheduleProps } from "@/app/types";
 import { cn } from "@/lib/utils";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { ConferenceSchedule } from "./conference-schedule";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 // import { useParams } from "next/navigation";
 
 
 export function ScheduleList(
     { schedules, columns = 1 }: { schedules: ConferenceScheduleProps[], columns?: number }
 ) {
-    const { userId } = useParams<{ userId?: string }>();
+    // const { userId } = useParams<{ userId?: string }>();
     // const isSingle = userId ? 'single' : 'multiple';
     // const defaultValue = userId ? [`item-0`] : ["item-0"];
     return (
