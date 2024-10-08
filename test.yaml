@@ -1,0 +1,11 @@
+config:
+  target: "http://localhost:3000" # Your Next.js app's base URL
+  phases:
+    - duration: 60 # Test duration in seconds
+      arrivalRate: 100 # Requests per second
+      name: "Initial load test"
+
+scenarios:
+  - flow:
+      - get:
+          url: "/api/test" # Path to the GET API endpoint
