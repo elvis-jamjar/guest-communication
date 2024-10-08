@@ -85,7 +85,7 @@ function Banner({ banners }: { banners: string[] }) {
   return (
     <div className={cn('grid gap-2 mt-2', gridClass)}>
       {banners.map((banner, index) => (
-        <Image className='w-full h-auto object-cover rounded-md' key={index} src={banner} alt={banner} width={100} height={50} />
+        <Image className='w-full h-auto object-cover rounded-md' key={index} src={banner} alt={"Image"} width={500} height={500} />
       ))}
     </div>
   )
