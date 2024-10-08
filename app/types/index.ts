@@ -45,3 +45,16 @@ export interface ConferenceScheduleProps {
 export interface Settings {
   columns?: number;
 }
+
+export interface QuickLinks {
+  title?: string;
+  link?: string;
+  description?: string;
+  buttonLabel?: string;
+}
+
+export interface PageContent {
+  aboutSection?: string;
+  quickLinksTitle?: string;
+  quickLinks?: QuickLinks[];
+}

@@ -2,44 +2,58 @@
 
 import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
 import { useEffect, useState } from "react";
-import { ConferenceScheduleProps } from "../../types";
+import { ConferenceScheduleProps, PageContent } from "../../types";
 import { Button } from "@/components/ui/button";
 import { Grid2X2, Rows3, Save } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createConferenceSchedules, createConferenceSettings, getConferenceSchedule, getConferenceSettings } from "../../actions/timeline";
+import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
 import { ScheduleList } from "@/components/schedule-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import React from "react";
+import { PageContentDisplayComponent } from "@/components/page-content-display";
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
     const [columns, setColumns] = useState<number>(2);
+
     const { data, refetch } = useQuery({
         queryKey: ['conference-schedules'],
         queryFn: async () => await getConferenceSchedule(),
         staleTime: 1000 * 60 * 10 // 
     });
-    const { data: settings } = useQuery({
+    const { data: settings, refetch: refetchSettings } = useQuery({
         queryKey: ['conference-settings'],
         queryFn: async () => await getConferenceSettings(),
         staleTime: 1000 * 60 * 10 // 
     });
-    const [schedules, setSchedules] = useState<ConferenceScheduleProps[]>([]);
+    const { data: remotePageContent, refetch: refetchPageContent } = useQuery({
+        queryKey: ['page-content'],
+        queryFn: async () => await getPageContent(),
+        staleTime: 1000 * 60 * 10 // 
+    });
 
+    const [schedules, setSchedules] = useState<ConferenceScheduleProps[]>([]);
+    const [pageContent, setPageContent] = useState<PageContent | undefined>(remotePageContent);
     const mutate = useMutation({
         mutationFn: createConferenceSchedules,
         onSuccess: () => {
             refetch();
         }
-    })
+    });
     const mutateSettings = useMutation({
         mutationFn: createConferenceSettings,
         onSuccess: () => {
-            refetch();
+            refetchSettings();
         }
-    })
+    });
+    const mutatePageContent = useMutation({
+        mutationFn: createPageContent,
+        onSuccess: () => {
+            refetchPageContent();
+        }
+    });
     useEffect(() => {
         if (data) {
             // alert("Data fetched")
@@ -54,6 +68,13 @@ export default function Home() {
         }
     }, [settings]);
 
+    // set page content
+    useEffect(() => {
+        if (remotePageContent) {
+            setPageContent(remotePageContent);
+        }
+    }, [remotePageContent]);
+
 
     async function mutateSchedules() {
         try {
@@ -64,6 +85,22 @@ export default function Home() {
                 .catch((error) => {
                     console.log(error);
                     alert("Failed to save schedules")
+                })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function mutatePageContentData() {
+        try {
+            if (!pageContent) return;
+            await mutatePageContent.mutateAsync(pageContent)
+                .then(() => {
+                    alert("Page content saved successfully")
+                })
+                .catch((error) => {
+                    console.log(error);
+                    alert("Failed to save page content")
                 })
         } catch (error) {
             console.log(error);
@@ -89,7 +126,9 @@ export default function Home() {
         >
             <ResizablePanel defaultSize={40} minSize={20}>
                 <ScrollArea className="h-[99dvh]">
-                    <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules} />
+                    <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules}
+                        pageContent={pageContent || {}} onPageContentChange={setPageContent}
+                    />
                 </ScrollArea>
             </ResizablePanel>
             <ResizableHandle withHandle />
@@ -124,6 +163,22 @@ export default function Home() {
                         </Button>
                     </div>
                     <ScheduleList schedules={schedules} columns={columns} />
+                    <hr className="border-t border-gray-300" />
+                    <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
+                        <div className="flex items-center gap-4">
+                            <h1 className="text-primary-purple text-xl font-bold p-4">Page content Preview</h1>
+                        </div>
+                        <Button
+                            onClick={mutatePageContentData}
+                            size={"sm"}
+                            variant={"default"}
+                            disabled={!schedules?.length || mutate?.isPending}
+                            className="bg-primary-main text-white rounded-lg">
+                            <Save className="w-4 h-4 mr-2 " />
+                            {mutatePageContent.isPending ? "Saving..." : "Save changes"}
+                        </Button>
+                    </div>
+                    <PageContentDisplayComponent {...pageContent} />
                 </ScrollArea>
             </ResizablePanel>
         </ResizablePanelGroup>

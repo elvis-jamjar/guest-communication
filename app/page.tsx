@@ -6,10 +6,11 @@ import React from "react";
 import { Separator } from "@/components/ui/separator"
 import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getConferenceSchedule, getConferenceSettings } from "./actions/timeline";
+import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScheduleList } from "@/components/schedule-list";
+import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
 
 const textIconData = [
   {
@@ -44,6 +45,14 @@ export default function Home() {
     queryFn: async () => await getConferenceSettings(),
     refetchInterval: INTERVAL,
   });
+
+  // get page content
+  const { data: pageContent } = useQuery({
+    queryKey: ['page-content'],
+    queryFn: async () => await getPageContent(),
+    refetchInterval: INTERVAL,
+  });
+
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
   // const [isClicked, setIsClicked] = React.useState<boolean>(false);
   function scrollToSection(id: string) {
@@ -154,8 +163,10 @@ export default function Home() {
               </p>
             </div>
           </section>
+          {/* about us description */}
+          <AboutDescription aboutSection={pageContent?.aboutSection || ''} />
           {/* social media */}
-          <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 md:px-8">
+          <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 py-4 md:px-8">
             {
               textIconData.map((social, index) => (
                 <TextIcon key={index} text={social?.text} icon={social?.icon} />
@@ -177,6 +188,13 @@ export default function Home() {
           data &&
           <ScheduleList schedules={data} columns={settings?.columns} />
         }
+      </section>
+      {/* quick links */}
+      <section id="quick-links" className="py-16 bg-white">
+        <PageQuickLinks
+          pageContent={pageContent || {}}
+          className={cn("container mx-auto max-w-5xl")}
+        />
       </section>
       {/* sponsors */}
       <section id="sponsors" className="py-16 bg-white">
@@ -212,4 +230,6 @@ function TextIcon({ text, icon }: { text: string, icon: React.ReactNode }) {
     </div>
   )
 }
+
+
 

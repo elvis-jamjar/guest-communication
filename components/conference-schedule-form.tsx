@@ -9,12 +9,13 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Speaker, TimelineItemProps, ConferenceScheduleProps } from '@/app/types'
+import { Speaker, TimelineItemProps, ConferenceScheduleProps, PageContent } from '@/app/types'
 import { icons } from './conference-schedule'
 import { UploadDropzone } from '@/lib/utils'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
+import { PageContentFormComponent } from './page-content-form'
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -493,7 +494,7 @@ export function ConferenceScheduleForm(
 }
 
 // list of conference schedule forms
-export function ConferenceScheduleForms({ schedules, onChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void }) {
+export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPageContentChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void }) {
   return (
     <div className="px-4 max-w-4xl mx-auto">
       <div className="px-8 py-4 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
@@ -534,6 +535,23 @@ export function ConferenceScheduleForms({ schedules, onChange }: { schedules: Co
           ))}
         </Accordion>
       </div>
+      <PageContentForm
+        pageContent={pageContent}
+        onChange={onPageContentChange}
+      />
+    </div>
+  )
+}
+
+
+export function PageContentForm({ pageContent, onChange }: { pageContent: PageContent, onChange: (pageContent: PageContent) => void }) {
+  return (
+    <div className='px-8 py-4 flex flex-col justify-between bg-white w-full'>
+      <h1 className="text-xl font-bold py-2">Page Content</h1>
+      <PageContentFormComponent
+        pageContent={pageContent}
+        onPageContentChange={onChange}
+      />
     </div>
   )
 }

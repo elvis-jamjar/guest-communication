@@ -2,6 +2,7 @@
 import { redis } from "@/lib/db";
 import {
   ConferenceScheduleProps,
+  PageContent,
   Settings,
   TimelineItemProps,
 } from "@/app/types";
@@ -75,4 +76,16 @@ export async function getConferenceSettings(): Promise<Settings> {
       columns: 1,
     };
   return JSON.parse(settings);
+}
+
+// page content PageContent
+export async function createPageContent(content: PageContent) {
+  await redis.set("page-content", JSON.stringify(content));
+}
+
+// get page content
+export async function getPageContent(): Promise<PageContent> {
+  const content = await redis.get("page-content");
+  if (!content) return {};
+  return JSON.parse(content);
 }
