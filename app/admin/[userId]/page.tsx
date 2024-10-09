@@ -178,7 +178,9 @@ export default function Home() {
                             {mutatePageContent.isPending ? "Saving..." : "Save changes"}
                         </Button>
                     </div>
-                    <PageContentDisplayComponent {...pageContent} />
+                    <div className="p-4">
+                        <PageContentDisplayComponent {...pageContent} />
+                    </div>
                 </ScrollArea>
             </ResizablePanel>
         </ResizablePanelGroup>

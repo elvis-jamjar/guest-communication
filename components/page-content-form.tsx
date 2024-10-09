@@ -32,8 +32,9 @@ export function PageContentFormComponent(
               onChange={
                 (e) => onPageContentChange({ ...pageContent, aboutSection: e.target.value })
               }
+              wrap="soft"
               placeholder="Enter about section content"
-              className="min-h-[100px]"
+              className="min-h-[120px]"
             />
           </div>
 

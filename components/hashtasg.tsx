@@ -12,7 +12,7 @@ export function HashTags(
         <Fragment>
             {
                 tags.map((tag, index) => (
-                    <div key={index} className="flex items-center text-lg gap-0.5 font-black tracking-tighter">
+                    <div key={index} className="flex items-center text-xl gap-0.5 font-medium tracking-tighter">
                         <span
                             className="text-primary-main"
                         >#</span>
