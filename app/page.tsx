@@ -31,7 +31,7 @@ const textIconData = [
   }
 ]
 
-const sections = ["about", "program", "sponsors", "partners"];
+const sections = ["about", "programme", "sponsors", "partners"];
 // const INTERVAL = 60000; // 1 minute
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -80,7 +80,7 @@ export default function Home() {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top < window.innerHeight * 0.8 && rect.bottom > window.innerHeight * 0.2;
+          return rect.top < window.innerHeight * 0.7 && rect.bottom > window.innerHeight * 0.2;
         }
         return false;
       });
@@ -142,21 +142,21 @@ export default function Home() {
               <Separator orientation="vertical" className="bg-slate-900 h-72 hidden md:flex" />
               <Separator orientation="horizontal" className="bg-slate-900 w-full my-4 flex md:hidden" />
               <div className="space-y-2 text-foreground">
-                <h2 className="text-2xl font-bold">9th - 11th October, 2024</h2>
-                <div className="py-2 flex flex-col w-fit">
+                <h2 className="text-xl md:text-3xl font-bold">9th - 11th October, 2024</h2>
+                <div className="py-2 gap-2 flex flex-col w-fit">
                   {
                     ["Labadi Beach Hotel,", "1 Labadi By-Pass,", "Accra, Ghana."].map((line, index) => (
-                      <p key={index} className="text-2xl text-left font-thin">{line}</p>
+                      <p key={index} className="text-2xl md:text-3xl leading-loose text-left font-thin">{line}</p>
                     ))
                   }
                 </div>
-                <div className="pt-2">
+                {/* <div className="pt-2">
                   <p className="text-xl text-left font-semibold">#ACGC4B</p>
                   <p className="text-xl text-left font-semibold">#AfricanInHouse</p>
-                </div>
+                </div> */}
               </div>
             </div>
-            <div className="bg-primary-main flex rounded-bl-xl text-white top-0 right-0 h-44 md:h-64 w-6 md:w-16 absolute items-center justify-center">
+            <div className="bg-primary-main flex rounded-bl-xl text-white top-1 right-0 h-44 md:h-64 w-6 md:w-16 absolute items-center justify-center">
               <p className="transform -rotate-90 text-sm md:text-xl whitespace-nowrap font-bold">
                 Conference Programme
               </p>
@@ -177,7 +177,7 @@ export default function Home() {
       </section>
 
       {/* Program Section */}
-      <section id="program" className="py-20 bg-gray-100 md:min-h-[10dvh]">
+      <section id="programme" className="py-20 bg-gray-100 md:min-h-[10dvh]">
         {
           isLoading && <div className="text-center">
             <p>Loading...</p>
