@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScheduleList } from "@/components/schedule-list";
 import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
+import { HashTags } from "@/components/hashtasg";
 
 const textIconData = [
   {
@@ -32,6 +33,8 @@ const textIconData = [
 ]
 
 const sections = ["about", "programme", "sponsors", "partners"];
+// #ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica
+const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
 // const INTERVAL = 60000; // 1 minute
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -117,7 +120,9 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id={"about"} className="text-white bg-gray-50 h-fit w-full relative">
+      <section id={"about"} className="text-white bg-gray-50 h-fit w-full relative"
+        style={{ backgroundImage: "url('/images/ACGC_bg_2024.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
+      >
         <div className="max-w-5xl flex flex-col gap-6 mx-auto p-4">
           {/* Header Section */}
           <header className="flex items-center py-4">
@@ -126,7 +131,14 @@ export default function Home() {
             </div>
           </header>
           {/* Conference Title */}
-          <section className="flex-col flex-wrap w-full rounded-lg text-center mb-8 px-4">
+          <section className="flex-col flex-wrap w-full rounded-lg text-center mb-1 px-4"
+          >
+            {/* <Image
+              src="/images/ACGC_bg_2024.png"
+              // width={400} height={400}
+              alt="ACGC Logo"
+              fill
+              className="w-full h-[400px] object-cover z-0" /> */}
             <div className="grid grid-cols-1 gap-0 space-y-0 w-fit md:px-9">
               <h2 className="bg-primary-main col-span-2 px-2 w-fit leading-relaxed font-extrabold text-2xl md:text-5xl">
                 6th Annual
@@ -135,28 +147,27 @@ export default function Home() {
                 ACGC Conference
               </h2>
             </div>
-            <div className="w-full flex flex-wrap justify-between gap-8">
+            <div className="w-full flex flex-wrap md:flex-nowrap justify-between gap-8">
               <div>
                 <Image src="/images/ACGC_text.png" width={400} height={400} alt="ACGC Logo" className="w-[500px] h-auto rounded-xl" />
               </div>
-              <Separator orientation="vertical" className="bg-slate-900 h-72 hidden md:flex" />
+              <Separator orientation="vertical" className="bg-slate-900 h-72 mt-12 hidden md:flex" />
               <Separator orientation="horizontal" className="bg-slate-900 w-full my-4 flex md:hidden" />
-              <div className="space-y-2 text-foreground">
-                <h2 className="text-xl md:text-3xl font-bold">9th - 11th October, 2024</h2>
-                <div className="py-2 gap-2 flex flex-col w-fit">
+              <div className="space-y-4 text-foreground">
+                <h2 className="text-xl md:text-3xl font-extrabold">9th - 11th October, 2024</h2>
+                <div className="py-2 gap-1.5 flex flex-col w-fit">
                   {
                     ["Labadi Beach Hotel,", "1 Labadi By-Pass,", "Accra, Ghana."].map((line, index) => (
                       <p key={index} className="text-2xl md:text-3xl leading-loose text-left font-thin">{line}</p>
                     ))
                   }
                 </div>
-                {/* <div className="pt-2">
-                  <p className="text-xl text-left font-semibold">#ACGC4B</p>
-                  <p className="text-xl text-left font-semibold">#AfricanInHouse</p>
-                </div> */}
+                <div className="pt-2 grid gap-1">
+                  <HashTags tags={hashTags} />
+                </div>
               </div>
             </div>
-            <div className="bg-primary-main flex rounded-bl-xl text-white top-1 right-0 h-44 md:h-64 w-6 md:w-16 absolute items-center justify-center">
+            <div className="bg-primary-main flex rounded-bl-xl text-white top-0 right-0 h-64 w-6 md:w-16 absolute items-center justify-center">
               <p className="transform -rotate-90 text-sm md:text-xl whitespace-nowrap font-bold">
                 Conference Programme
               </p>
@@ -173,7 +184,6 @@ export default function Home() {
             }
           </div>
         </div>
-
       </section>
 
       {/* Program Section */}
