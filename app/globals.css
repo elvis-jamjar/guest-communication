@@ -3,22 +3,13 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'satoshi-black';
-  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Black.woff') format('woff')
+  font-family: 'Roboto';
+  src: url('https: //fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap')
 }
 
-@font-face {
-  font-family: 'satoshi-light';
-  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Light.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'satoshi-medium';
-  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Medium.woff') format('woff');
-}
 
 body {
-  font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
+  font-family: 'Roboto', sans-serif;
 }
 
 @layer utilities {
@@ -87,10 +78,11 @@ body {
 @layer base {
   * {
     @apply border-border;
+    font-family: 'Roboto', sans-serif;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
+    font-family: 'Roboto', sans-serif;
   }
 }

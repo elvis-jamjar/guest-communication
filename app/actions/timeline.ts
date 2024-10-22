@@ -1,11 +1,11 @@
 "use server";
-import { redis } from "@/lib/db";
 import {
   ConferenceScheduleProps,
   PageContent,
   Settings,
   TimelineItemProps,
 } from "@/app/types";
+import { redis } from "@/lib/db";
 
 /**
  * create new timeline item
@@ -15,7 +15,7 @@ import {
 export async function createTimelineItem(item: TimelineItemProps) {
   const items = await getTimelineItems();
   items.push(item);
-  await redis.set("timeline-items", JSON.stringify(items));
+  await redis.set("4dx-timeline-items", JSON.stringify(items));
 }
 
 /**
@@ -29,7 +29,7 @@ export async function updateTimelineItem(item: TimelineItemProps) {
   const index = items.findIndex((i) => i.id === item.id);
   if (index === -1) return;
   items[index] = item;
-  await redis.set("timeline-items", JSON.stringify(items));
+  await redis.set("4dx-timeline-items", JSON.stringify(items));
 }
 
 // create update or create shedules
@@ -37,7 +37,7 @@ export async function createConferenceSchedules(
   schedules: ConferenceScheduleProps[]
 ) {
   try {
-    await redis.set("conference-schedules", JSON.stringify(schedules));
+    await redis.set("4dx-conference-schedules", JSON.stringify(schedules));
   } catch (error) {
     console.log(error);
     throw Error("Failed to save schedules");
@@ -48,7 +48,7 @@ export async function getConferenceSchedule(): Promise<
   ConferenceScheduleProps[]
 > {
   try {
-    const schedules = await redis.get("conference-schedules");
+    const schedules = await redis.get("4dx-conference-schedules");
     if (!schedules) return [];
     return JSON.parse(schedules) as ConferenceScheduleProps[];
   } catch (error) {
@@ -58,19 +58,19 @@ export async function getConferenceSchedule(): Promise<
 }
 
 export async function getTimelineItems(): Promise<TimelineItemProps[]> {
-  const items = await redis.get("timeline-items");
+  const items = await redis.get("4dx-timeline-items");
   if (!items) return [];
   return JSON.parse(items);
 }
 
 // create setting for the conference
 export async function createConferenceSettings(settings: Settings) {
-  await redis.set("conference-settings", JSON.stringify(settings));
+  await redis.set("4dx-conference-settings", JSON.stringify(settings));
 }
 
 // get settings for the conference
 export async function getConferenceSettings(): Promise<Settings> {
-  const settings = await redis.get("conference-settings");
+  const settings = await redis.get("4dx-conference-settings");
   if (!settings)
     return {
       columns: 1,
@@ -80,12 +80,12 @@ export async function getConferenceSettings(): Promise<Settings> {
 
 // page content PageContent
 export async function createPageContent(content: PageContent) {
-  await redis.set("page-content", JSON.stringify(content));
+  await redis.set("4dx-page-content", JSON.stringify(content));
 }
 
 // get page content
 export async function getPageContent(): Promise<PageContent> {
-  const content = await redis.get("page-content");
+  const content = await redis.get("4dx-page-content");
   if (!content) return {};
   return JSON.parse(content);
 }

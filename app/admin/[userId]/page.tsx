@@ -1,17 +1,16 @@
 "use client";
 
 import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
-import { useEffect, useState } from "react";
-import { ConferenceScheduleProps, PageContent } from "../../types";
-import { Button } from "@/components/ui/button";
-import { Grid2X2, Rows3, Save } from "lucide-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
-import { ScheduleList } from "@/components/schedule-list";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import React from "react";
 import { PageContentDisplayComponent } from "@/components/page-content-display";
+import { ScheduleList } from "@/components/schedule-list";
+import { Button } from "@/components/ui/button";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Grid2X2, Rows3, Save } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
+import { ConferenceScheduleProps, PageContent } from "../../types";
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
 
@@ -139,7 +138,7 @@ export default function Home() {
                 <ScrollArea className="h-[99dvh] bg-gray-100 relative">
                     <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
                         <div className="flex items-center gap-4">
-                            <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
+                            <h1 className="text-secondary-main text-xl font-bold p-4">Preview</h1>
                             {/* toggle 2 column and 1 */}
                             <div className="flex gap-0 ring-1 ring-primary-main rounded-md p-0.5">
                                 <Button size="sm" variant={columns === 2 ? "default" : "secondary"}
@@ -166,7 +165,7 @@ export default function Home() {
                     <hr className="border-t border-gray-300" />
                     <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
                         <div className="flex items-center gap-4">
-                            <h1 className="text-primary-purple text-xl font-bold p-4">Page content Preview</h1>
+                            <h1 className="text-secondary-main text-xl font-bold p-4">Page content Preview</h1>
                         </div>
                         <Button
                             onClick={mutatePageContentData}

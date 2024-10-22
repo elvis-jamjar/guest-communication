@@ -1,20 +1,17 @@
-'use client'
-
-import { ConferenceScheduleProps, TimelineItemProps, Speaker } from '@/app/types';
-import { cn } from '@/lib/utils'
+'use client';
+import { ConferenceScheduleProps, Speaker, TimelineItemProps } from '@/app/types';
+import { cn } from '@/lib/utils';
 import {
-  Coffee,
   Camera,
-  Mic,
-  Users,
+  Coffee,
+  Flag,
   Gamepad2,
+  Mic,
+  PartyPopper,
   PersonStanding,
   Tv,
-  PartyPopper,
-  Flag
-} from 'lucide-react'
-import Image from 'next/image'
-import { DynamicImage } from './ui/dynamic-image';
+  Users
+} from 'lucide-react';
 import React from 'react';
 
 export const icons = {
@@ -30,114 +27,109 @@ export const icons = {
 }
 
 export function ConferenceSchedule(
-  { className, timeLineItems, columns = 2 }: ConferenceScheduleProps & { columns?: number }
+  { className, timeLineItems }: ConferenceScheduleProps & { columns?: number }
 ) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   // check if timeLineItems items is more than 3 then split it into two halves
-  const firstHalf = timeLineItems?.length > 6 ? timeLineItems.slice(0, Math.ceil(timeLineItems.length / 2)) : timeLineItems;
-  const secondHalf = timeLineItems?.length > 6 ? timeLineItems.slice(Math.ceil(timeLineItems.length / 2)) : [];
+  // const firstHalf = timeLineItems?.length > 6 ? timeLineItems.slice(0, Math.ceil(timeLineItems.length / 2)) : timeLineItems;
+  // const secondHalf = timeLineItems?.length > 6 ? timeLineItems.slice(Math.ceil(timeLineItems.length / 2)) : [];
 
 
   return (
     <div
       ref={containerRef}
-      className={cn("bg-transparent p-8 py-4 mx-auto w-full", className)}>
-      <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 w-full", (columns === 1) && 'md:grid-cols-1')}>
-        <div className="w-full">
-          {firstHalf.map((item, index) => (
-            <TimelineItem
-              {...item}
-              key={index}
-              isFirst={index === 0}
-            // hideLine={arr.length === 1}
-            />
-          ))}
-          {
-            (columns === 1) && secondHalf.map((item, index) => (
-              <TimelineItem
-                {...item}
-                key={`second-${index}`}
-              // isFirst={index === 0}
-              // hideLine={arr.length === 1}
-              />
-            ))
-          }
-        </div>
-        {(columns === 2) && <div className="w-full">
-          {secondHalf.map((item, index, arr) => (
-            <TimelineItem
-              key={index}
-              {...item}
-              isFirst={index === 0}
-              hideLine={arr.length === 1}
-            />
-          ))}
-        </div>}
-      </div>
-
-    </div>
-  )
-}
-
-function Banner({ banners }: { banners: string[] }) {
-  // if banners is one then display it as a single image else display as a grid of two images
-  const gridClass = banners?.length === 1 ? 'grid-cols-1' : 'grid-cols-2';
-  return (
-    <div className={cn('grid gap-2 my-2', gridClass)}>
-      {banners.map((banner, index) => (
-        <Image className='w-full h-auto object-cover rounded-md' key={index} src={banner} alt={"Image"} width={500} height={500} />
+      className={cn("md:p-8 py-4 mx-auto w-full", className)}>
+      {timeLineItems?.map((item, index) => (
+        <TimelineItem
+          {...item}
+          isFirst={index === 0}
+          key={index} className={cn('p-0 md:p-0', item?.className)} />
       ))}
     </div>
   )
 }
 
-function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems }: TimelineItemProps) {
+// function Banner({ banners }: { banners: string[] }) {
+//   // if banners is one then display it as a single image else display as a grid of two images
+//   const gridClass = banners?.length === 1 ? 'grid-cols-1' : 'grid-cols-2';
+//   return (
+//     <div className={cn('grid gap-2 my-2', gridClass)}>
+//       {banners.map((banner, index) => (
+//         <Image className='w-full h-auto object-cover rounded-md' key={index} src={banner} alt={"Image"} width={500} height={500} />
+//       ))}
+//     </div>
+//   )
+// }
+
+function TimelineItem({ time, isFirst, title, description, speakers }: TimelineItemProps) {
   return (
     // (trackLabel || icon || title) && 
-    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white',
-      className)}>
-      <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
-        <div className={cn("text-white w-8 h-8 z-10 rounded-full flex p-2 mt-[3.8rem]", icon && 'w-fit h-fit', isTrack && '-ms-1  mt-[5rem] w-fit h-fit', 'bg-primary-main', iconColor)}>
-          {
-            !isTrack ? icons[icon as keyof typeof icons] : <div className='flex items-center gap-1'>
-              <div className='bg-white w-4 h-4 rounded-full'></div>
-              <h2 className="text-white text-sm font-bold">{trackLabel || 'Track 1'}</h2>
-            </div>
-          }
+    // <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white',
+    //   className)}>
+    //   <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
+    //     <div className={cn("text-white w-4 h-4 z-10 rounded-full flex p-2 mt-[3.8rem]", 'bg-secondary-main', iconColor)}>
+    //       {
+    //         !isTrack ? icons[icon as keyof typeof icons] : <div className='flex items-center gap-1'>
+    //           <div className='bg-white w-4 h-4 rounded-full'></div>
+    //           <h2 className="text-white text-sm font-bold">{trackLabel || 'Track 1'}</h2>
+    //         </div>
+    //       }
+    //     </div>
+    //     {!hideLine && <div className={cn("flex-1 w-px bg-gray-300 z-auto absolute h-full", isFirst && 'mt-24', isTrack && "left-[15.6px]")}></div>}
+    //   </div>
+    //   <div className={cn('ps-10 w-full')}>
+    //     {time && <p className={cn("text-xs font-bold whitespace-normal tracking-tight", isTrack && 'pb-2')}>{time}</p>}
+    //     {sectionTitle && <h4 className={cn("text-sm tracking-widest uppercase font-mono py-1", isTrack && "mt-12")}>{sectionTitle}</h4>}
+    //     <h3 className={cn("font-bold text-sm text-secondary-main py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
+    //     {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
+    //     {description && <p className="text-sm text-gray-600">{description}</p>}
+    //     {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' />}
+    //     {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' />}
+    //     {host && <SpeakerList speakers={[host]} title='Host' />}
+    //     {(Number(moderators?.length || 0) > 0) && <SpeakerList speakers={moderators || []} title='moderator' />}
+    //     {children}
+    //     {(bannerPosition === 'bottom') && <Banner banners={banners || []} />}
+    //     {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
+    //   </div>
+    //   {(Number(subItems?.length || 0) > 0) &&
+    //     subItems?.map((item, index) => (
+    //       <TimelineItem {...item} key={index} className={cn('p-0 md:p-0', item?.className)} />
+    //     ))
+    //   }
+    // </div>
+
+    <div className='grid md:grid-cols-7 grid-cols-1 relative gap-5 md:gap-0'>
+      <div className={cn("flex-1 w-px left-2 bg-secondary-main z-auto absolute h-full top-auto bottom-0")}></div>
+      <div className={cn('col-span-1 w-4 h-4 flex rounded-full justify-center items-center bg-white z-10')}>
+        <div className={cn('w-2 h-2 rounded-full', isFirst ? 'bg-primary-main' : 'bg-secondary-main')}>
         </div>
-        {!hideLine && <div className={cn("flex-1 w-px bg-gray-300 z-auto absolute h-full", isFirst && 'mt-24', isTrack && "left-[15.6px]")}></div>}
       </div>
-      <div className={cn('ps-10 w-full')}>
-        {time && <p className={cn("text-xs font-bold whitespace-normal tracking-tight", isTrack && 'pb-2')}>{time}</p>}
-        {sectionTitle && <h4 className={cn("text-sm tracking-widest uppercase font-mono py-1", isTrack && "mt-12")}>{sectionTitle}</h4>}
-        <h3 className={cn("font-bold text-sm text-primary-purple py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
-        {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
-        {description && <p className="text-sm text-gray-600">{description}</p>}
-        {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' />}
-        {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' />}
-        {host && <SpeakerList speakers={[host]} title='Host' />}
-        {(Number(moderators?.length || 0) > 0) && <SpeakerList speakers={moderators || []} title='moderator' />}
-        {children}
-        {(bannerPosition === 'bottom') && <Banner banners={banners || []} />}
-        {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
+      <div className='md:col-span-2 md:p-0 ps-5 flex md:flex-col gap-2 md:gap-0'>
+        {
+          isFirst && <h2 className='text-sm font-extrabold text-secondary-main'>Time</h2>
+        }
+        <h3 className='text-sm font-normal text-secondary-main'>{time}</h3>
       </div>
-      {(Number(subItems?.length || 0) > 0) &&
-        subItems?.map((item, index) => (
-          <TimelineItem {...item} key={index} className={cn('p-0 md:p-0', item?.className)} />
-        ))
-      }
+      <div className='flex flex-col gap-4 md:gap-2 md:p-0 ps-5 md:col-span-4'>
+        {
+          isFirst && <h2 className='text-sm font-extrabold text-secondary-main'>Activity</h2>
+        }
+        <h3 className='text-sm font-semibold text-secondary-main'>{title}</h3>
+        <p className='text-sm font-normal text-gray-600'>{description}</p>
+        <SpeakerList speakers={speakers || []} title='Speaker' />
+      </div>
     </div>
   )
 }
 
-function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: string }) {
+function SpeakerList({ speakers }: { speakers: Array<Speaker>, title: string }) {
   return (
     <div className="space-y-2">
-      {(Number(speakers?.length || 0) > 0) && <h2 className="text-sm mt-5 font-semibold uppercase">
+      {/* {(Number(speakers?.length || 0) > 0) && <h2 className="text-sm mt-5 font-semibold uppercase">
         {speakers?.length > 1 ? `${title?.toLowerCase()}s` : `${title?.toLowerCase()}`}
-      </h2>}
+      </h2>} */}
       {speakers.map((speaker, index) => (
-        <p key={index} className="text-xs">
+        <p key={index} className="text-xs text-secondary-main">
           <span className="font-semibold">{speaker?.name}</span>{speaker?.name && ','}
           {speaker?.title} <br />
           {speaker?.bio}
@@ -147,26 +139,26 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
   )
 }
 
-function Sponsor({ sponsors }: { sponsors: Array<string> }) {
-  const urlList = sponsors.filter((sponsor) => sponsor.startsWith('http'));
-  const nonUrlList = sponsors.filter((sponsor) => !sponsor.startsWith('http'));
-  return (
-    <div className="mt-2">
-      {(Number(sponsors?.length || 0) > 0) && <h2 className="text-xs text-primary-main py-2 font-mono">SPONSORED BY</h2>}
-      {/* sponsor images */}
-      <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
-        {urlList.map((sponsor, index) => (
-          <DynamicImage key={index} src={sponsor} alt={sponsor} />
-        ))}
-      </div>
-      <div className='pt-2'>
-        {Number(nonUrlList?.length || 0) > 0 && <span className="text-xs font-mono px-0 rounded-md">{
-          nonUrlList.join(', ')
-        }</span>}
-      </div>
-    </div>
-  )
-}
+// function Sponsor({ sponsors }: { sponsors: Array<string> }) {
+//   const urlList = sponsors.filter((sponsor) => sponsor.startsWith('http'));
+//   const nonUrlList = sponsors.filter((sponsor) => !sponsor.startsWith('http'));
+//   return (
+//     <div className="mt-2">
+//       {(Number(sponsors?.length || 0) > 0) && <h2 className="text-xs text-primary-main py-2 font-mono">SPONSORED BY</h2>}
+//       {/* sponsor images */}
+//       <div className={cn("flex gap-2 flex-wrap justify-start w-full")}>
+//         {urlList.map((sponsor, index) => (
+//           <DynamicImage key={index} src={sponsor} alt={sponsor} />
+//         ))}
+//       </div>
+//       <div className='pt-2'>
+//         {Number(nonUrlList?.length || 0) > 0 && <span className="text-xs font-mono px-0 rounded-md">{
+//           nonUrlList.join(', ')
+//         }</span>}
+//       </div>
+//     </div>
+//   )
+// }
 
 
 

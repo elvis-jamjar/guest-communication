@@ -33,12 +33,12 @@ const config: Config = withUt({
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          main: "#d2993a",
-          purple: "#482367",
+          main: "#00A69C",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          main: "#F05A28",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

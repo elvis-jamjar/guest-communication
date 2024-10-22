@@ -15,7 +15,7 @@ export interface TimelineItemProps {
   trackLabel?: string;
   banners?: Array<string>;
   bannerPosition?: "top" | "bottom";
-  iconColor?: "bg-primary-purple" | "bg-primary-main";
+  iconColor?: "bg-secondary-main" | "bg-primary-main";
   children?: React.ReactNode;
   hideLine?: boolean;
   className?: string;

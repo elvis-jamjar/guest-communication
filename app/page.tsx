@@ -1,40 +1,36 @@
-"use client"
-
+"use client";;
+import { ScheduleList } from "@/components/schedule-list";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { CalendarDaysIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { Separator } from "@/components/ui/separator"
-import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { ScheduleList } from "@/components/schedule-list";
-import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
-import { HashTags } from "@/components/hashtasg";
+import { getConferenceSchedule, getConferenceSettings } from "./actions/timeline";
 
-const textIconData = [
-  {
-    text: 'www.acgc.africa',
-    icon: <Globe className="w-4 h-4" />
-  },
-  {
-    text: '@african_inhouse',
-    // twitter icon
-    icon: <Twitter className="w-4 h-4" />
-  },
-  {
-    text: 'mail@acgc.africa',
-    icon: <Mail className="w-4 h-4" />
-  },
-  {
-    text: 'ACGC (African Corprate Government Counsel Forum)',
-    icon: <Linkedin className="w-4 h-4" />
-  }
-]
+// const textIconData = [
+//   {
+//     text: 'www.acgc.africa',
+//     icon: <Globe className="w-4 h-4" />
+//   },
+//   {
+//     text: '@african_inhouse',
+//     // twitter icon
+//     icon: <Twitter className="w-4 h-4" />
+//   },
+//   {
+//     text: 'mail@acgc.africa',
+//     icon: <Mail className="w-4 h-4" />
+//   },
+//   {
+//     text: 'ACGC (African Corprate Government Counsel Forum)',
+//     icon: <Linkedin className="w-4 h-4" />
+//   }
+// ]
 
-const sections = ["about", "programme", "sponsors", "partners"];
+const sections = ["about", "programme"];
 // #ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica
-const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
+// const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
 // const INTERVAL = 60000; // 1 minute
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -49,11 +45,11 @@ export default function Home() {
   });
 
   // get page content
-  const { data: pageContent } = useQuery({
-    queryKey: ['page-content'],
-    queryFn: async () => await getPageContent(),
-    refetchInterval: 90000, // 15 minutes
-  });
+  // const { data: pageContent } = useQuery({
+  //   queryKey: ['page-content'],
+  //   queryFn: async () => await getPageContent(),
+  //   refetchInterval: 90000, // 15 minutes
+  // });
 
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
   // const [isClicked, setIsClicked] = React.useState<boolean>(false);
@@ -94,12 +90,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       {/* Navbar */}
-      <header className="bg-white py-4 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
+      <header className="bg-white py-1 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto  max-w-5xl md:px-8 flex justify-between items-center">
           {/* <h1 className="text-2xl font-bold">ACGC</h1> */}
-          <Image src="/images/logo.png" width={400} height={400} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
+          <Image src="/images/4dx/logo.png" width={400} height={400} alt="ACGC" className="w-16 h-auto object-cover rounded-xl" />
           <nav className="flex items-center gap-2">
             {
               sections?.map((section, index) => {
@@ -120,34 +116,49 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id={"about"} className="text-white bg-gray-50 h-fit w-full relative"
-        style={{ backgroundImage: "url('/images/ACGC_bg_2024.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
+      <section id={"about"} className="text-white h-fit w-full relative"
+        style={{ backgroundImage: "url('/images/4dx/parttern_1.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
       >
         <div className="max-w-5xl flex flex-col gap-6 mx-auto p-4">
           {/* Header Section */}
-          <header className="flex items-center py-4">
+          {/* <header className="flex items-center py-4">
             <div className="flex flex-wrap items-center md:px-8">
-              <Image src="/images/logo.png" width={400} height={400} alt="ACGC Logo" className="w-64 h-auto rounded-xl" />
             </div>
-          </header>
+          </header> */}
           {/* Conference Title */}
-          <section className="flex-col flex-wrap w-full rounded-lg text-center mb-1 px-4"
-          >
+          <section className="flex flex-col items-center  flex-wrap w-full rounded-lg mb-1 px-4">
+            {/* <Image
+              src={"/images/4dx/logo.png"}
+              alt="4dx Logo"
+              width={500}
+              height={500}
+              priority
+              className="w-20 h-auto object-cover"
+            /> */}
+            <Image
+              src={"/images/4dx/4dx_programme_logo.png"}
+              alt="4dx Programme Logo"
+              width={800}
+              height={800}
+              priority
+              className="w-96 h-auto object-cover"
+            />
+
             {/* <Image
               src="/images/ACGC_bg_2024.png"
               // width={400} height={400}
               alt="ACGC Logo"
               fill
               className="w-full h-[400px] object-cover z-0" /> */}
-            <div className="grid grid-cols-1 gap-0 space-y-0 w-fit md:px-9">
+            {/* <div className="grid grid-cols-1 gap-0 space-y-0 w-fit md:px-9">
               <h2 className="bg-primary-main col-span-2 px-2 w-fit leading-relaxed font-extrabold text-2xl md:text-5xl">
                 6th Annual
               </h2> <br />
               <h2 className="w-fit text-left px-2 leading-relaxed bg-primary-main font-extrabold text-2xl md:text-5xl">
                 ACGC Conference
               </h2>
-            </div>
-            <div className="w-full flex flex-wrap md:flex-nowrap justify-between gap-8">
+            </div> */}
+            {/* <div className="w-full flex flex-wrap md:flex-nowrap justify-between gap-8">
               <div>
                 <Image src="/images/ACGC_text.png" width={400} height={400} alt="ACGC Logo" className="w-[500px] h-auto rounded-xl" />
               </div>
@@ -166,28 +177,32 @@ export default function Home() {
                   <HashTags tags={hashTags} />
                 </div>
               </div>
-            </div>
-            <div className="bg-primary-main flex rounded-bl-xl text-white top-0 right-0 h-64 w-6 md:w-16 absolute items-center justify-center">
+            </div> */}
+            {/* <div className="bg-primary-main flex rounded-bl-xl text-white top-0 right-0 h-64 w-6 md:w-16 absolute items-center justify-center">
               <p className="transform -rotate-90 text-sm md:text-xl whitespace-nowrap font-bold">
                 Conference Programme
               </p>
-            </div>
+            </div> */}
           </section>
           {/* about us description */}
-          <AboutDescription aboutSection={pageContent?.aboutSection || ''} />
+          {/* <AboutDescription aboutSection={pageContent?.aboutSection || ''} /> */}
           {/* social media */}
-          <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 py-4 md:px-8">
+          {/* <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 py-4 md:px-8">
             {
               textIconData.map((social, index) => (
                 <TextIcon key={index} text={social?.text} icon={social?.icon} />
               ))
             }
-          </div>
+          </div> */}
         </div>
       </section>
 
       {/* Program Section */}
-      <section id="programme" className="py-20 bg-gray-100 md:min-h-[10dvh]">
+      <section id="programme" className="py-20 md:min-h-[10dvh] md:mx-40">
+        <h1 className="text-center flex items-center justify-center text-secondary-main leading-normal tracking-tight text-4xl font-extrabold mb-8">
+          <CalendarDaysIcon className="w-8 h-8 mr-4" />
+          Program Outline
+        </h1>
         {
           isLoading && <div className="text-center">
             <p>Loading...</p>
@@ -199,31 +214,25 @@ export default function Home() {
         }
       </section>
       {/* quick links */}
-      <section id="quick-links" className="py-16 bg-white">
+      {/* <section id="quick-links" className="py-16 bg-white">
         <PageQuickLinks
           pageContent={pageContent || {}}
           className={cn("container mx-auto max-w-5xl px-5 md:px-2")}
         />
-      </section>
+      </section> */}
       {/* sponsors */}
-      <section id="sponsors" className="py-16 bg-white">
+      {/* <section id="sponsors" className="py-16 bg-white">
         <div className="mx-auto container max-w-5xl">
           <Image src="/images/sponsors.png" width={1000} height={200} alt="Sponsors" className="w-full h-auto object-contain" />
         </div>
-      </section>
+      </section> */}
       {/* partners */}
-      <section id="partners" className="py-16 bg-white mx-auto">
+      {/* <section id="partners" className="py-16 bg-white mx-auto">
         <div className="mx-auto container max-w-5xl">
           <Image src="/images/partners.png" width={1000} height={200} alt="partners" className="w-full h-auto object-contain" />
         </div>
-      </section>
+      </section> */}
 
-      {/* Footer */}
-      <footer className="bg-black text-white py-6">
-        <div className="container mx-auto text-center">
-          <p>&copy; {new Date().getFullYear()} ACGC Guest Communication. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

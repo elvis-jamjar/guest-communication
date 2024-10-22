@@ -1,55 +1,14 @@
 import type { Metadata } from "next";
 // import localFont from "next/font/local";
-import "./globals.css";
 import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import "./globals.css";
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
-
-// // add sotashi fonts
-// const sotashiBlack = localFont({
-//   src: "./fonts/Satoshi-Black.woff",
-//   variable: "--font-sotas-black",
-//   weight: "100 900",
-// });
-// const sotashiBold = localFont({
-//   src: "./fonts/Satoshi-Bold.woff",
-//   variable: "--font-sotas-bold",
-//   weight: "100 900",
-// });
-// // italics
-// const sotashiItalic = localFont({
-//   src: "./fonts/Satoshi-Italic.woff",
-//   variable: "--font-sotas-italic",
-//   weight: "100 900",
-// });
-
-// //light
-// const sotashiLight = localFont({
-//   src: "./fonts/Satoshi-Light.woff",
-//   variable: "--font-sotas-light",
-//   weight: "100 900",
-// });
-
-// // medium
-// const sotashiMedium = localFont({
-//   src: "./fonts/Satoshi-Medium.woff",
-//   variable: "--font-sotas-medium",
-//   weight: "100 900",
-// });
 
 export const metadata: Metadata = {
-  title: "ACGC guest communication",
-  description: "ACGC guest communication",
+  title: "4DX Guest Communication",
+  description: "4DX Guest Communication is a platform for managing guest communication.",
 };
 
 export default function RootLayout({
@@ -58,11 +17,58 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en"
+
+    >
       <body
-        className={cn(`text-foreground bg-background antialiased`)}>
+        style={{
+          backgroundAttachment: "local",
+          // backgroundPosition: "fixed",
+          // backgroundRepeat: "repeat",
+          // backgroundSize: "cover",
+          backgroundImage: "url('/images/4dx/parttern_2.png')",
+        }}
+        className={cn(`text-foreground antialiased`)}>
         <Providers>
-          {children}
+          <>
+            <main className="container mx-auto">
+              {children}
+            </main>
+            {/* Footer */}
+            <footer className=" text-white bg-primary-main">
+              <div className="container py-24 mx-auto flex flex-wrap md:justify-around justify-center">
+                <div className="flex flex-wrap gap-5 justify-center items-center">
+                  <div className="flex items-center rounded-full p-4 bg-white">
+                    <Image
+                      src="/images/4dx/logo.png"
+                      width={600}
+                      height={600}
+                      priority
+                      alt="4dx"
+                      className="w-28 h-28 object-contain"
+                    />
+                  </div>
+                  <p className="text-left max-w-72">
+                    4DX Ventures is a Pan-Africa Focused Venture Capital Firm. Our mission is to connect people, ideas, and capital to create a thriving African continent, and a vibrant global community.
+                  </p>
+                </div>
+                <div className="flex  gap-6 flex-col items-center justify-center">
+                  <div className="flex gap-2">
+                    <Image src="/images/4dx/linkedin.png" width={200} height={200} alt="linkedin" className="w-12 h-12 object-contain" />
+                    <Image src="/images/4dx/globe.png" width={200} height={200} alt="twitter" className="w-12 h-12 object-contain" />
+                  </div>
+                  <p className="w-fit">&copy; {new Date().getFullYear()} 4DX Ventures</p>
+                </div>
+              </div>
+              <Image
+                src="/images/4dx/background.png"
+                width={1000}
+                height={400}
+                alt="4dx"
+                className="w-full h-12 object-cover bg-white"
+              />
+            </footer>
+          </>
         </Providers>
       </body>
     </html>

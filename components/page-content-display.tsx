@@ -1,10 +1,10 @@
 'use client'
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { PageContent } from "@/app/types"
-import { ArrowUpRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import { ArrowUpRight } from "lucide-react"
 
 
 export function PageContentDisplayComponent({ aboutSection, quickLinksTitle, quickLinks }: PageContent) {
@@ -30,7 +30,7 @@ export function PageQuickLinks({ pageContent, className }: { pageContent: PageCo
         {pageContent?.quickLinks?.map((link, index) => (
           <Card key={index} className="flex flex-col shadow-none border-2 bg-transparent border-primary-main">
             <CardHeader>
-              <CardTitle className="font-bold text-sm text-primary-purple py-2 break-words">{link?.title || 'Quick Link'}</CardTitle>
+              <CardTitle className="font-bold text-sm text-secondary-main py-2 break-words">{link?.title || 'Quick Link'}</CardTitle>
             </CardHeader>
             <CardContent className="flex-grow">
               <p className="text-muted-foreground">{link.description || 'No description available.'}</p>

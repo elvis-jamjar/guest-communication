@@ -1,21 +1,20 @@
 'use client'
 
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import { GripVertical, PlusCircle } from 'lucide-react'
+import { ConferenceScheduleProps, PageContent, Speaker, TimelineItemProps } from '@/app/types'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Speaker, TimelineItemProps, ConferenceScheduleProps, PageContent } from '@/app/types'
-import { icons } from './conference-schedule'
+import { Textarea } from "@/components/ui/textarea"
 import { UploadDropzone } from '@/lib/utils'
+import { GripVertical, PlusCircle } from 'lucide-react'
 import Image from 'next/image'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
-import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
+import React, { useEffect, useState } from 'react'
+import SortableList, { SortableItem, SortableKnob } from "react-easy-sort"
+import { icons } from './conference-schedule'
 import { PageContentFormComponent } from './page-content-form'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -106,13 +105,13 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
       }
       <Select
         value={item?.iconColor}
-        onValueChange={(value) => onChange({ ...item, iconColor: value as "bg-primary-purple" | "bg-primary-main" })}
+        onValueChange={(value) => onChange({ ...item, iconColor: value as "bg-secondary-main" | "bg-primary-main" })}
       >
         <SelectTrigger>
           <SelectValue placeholder="Track & Icon color" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="bg-primary-purple" className='border-l-2 my-1 border-l-primary-purple hover:text-primary-purple'>Purple</SelectItem>
+          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-primary-purple hover:text-secondary-main'>Purple</SelectItem>
           <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Amber</SelectItem>
         </SelectContent>
       </Select>
@@ -457,7 +456,7 @@ export function ConferenceScheduleForm(
             {schedule?.timeLineItems?.map((item, index) => (
               <SortableItem
                 key={index}>
-                <AccordionItem value={`${index}`} className='hover:bg-primary-purple/5 hover:shadow-md rounded-md px-2'>
+                <AccordionItem value={`${index}`} className='hover:bg-secondary-main/5 hover:shadow-md rounded-md px-2'>
                   <AccordionTrigger className='decoration-transparent flex justify-start'>
                     <div className="flex cursor-grab items-center mr-2">
                       <SortableKnob>
