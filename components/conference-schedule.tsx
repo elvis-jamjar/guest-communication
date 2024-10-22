@@ -122,6 +122,7 @@ function TimelineItem({ time, isFirst, title, description, speakers }: TimelineI
   )
 }
 
+
 function SpeakerList({ speakers }: { speakers: Array<Speaker>, title: string }) {
   return (
     <div className="space-y-2">
