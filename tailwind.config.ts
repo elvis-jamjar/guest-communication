@@ -19,6 +19,10 @@ const config: Config = withUt({
           body: ["satoshi-light", "satoshi-black"],
         };
       },
+      space: {
+        mainspacing: "120px",
+        sectionspacing: "60px",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

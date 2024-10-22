@@ -1,13 +1,11 @@
-"use client";
-
+"use client";;
 import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
-import { PageContentDisplayComponent } from "@/components/page-content-display";
 import { ScheduleList } from "@/components/schedule-list";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Grid2X2, Rows3, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
 import { ConferenceScheduleProps, PageContent } from "../../types";
@@ -121,8 +119,7 @@ export default function Home() {
     return (
         <ResizablePanelGroup
             direction="horizontal"
-            className="min-h-[200px] h-screen max-w-full rounded-lg border md:min-w-[450px]"
-        >
+            className="min-h-[200px] h-screen max-w-full rounded-lg border md:min-w-[450px]">
             <ResizablePanel defaultSize={40} minSize={20}>
                 <ScrollArea className="h-[99dvh]">
                     <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules}
@@ -133,54 +130,21 @@ export default function Home() {
             <ResizableHandle withHandle />
             <ResizablePanel
                 defaultSize={60}
-                minSize={60}
-            >
-                <ScrollArea className="h-[99dvh] bg-gray-100 relative">
-                    <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
-                        <div className="flex items-center gap-4">
-                            <h1 className="text-secondary-main text-xl font-bold p-4">Preview</h1>
-                            {/* toggle 2 column and 1 */}
-                            <div className="flex gap-0 ring-1 ring-primary-main rounded-md p-0.5">
-                                <Button size="sm" variant={columns === 2 ? "default" : "secondary"}
-                                    onClick={toggleColumns} className="">
-                                    <Grid2X2 className="w-4 h-4 " />
-                                </Button>
-                                <Button size="sm" variant={columns === 1 ? "default" : "secondary"}
-                                    onClick={toggleColumns} className="">
-                                    <Rows3 className="w-4 h-4 " />
-                                </Button>
-                            </div>
-                        </div>
+                minSize={40}>
+                <div className=" bg-gray-100 relative flex p-4 flex-col gap-2">
+                    <div className=" px-2 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
                         <Button
                             onClick={mutateSchedules}
                             size={"sm"}
                             variant={"default"}
                             disabled={!schedules?.length || mutate?.isPending}
-                            className="bg-primary-main text-white rounded-lg">
+                            className="bg-secondary-main text-white rounded-lg">
                             <Save className="w-4 h-4 mr-2 " />
                             {mutate.isPending ? "Saving..." : "Save changes"}
                         </Button>
                     </div>
-                    <ScheduleList schedules={schedules} columns={columns} />
-                    <hr className="border-t border-gray-300" />
-                    <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
-                        <div className="flex items-center gap-4">
-                            <h1 className="text-secondary-main text-xl font-bold p-4">Page content Preview</h1>
-                        </div>
-                        <Button
-                            onClick={mutatePageContentData}
-                            size={"sm"}
-                            variant={"default"}
-                            disabled={!schedules?.length || mutate?.isPending}
-                            className="bg-primary-main text-white rounded-lg">
-                            <Save className="w-4 h-4 mr-2 " />
-                            {mutatePageContent.isPending ? "Saving..." : "Save changes"}
-                        </Button>
-                    </div>
-                    <div className="p-4">
-                        <PageContentDisplayComponent {...pageContent} />
-                    </div>
-                </ScrollArea>
+                    <ScheduleList schedules={schedules} />
+                </div>
             </ResizablePanel>
         </ResizablePanelGroup>
     )

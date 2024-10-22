@@ -61,8 +61,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             <SelectValue placeholder="Time color" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-            <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-primary-purple hover:text-secondary-main'>Secondary</SelectItem>
+            <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+            <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -80,8 +80,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <SelectValue placeholder="Section Title color" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+          <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+          <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
         </SelectContent>
       </Select>
       <Input
@@ -97,8 +97,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <SelectValue placeholder="Title color" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+          <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+          <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
         </SelectContent>
       </Select>
       <Textarea
@@ -151,8 +151,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <SelectValue placeholder="Track & Icon color" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Purple</SelectItem>
-          <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Amber</SelectItem>
+          <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
         </SelectContent>
       </Select>
       <div className="flex items-center space-x-2">
@@ -469,14 +469,13 @@ export function ConferenceScheduleForm(
           {/* color */}
           <Select
             value={schedule?.color?.day}
-            onValueChange={(value) => setSchedule({ ...schedule, color: { ...schedule.color, day: value as ColorType } })}
-          >
+            onValueChange={(value) => setSchedule({ ...schedule, color: { ...schedule.color, day: value as ColorType } })}>
             <SelectTrigger>
               <SelectValue placeholder="Day color" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-              <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+              <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+              <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -496,8 +495,8 @@ export function ConferenceScheduleForm(
               <SelectValue placeholder="Title color" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-              <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+              <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+              <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -1,5 +1,6 @@
 'use client';;
 import { ConferenceScheduleProps } from "@/app/types";
+import { cn } from "@/lib/utils";
 import { ConferenceSchedule } from "./conference-schedule";
 // import { useParams } from "next/navigation";
 // import { useParams } from "next/navigation";
@@ -32,9 +33,13 @@ export function ScheduleList(
         //     //     ))}
         //     // </Accordion>
 
-        <div className="ring-primary-main ring-2 rounded-2xl mx-2 bg-white">
-            <div className="bg-primary-main p-2 flex justify-center rounded-t-2xl">
-                <h2 className="text-white text-2xl font-bold">3rd-6th November</h2>
+        <div className="ring-primary-main ring-2 rounded-[30px] mx-2 bg-white">
+            <div className="bg-primary-main p-2 flex justify-center rounded-t-[30px]">
+                <div
+                    style={{
+                        fontSize: "clamp(1rem, 2vw, 2rem)"
+                    }}
+                    className="text-white font-semibold">3rd - 6th November</div>
             </div>
             <div className="md:px-12 px-2 py-4">
                 {
@@ -42,10 +47,10 @@ export function ScheduleList(
                         return (
                             <div key={"main-" + index} className="flex flex-wrap md:flex-nowrap relative -space-y-4">
                                 <div className="md:max-w-28">
-                                    <h2 className="text-2xl font-bold text-primary-main">
+                                    <h2 className={cn("text-2xl font-bold text-primary-main", schedule?.color?.day)}>
                                         {schedule.day}
                                     </h2>
-                                    <p className="text-orange-500 font-semibold">
+                                    <p className={cn("text-orange-500 font-semibold",)}>
                                         {schedule?.title}
                                     </p>
                                 </div>

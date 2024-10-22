@@ -1,7 +1,5 @@
-"use client"
-
-import { ArrowDown } from "lucide-react";
-import { Button } from "./ui/button";
+"use client";;
+import Image from "next/image";
 
 export function ArrowDownButton() {
     function scrollToProgram() {
@@ -10,11 +8,18 @@ export function ArrowDownButton() {
         program?.scrollIntoView({ behavior: "smooth" });
     }
     return (
-        <Button
+        <div
+            // style={{
+            //     padding: "10px",
+            //     borderRadius: "50%",
+            //     marginTop: "30px",
+            //     width: "max(40px, 70%)",
+            //     height: "max(40px, 3vh)"
+            // }}
             onClick={scrollToProgram}
-            className="absolute bottom-0 hover:bg-secondary-main hover:text-white bg-secondary-main rounded-full h-16 w-16 duration-1000 delay-700 animate-bounce"
+            className="absolute bottom-8 cursor-pointer flex justify-center items-center rounded-full p-4 w-[3.8rem] h-[3.8rem] hover:bg-secondary-main hover:text-white bg-secondary-main duration-1000 delay-700 animate-bounce"
         >
-            <ArrowDown className="w-10 h-10 " />
-        </Button>
+            <Image src="/images/4dx/arrow_down.png" width={100} height={100} alt="arrow down" className="w-10 h-10 object-contain" />
+        </div>
     )
 }

@@ -4,7 +4,8 @@ export interface Speaker {
   bio: string;
 }
 
-export type ColorType = "bg-secondary-main" | "bg-primary-main";
+export type ColorType = "text-secondary-main" | "text-primary-main";
+export type BgColorType = "bg-secondary-main" | "bg-primary-main";
 
 export interface TimelineItemProps {
   id?: string;
@@ -17,7 +18,7 @@ export interface TimelineItemProps {
   trackLabel?: string;
   banners?: Array<string>;
   bannerPosition?: "top" | "bottom";
-  iconColor?: ColorType;
+  iconColor?: BgColorType;
   children?: React.ReactNode;
   hideLine?: boolean;
   className?: string;
