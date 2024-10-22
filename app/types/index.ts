@@ -4,6 +4,8 @@ export interface Speaker {
   bio: string;
 }
 
+export type ColorType = "bg-secondary-main" | "bg-primary-main";
+
 export interface TimelineItemProps {
   id?: string;
   time?: string;
@@ -15,7 +17,7 @@ export interface TimelineItemProps {
   trackLabel?: string;
   banners?: Array<string>;
   bannerPosition?: "top" | "bottom";
-  iconColor?: "bg-secondary-main" | "bg-primary-main";
+  iconColor?: ColorType;
   children?: React.ReactNode;
   hideLine?: boolean;
   className?: string;
@@ -33,12 +35,24 @@ export interface TimelineItemProps {
     facilitators?: Array<Speaker>;
     moderators?: Array<Speaker>;
   };
+  color?: {
+    sectionTitle?: ColorType;
+    description?: ColorType;
+    title?: ColorType;
+    time?: ColorType;
+    day?: ColorType;
+    dayTitle?: ColorType;
+  };
 }
 
 export interface ConferenceScheduleProps {
   className?: string;
   day: string;
   title: string;
+  color?: {
+    day?: ColorType;
+    dayTitle?: ColorType;
+  };
   timeLineItems: TimelineItemProps[];
 }
 

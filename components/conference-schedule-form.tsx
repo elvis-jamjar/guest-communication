@@ -1,6 +1,6 @@
 'use client'
 
-import { ConferenceScheduleProps, PageContent, Speaker, TimelineItemProps } from '@/app/types'
+import { ColorType, ConferenceScheduleProps, PageContent, Speaker, TimelineItemProps } from '@/app/types'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -46,21 +46,61 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
 
   return (
     <div className="space-y-4 p-4 border rounded-md">
-      <Input
-        placeholder="Time(eg. 10:00 AM)"
-        value={item.time}
-        onChange={(e) => onChange({ ...item, time: e.target.value })}
-      />
+      <div className='space-y-2'>
+        <Label htmlFor="time">Time</Label>
+        <Input
+          placeholder="Time(eg. 10:00 AM)"
+          value={item.time}
+          onChange={(e) => onChange({ ...item, time: e.target.value })}
+        />
+        <Select
+          value={item?.color?.time}
+          onValueChange={(value) => onChange({ ...item, color: { ...item?.color, time: value as ColorType } })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Time color" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+            <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-primary-purple hover:text-secondary-main'>Secondary</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <Input
         placeholder="Section Title"
         value={item.sectionTitle}
         onChange={(e) => onChange({ ...item, sectionTitle: e.target.value })}
       />
+      <Select
+        value={item?.color?.sectionTitle}
+        onValueChange={(value) => onChange({ ...item, color: { ...item?.color, sectionTitle: value as ColorType } })}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Section Title color" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+        </SelectContent>
+      </Select>
       <Input
         placeholder="Title"
         value={item.title}
         onChange={(e) => onChange({ ...item, title: e.target.value })}
       />
+      <Select
+        value={item?.color?.title}
+        onValueChange={(value) => onChange({ ...item, color: { ...item?.color, title: value as ColorType } })}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Title color" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+        </SelectContent>
+      </Select>
       <Textarea
         placeholder="Description"
         value={item.description}
@@ -111,7 +151,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <SelectValue placeholder="Track & Icon color" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-primary-purple hover:text-secondary-main'>Purple</SelectItem>
+          <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Purple</SelectItem>
           <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Amber</SelectItem>
         </SelectContent>
       </Select>
@@ -123,14 +163,14 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         />
         <Label htmlFor="hide-line">Hide Line</Label>
       </div>
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Switch
           id="is-first"
           checked={item.isFirst}
           onCheckedChange={(checked) => onChange({ ...item, isFirst: checked })}
         />
         <Label htmlFor="is-first">Is First</Label>
-      </div>
+      </div> */}
       <div className="space-y-2">
         <Label>Images</Label>
         <UploadDropzone
@@ -419,21 +459,47 @@ export function ConferenceScheduleForm(
     <form onSubmit={handleSubmit} className="space-y-8 p-6 max-w-4xl mx-auto">
       {/* <h1 className="text-3xl font-bold">Conference Schedule Form</h1> */}
       <div className="space-y-4">
-        <div>
+        <div className='space-y-2'>
           <Label htmlFor="day">Day</Label>
           <Input
             id="day"
             value={schedule.day}
             onChange={(e) => setSchedule({ ...schedule, day: e.target.value })}
           />
+          {/* color */}
+          <Select
+            value={schedule?.color?.day}
+            onValueChange={(value) => setSchedule({ ...schedule, color: { ...schedule.color, day: value as ColorType } })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Day color" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+              <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div>
+        <div className='space-y-2'>
           <Label htmlFor="title">Title</Label>
           <Input
             id="title"
             value={schedule.title}
             onChange={(e) => setSchedule({ ...schedule, title: e.target.value })}
           />
+          {/* color */}
+          <Select
+            value={schedule?.color?.dayTitle}
+            onValueChange={(value) => setSchedule({ ...schedule, color: { ...schedule.color, dayTitle: value as ColorType } })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Title color" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+              <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className="space-y-4">

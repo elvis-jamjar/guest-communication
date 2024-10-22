@@ -1,10 +1,7 @@
 "use client";;
 import { ScheduleList } from "@/components/schedule-list";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDaysIcon } from "lucide-react";
-import Image from "next/image";
 import React from "react";
 import { getConferenceSchedule, getConferenceSettings } from "./actions/timeline";
 
@@ -92,9 +89,8 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Navbar */}
-      <header className="bg-white py-1 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
+      {/* <header className="bg-white py-1 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto  max-w-5xl md:px-8 flex justify-between items-center">
-          {/* <h1 className="text-2xl font-bold">ACGC</h1> */}
           <Image src="/images/4dx/logo.png" width={400} height={400} alt="ACGC" className="w-16 h-auto object-cover rounded-xl" />
           <nav className="flex items-center gap-2">
             {
@@ -113,92 +109,13 @@ export default function Home() {
             }
           </nav>
         </div>
-      </header>
+      </header> */}
 
       {/* Hero Section */}
-      <section id={"about"} className="text-white h-fit w-full relative"
-        style={{ backgroundImage: "url('/images/4dx/parttern_1.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
-      >
-        <div className="max-w-5xl flex flex-col gap-6 mx-auto p-4">
-          {/* Header Section */}
-          {/* <header className="flex items-center py-4">
-            <div className="flex flex-wrap items-center md:px-8">
-            </div>
-          </header> */}
-          {/* Conference Title */}
-          <section className="flex flex-col items-center  flex-wrap w-full rounded-lg mb-1 px-4">
-            {/* <Image
-              src={"/images/4dx/logo.png"}
-              alt="4dx Logo"
-              width={500}
-              height={500}
-              priority
-              className="w-20 h-auto object-cover"
-            /> */}
-            <Image
-              src={"/images/4dx/4dx_programme_logo.png"}
-              alt="4dx Programme Logo"
-              width={800}
-              height={800}
-              priority
-              className="w-96 h-auto object-cover"
-            />
 
-            {/* <Image
-              src="/images/ACGC_bg_2024.png"
-              // width={400} height={400}
-              alt="ACGC Logo"
-              fill
-              className="w-full h-[400px] object-cover z-0" /> */}
-            {/* <div className="grid grid-cols-1 gap-0 space-y-0 w-fit md:px-9">
-              <h2 className="bg-primary-main col-span-2 px-2 w-fit leading-relaxed font-extrabold text-2xl md:text-5xl">
-                6th Annual
-              </h2> <br />
-              <h2 className="w-fit text-left px-2 leading-relaxed bg-primary-main font-extrabold text-2xl md:text-5xl">
-                ACGC Conference
-              </h2>
-            </div> */}
-            {/* <div className="w-full flex flex-wrap md:flex-nowrap justify-between gap-8">
-              <div>
-                <Image src="/images/ACGC_text.png" width={400} height={400} alt="ACGC Logo" className="w-[500px] h-auto rounded-xl" />
-              </div>
-              <Separator orientation="vertical" className="bg-slate-900 h-72 mt-12 hidden md:flex" />
-              <Separator orientation="horizontal" className="bg-slate-900 w-full my-4 flex md:hidden" />
-              <div className="space-y-4 text-foreground">
-                <h2 className="text-xl md:text-3xl font-extrabold">9th - 11th October, 2024</h2>
-                <div className="py-2 gap-1.5 flex flex-col w-fit">
-                  {
-                    ["Labadi Beach Hotel,", "1 Labadi By-Pass,", "Accra, Ghana."].map((line, index) => (
-                      <p key={index} className="text-2xl md:text-3xl leading-loose text-left font-thin">{line}</p>
-                    ))
-                  }
-                </div>
-                <div className="pt-2 grid gap-1">
-                  <HashTags tags={hashTags} />
-                </div>
-              </div>
-            </div> */}
-            {/* <div className="bg-primary-main flex rounded-bl-xl text-white top-0 right-0 h-64 w-6 md:w-16 absolute items-center justify-center">
-              <p className="transform -rotate-90 text-sm md:text-xl whitespace-nowrap font-bold">
-                Conference Programme
-              </p>
-            </div> */}
-          </section>
-          {/* about us description */}
-          {/* <AboutDescription aboutSection={pageContent?.aboutSection || ''} /> */}
-          {/* social media */}
-          {/* <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 py-4 md:px-8">
-            {
-              textIconData.map((social, index) => (
-                <TextIcon key={index} text={social?.text} icon={social?.icon} />
-              ))
-            }
-          </div> */}
-        </div>
-      </section>
 
       {/* Program Section */}
-      <section id="programme" className="py-20 md:min-h-[10dvh] md:mx-40">
+      <section id="programme" className="py-8 md:min-h-[10dvh] md:mx-40">
         <h1 className="text-center flex items-center justify-center text-secondary-main leading-normal tracking-tight text-4xl font-extrabold mb-8">
           <CalendarDaysIcon className="w-8 h-8 mr-4" />
           Program Outline

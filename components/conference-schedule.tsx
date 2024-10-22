@@ -61,7 +61,7 @@ export function ConferenceSchedule(
 //   )
 // }
 
-function TimelineItem({ time, isFirst, title, description, speakers }: TimelineItemProps) {
+function TimelineItem({ time, isFirst, title, sectionTitle, description, speakers }: TimelineItemProps) {
   return (
     // (trackLabel || icon || title) && 
     // <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white',
@@ -115,6 +115,7 @@ function TimelineItem({ time, isFirst, title, description, speakers }: TimelineI
           isFirst && <h2 className='text-sm font-extrabold text-secondary-main'>Activity</h2>
         }
         <h3 className='text-sm font-semibold text-secondary-main'>{title}</h3>
+        {sectionTitle && <h4 className={cn("text-sm tracking-widest font-mono py-1")}>{sectionTitle}</h4>}
         <p className='text-sm font-normal text-gray-600'>{description}</p>
         <SpeakerList speakers={speakers || []} title='Speaker' />
       </div>
