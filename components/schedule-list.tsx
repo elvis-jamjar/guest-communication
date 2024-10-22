@@ -41,7 +41,7 @@ export function ScheduleList(
                     }}
                     className="text-white font-semibold">3rd - 6th November</div>
             </div>
-            <div className="md:px-12 px-2 py-4">
+            <div className="md:p-16 p-4">
                 {
                     schedules.map((schedule, index) => {
                         return (
