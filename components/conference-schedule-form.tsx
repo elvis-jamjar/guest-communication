@@ -34,6 +34,39 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
       value={speaker.bio}
       onChange={(e) => onChange({ ...speaker, bio: e.target.value })}
     />
+    <div className='flex-col'>
+      {/* upload speaker image */}
+      <UploadDropzone
+        endpoint="imageUploader"
+        config={{
+          mode: "auto",
+          appendOnPaste: true
+        }}
+        onClientUploadComplete={(res) => {
+          // Do something with the response.
+          onChange({ ...speaker, photo: res[0]?.url })
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error?.message}`);
+        }}
+      />
+      <div className="flex items-center flex-col space-y-2 py-2 gap-2">
+        <div className="flex w-24 h-24 items-center gap-2">
+          {speaker?.photo && <Image src={speaker?.photo} alt={speaker?.name} width={100} height={100} className="rounded-full w-full h-full object-cover" />}
+        </div>
+        <Button size={"sm"} onClick={() => onChange({ ...speaker, photo: '' })}>Remove Image</Button>
+      </div>
+    </div>
+    {/* toggle to display speaker on page */}
+    <div className="flex items-center space-x-2">
+      <Switch
+        id="is-displayed"
+        checked={speaker?.visibleOnPage}
+        onCheckedChange={(checked) => onChange({ ...speaker, visibleOnPage: checked })}
+      />
+      <Label htmlFor="is-displayed">Display Speaker</Label>
+    </div>
     <Button variant="destructive" onClick={onRemove}>Remove Speaker</Button>
   </div>
 )
@@ -68,24 +101,26 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         </Select>
       </div>
 
-      <Input
-        placeholder="Section Title"
-        value={item.sectionTitle}
-        onChange={(e) => onChange({ ...item, sectionTitle: e.target.value })}
-      />
-      <Select
-        value={item?.color?.sectionTitle}
-        onValueChange={(value) => onChange({ ...item, color: { ...item?.color, sectionTitle: value as ColorType } })}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Section Title color" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-          <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
-          <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className='space-y-2 hidden'>
+        <Input
+          placeholder="Section Title"
+          value={item.sectionTitle}
+          onChange={(e) => onChange({ ...item, sectionTitle: e.target.value })}
+        />
+        <Select
+          value={item?.color?.sectionTitle}
+          onValueChange={(value) => onChange({ ...item, color: { ...item?.color, sectionTitle: value as ColorType } })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Section Title color" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+            <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+            <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <Input
         placeholder="Title"
         value={item.title}
@@ -589,7 +624,7 @@ export function ConferenceScheduleForm(
 }
 
 // list of conference schedule forms
-export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPageContentChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void }) {
+export function ConferenceScheduleForms({ schedules, onChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void }) {
   return (
     <div className="px-4 max-w-4xl mx-auto">
       <div className="px-8 py-4 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
@@ -600,7 +635,7 @@ export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPa
       </div>
       <div className="space-y-8">
         <Accordion type="single" collapsible>
-          {schedules.map((schedule, index) => (
+          {schedules?.map((schedule, index) => (
             <AccordionItem key={`day-key-${index}`} value={`${index}`} className='shadow-sm rounded-md hover:bg-primary-main/5 pr-4 my-4'>
               <AccordionTrigger className='cursor-pointer w-full decoration-transparent hover:decoration-transparent'>
                 <div className="flex items-center md:px-4 justify-between">
@@ -650,3 +685,98 @@ export function PageContentForm({ pageContent, onChange }: { pageContent: PageCo
     </div>
   )
 }
+
+// update speakers images and toggle whether to display them or not on the website
+// export function SpeakerImageUpdater(
+//   { schedules, onChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void }
+// ) {
+
+//   const [schedulesData, setSchedulesData] = useState<ConferenceScheduleProps[]>(schedules)
+//   if (!schedulesData) return null
+//   useEffect(() => {
+//     setSchedulesData(schedulesData)
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [schedules])
+//   // console.log(schedulesData)
+
+//   return (
+//     <div className="px-4 max-w-4xl mx-auto">
+//       <div className='grid grid-cols-1 gap-2'>
+//         {schedulesData?.map((schedule, sIndex, _shecdules) => (
+//           <div key={sIndex} className="space-y-4 p-4 border rounded-md h-fit">
+//             <h2 className="text-lg font-semibold">{schedule?.day}</h2>
+//             <div className="space-y-4">
+//               {schedule?.timeLineItems?.map((item, tInx, _timeLines) => (
+//                 <div key={tInx} className="space-y-4 p-4 grid grid-cols-3 rounded-md">
+//                   {/* <h3 className="text-md font-semibold">Timeline {tInx + 1}</h3>
+//                   <div className="space-y-4"> */}
+//                   {item?.speakers?.map((speaker, spIndex, _speakers) => (
+//                     <div key={spIndex} className="flex-col flex justify-center items-center space-y-2">
+//                       <h4 className="text-lg font-semibold">{speaker?.name?.replace(":", '')}</h4>
+//                       <div className="flex w-28 h-28 items-center justify-center space-x-4">
+//                         <Image
+//                           src={speaker?.photo || 'https://picsum.photos/id/237/200/300'}
+//                           alt={speaker?.name}
+//                           width={200}
+//                           height={200}
+//                           className="w-full h-full object-cover rounded-full"
+//                         />
+//                       </div>
+//                       <UploadButton
+//                         endpoint="imageUploader"
+//                         appearance={{
+//                           button: 'w-12 max-w-20 h-8 text-xs font-semibold rounded-md bg-primary-main text-white',
+//                         }}
+//                         config={{
+//                           mode: "auto",
+//                           appendOnPaste: true
+//                         }}
+//                         onClientUploadComplete={(res) => {
+//                           const urls = res.map((r) => r.url)
+//                           // Do something with the response.
+//                           // update the speaker data with the new image url
+//                           const newSpeakers = [..._speakers]
+//                           newSpeakers[spIndex] = { ...speaker, photo: urls[0] }
+//                           const _newTimeLines = [..._timeLines]
+//                           // update speakers in timeline
+//                           _newTimeLines[tInx] = { ...item, speakers: newSpeakers }
+//                           // update the schedule with the new timeline
+//                           const newSchedules = [..._shecdules]
+//                           newSchedules[sIndex] = { ...schedule, timeLineItems: _newTimeLines }
+//                           onChange({ ...newSchedules })
+//                         }}
+//                         onUploadError={(error: Error) => {
+//                           // Do something with the error.
+//                           alert(`ERROR! ${error?.message}`);
+//                         }}
+//                       />
+//                       <div className="flex items-center space-x-4">
+//                         <Switch
+//                           id="show-speaker"
+//                           checked={speaker?.visibleOnPage}
+//                           onCheckedChange={(checked) => {
+//                             const newSpeakers = [..._speakers]
+//                             newSpeakers[spIndex] = { ...speaker, visibleOnPage: checked }
+//                             const _newTimeLines = [..._timeLines]
+//                             // update speakers in timeline
+//                             _newTimeLines[tInx] = { ...item, speakers: newSpeakers }
+//                             // update the schedule with the new timeline
+//                             const newSchedules = [..._shecdules]
+//                             newSchedules[sIndex] = { ...schedule, timeLineItems: _newTimeLines }
+//                             onChange({ ...newSchedules })
+//                           }}
+//                         />
+//                         <Label htmlFor="show-speaker">Display</Label>
+//                       </div>
+//                     </div>
+//                   ))}
+//                   {/* </div> */}
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   )
+// }

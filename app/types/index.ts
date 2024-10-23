@@ -3,6 +3,7 @@ export interface Speaker {
   title?: string;
   bio: string;
   photo?: string;
+  visibleOnPage?: boolean;
 }
 
 export type ColorType =

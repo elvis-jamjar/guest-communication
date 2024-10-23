@@ -9,6 +9,10 @@ const nextConfig = {
         hostname: "utfs.io",
         protocol: "https",
       },
+      {
+        hostname: "picsum.photos",
+        protocol: "https",
+      },
     ],
   },
 };

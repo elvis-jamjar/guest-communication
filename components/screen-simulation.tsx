@@ -1,4 +1,4 @@
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { useState } from 'react';
 
 interface ScreenProps {
@@ -46,25 +46,25 @@ interface ScreenSimulatorProps {
     desktopSecondContent?: React.ReactNode
 }
 
-export function ScreenSimulator({ desktopContent }: ScreenSimulatorProps) {
+export function ScreenSimulator({ desktopContent, desktopSecondContent }: ScreenSimulatorProps) {
     const [activeTab, setActiveTab] = useState("desktop")
 
     return (
         <div className="w-full max-w-4xl mx-auto p-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                {/* <TabsList className="grid w-full grid-cols-3 mb-1">
-                    <TabsTrigger value="mobile">Mobile</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 mb-1">
+                    {/* <TabsTrigger value="mobile">Mobile</TabsTrigger> */}
                     <TabsTrigger value="desktop">Preview</TabsTrigger>
-                    <TabsTrigger value="tablet">Form</TabsTrigger>
-                </TabsList> */}
+                    <TabsTrigger value="tablet">Speakers</TabsTrigger>
+                </TabsList>
                 <div className="flex justify-center items-center bg-gray-50 rounded-lg p-2">
                     {/* <TabsContent value="mobile" className="mt-0">
             <MobileScreen>{mobileContent}</MobileScreen>
           </TabsContent> */}
-                    {/* <TabsContent value="tablet" className="mt-0">
-                        <TabletScreen>{tabletContent}</TabletScreen>
+                    <TabsContent value="tablet" className="mt-0">
+                        {/* <TabletScreen>{tabletContent}</TabletScreen> */}
                         <DesktopScreen>{desktopSecondContent}</DesktopScreen>
-                    </TabsContent> */}
+                    </TabsContent>
                     <TabsContent value="desktop" className="mt-0">
                         <DesktopScreen>{desktopContent}</DesktopScreen>
                     </TabsContent>

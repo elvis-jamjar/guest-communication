@@ -8,7 +8,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Save } from "lucide-react";
 import { useEffect, useState } from "react";
-import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
+import {
+    createConferenceSchedules,
+    getConferenceSchedule,
+    getConferenceSettings,
+    getPageContent,
+} from "../../actions/timeline";
 import { ConferenceScheduleProps, PageContent } from "../../types";
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
@@ -21,12 +26,12 @@ export default function Home() {
         queryFn: async () => await getConferenceSchedule(),
         staleTime: 1000 * 60 * 10 // 
     });
-    const { data: settings, refetch: refetchSettings } = useQuery({
+    const { data: settings } = useQuery({
         queryKey: ['conference-settings'],
         queryFn: async () => await getConferenceSettings(),
         staleTime: 1000 * 60 * 10 // 
     });
-    const { data: remotePageContent, refetch: refetchPageContent } = useQuery({
+    const { data: remotePageContent } = useQuery({
         queryKey: ['page-content'],
         queryFn: async () => await getPageContent(),
         staleTime: 1000 * 60 * 10 // 
@@ -40,18 +45,18 @@ export default function Home() {
             refetch();
         }
     });
-    const mutateSettings = useMutation({
-        mutationFn: createConferenceSettings,
-        onSuccess: () => {
-            refetchSettings();
-        }
-    });
-    const mutatePageContent = useMutation({
-        mutationFn: createPageContent,
-        onSuccess: () => {
-            refetchPageContent();
-        }
-    });
+    // const mutateSettings = useMutation({
+    //     mutationFn: createConferenceSettings,
+    //     onSuccess: () => {
+    //         refetchSettings();
+    //     }
+    // });
+    // const mutatePageContent = useMutation({
+    //     mutationFn: createPageContent,
+    //     onSuccess: () => {
+    //         refetchPageContent();
+    //     }
+    // });
     useEffect(() => {
         if (data) {
             // alert("Data fetched")
@@ -89,33 +94,33 @@ export default function Home() {
         }
     }
 
-    async function mutatePageContentData() {
-        try {
-            if (!pageContent) return;
-            await mutatePageContent.mutateAsync(pageContent)
-                .then(() => {
-                    alert("Page content saved successfully")
-                })
-                .catch((error) => {
-                    console.log(error);
-                    alert("Failed to save page content")
-                })
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // async function mutatePageContentData() {
+    //     try {
+    //         if (!pageContent) return;
+    //         await mutatePageContent.mutateAsync(pageContent)
+    //             .then(() => {
+    //                 alert("Page content saved successfully")
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //                 alert("Failed to save page content")
+    //             })
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
-    function toggleColumns() {
-        setColumns(columns === 2 ? 1 : 2);
-        mutateSettings.mutateAsync({ columns: columns === 2 ? 1 : 2 })
-            .then(() => {
-                // alert("Settings saved successfully")
-            })
-            .catch((error) => {
-                console.log(error);
-                // alert("Failed to save settings")
-            });
-    }
+    // function toggleColumns() {
+    //     setColumns(columns === 2 ? 1 : 2);
+    //     mutateSettings.mutateAsync({ columns: columns === 2 ? 1 : 2 })
+    //         .then(() => {
+    //             // alert("Settings saved successfully")
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //             // alert("Failed to save settings")
+    //         });
+    // }
 
     return (
         <ResizablePanelGroup
@@ -146,7 +151,9 @@ export default function Home() {
                     </div>
                     <ScreenSimulator
                         desktopContent={<ScheduleList schedules={schedules} />}
-                    // desktopSecondContent={<ScheduleList schedules={schedules} />}
+                    // desktopSecondContent={<SpeakerImageUpdater schedules={speakerSchedules} onChange={(val) => {
+                    //     setSpeakerSchedules(val);
+                    // }} />}
                     />
                 </div>
             </ResizablePanel>

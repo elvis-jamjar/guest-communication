@@ -46,12 +46,11 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
     return () => clearTimeout(timer)
   })
 
-  const timeComponents = Object.keys(timeLeft).map((interval) => {
+  const timeComponents = Object.keys(timeLeft)?.map((interval) => {
 
-    if (!timeLeft[interval as keyof typeof timeLeft]) {
-      return null
-    }
-
+    // if (!timeLeft[interval as keyof typeof timeLeft]) {
+    //   return null
+    // }
 
     return (
       <div key={interval} className="flex flex-col items-center">
@@ -63,7 +62,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
           {(timeLeft[interval as keyof typeof timeLeft] as any)?.toString()?.padStart(2, '0')}
         </h2>
         <span
-          className="uppercase text-primary-main mt-2 font-bold">
+          className="uppercase text-primary-main mt-2 font-normal">
           {/* {interval === 'hours' ? 'Hr' : interval.slice(0, 3)} {interval} */}
           {getLabel(interval, timeLeft[interval as keyof typeof timeLeft] as number)}
         </span>

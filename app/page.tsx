@@ -7,9 +7,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "lucide-react";
+import { Link, Users2 } from "lucide-react";
 import Image from "next/image";
-import { getConferenceSchedule, getConferenceSettings } from "./actions/timeline";
+import { getConferenceSchedule, getConferenceSettings, getSpeakers } from "./actions/timeline";
 
 // const textIconData = [
 //   {
@@ -47,6 +47,12 @@ export default function Home() {
     refetchInterval: 80000, // 1 minute 20 seconds
   });
 
+  const { data: speackers } = useQuery({
+    queryKey: ['speakers'],
+    queryFn: async () => await getSpeakers(),
+    refetchInterval: 80000, // 1 minute 20 seconds
+  });
+
 
   return (
     <>
@@ -66,7 +72,8 @@ export default function Home() {
             <div className="flex flex-wrap gap-2 h-full w-full justify-center items-center">
               <div className="flex md:w-fit w-full h-full items-center  p-0">
                 <Image
-                  src={"/images/4dx/4dx_programme_logo.png"}
+                  // src={"/images/4dx/4dx_programme_logo.png"}
+                  src={"/images/4dx/new/Stackedate_4DX Summit_Updated_LogoTransp.png"}
                   width={600}
                   height={600}
                   priority
@@ -159,6 +166,39 @@ export default function Home() {
             <ScheduleList schedules={data} columns={settings?.columns} />
           }
         </div>
+      </section>
+
+      <section>
+        <div className="container mx-auto">
+          <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
+          {/* speakers */}
+          <div className="col-span-1 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {
+                speackers?.map((speaker, index) => (
+                  <Card key={index} className="w-full h-full p-4">
+                    <CardContent className="flex flex-col items-center space-y-4">
+                      <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
+                        <Image
+                          src={speaker?.photo || ''}
+                          width={400}
+                          height={400}
+                          priority
+                          alt="speaker"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <h2 className="text-primary-main text-lg font-bold">{speaker?.name?.replace(':', '')}</h2>
+                      <p className="text-secondary-main text-sm">{speaker?.title}</p>
+                    </CardContent>
+                  </Card>
+                ))
+              }
+            </div>
+          </div>
+
+        </div>
+
       </section>
 
       {/* accommodation */}
@@ -339,14 +379,15 @@ export default function Home() {
 }
 
 
-function HeadingText({ text, icon, className }: { text: string, icon: string, className?: string }) {
+function HeadingText({ text, icon, iconNode, className }: { text: string, icon?: string, className?: string, iconNode?: React.ReactNode }) {
   return (
     <div
       style={{
         fontSize: "clamp(2.2rem, 3.5vw, 3.5rem)"
       }}
       className="flex text-secondary-main gap-4 items-center w-full justify-center mb-8">
-      <Image src={icon} width={100} height={100} alt="icon" className={cn("w-12 h-12 object-contain", className)} />
+      {icon && <Image src={icon} width={100} height={100} alt="icon" className={cn("w-12 h-12 object-contain", className)} />}
+      {iconNode && iconNode}
       <h1
         className="text-center items-center justify-center text-secondary-main font-extrabold ">
         {text}

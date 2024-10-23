@@ -3,6 +3,7 @@ import {
   ConferenceScheduleProps,
   PageContent,
   Settings,
+  Speaker,
   TimelineItemProps,
 } from "@/app/types";
 import { redis } from "@/lib/db";
@@ -55,6 +56,24 @@ export async function getConferenceSchedule(): Promise<
     console.log("Error fetchign schedules", error);
     throw Error("Failed to fetch schedules");
   }
+}
+
+// get all speakers from timeline items
+export async function getSpeakers(): Promise<Speaker[]> {
+  const items = await getConferenceSchedule(); // get all
+  const speakers: Speaker[] = [];
+  items.forEach((item) => {
+    if (item.timeLineItems) {
+      item?.timeLineItems?.forEach((t) => {
+        if (t.speakers) {
+          t.speakers.forEach((s) => {
+            speakers.push(s);
+          });
+        }
+      });
+    }
+  });
+  return speakers;
 }
 
 export async function getTimelineItems(): Promise<TimelineItemProps[]> {
