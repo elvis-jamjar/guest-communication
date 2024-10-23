@@ -77,17 +77,17 @@ function TimelineItem({ time, isFirst, isTrack, title, sectionTitle, description
           isFirst && <h2 className='text-secondary-main hidden md:block'>Activity</h2>
         }
         {
-          title && <ul className={cn("list-none list-outside", isTrack && 'list-disc')}>
+          title && <ul className={cn("list-none list-outside", isTrack && 'list-disc pl-6')}>
             <li className={cn(color?.title, fontWeights?.title)}>
               {title}
             </li>
           </ul>
         }
-        <div className='flex-col space-y-2'>
+        <div className={cn('flex-col space-y-2', isTrack && "pl-6")}>
           {sectionTitle && <p className={cn("font-mono", color?.sectionTitle)}>
             {sectionTitle}
           </p>}
-          {description && <p className={cn(color?.description, fontWeights?.description)}>{description}</p>}
+          {description && <p className={cn(color?.description, fontWeights?.description,)}>{description}</p>}
           <SpeakerList speakers={speakers || []} title='Speaker' />
         </div>
       </div>

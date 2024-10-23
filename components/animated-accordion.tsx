@@ -35,7 +35,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
             {items.map((item, index, arr) => (
                 <div key={index} className={cn("border-2 border-x-[0.0px] border-t-0 border-primary-main rounded-b-3xl overflow-hidden", ((arr?.length - 1) == index) && 'border-0 border-transparent')}>
                     <motion.button
-                        className="flex justify-between items-center w-full px-4 py-4 text-left bg-white hover:bg-gray-50 focus:outline-none"
+                        className="flex justify-between items-center w-full px-4 md:px-8 py-4 text-left bg-white hover:bg-secondary-main/10 focus:outline-none"
                         onClick={() => toggleItem(index)}
                         initial={false}
                         aria-expanded={expandedIndex === index}
@@ -47,7 +47,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                             animate={{ rotate: expandedIndex === index ? 180 : 0 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <ChevronDown className="w-5 h-5 text-gray-500" aria-hidden="true" />
+                            <ChevronDown className="w-8 h-8 text-secondary-main" aria-hidden="true" />
                         </motion.span>
                     </motion.button>
                     <AnimatePresence initial={false}>
@@ -58,11 +58,11 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                                 animate="expanded"
                                 exit="collapsed"
                                 variants={{
-                                    expanded: { opacity: 1, maxHeight: isMobile ? "4000px" : "200dvh" },
+                                    expanded: { opacity: 1, maxHeight: isMobile ? "5000px" : "200dvh" },
                                     collapsed: { opacity: 0, maxHeight: "0px" }
                                 }}
                                 transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                                className="overflow-auto"
+                                className="overflow-hidden"
                             >
                                 {/* <div className="px-4 py-3 text-gray-700 bg-gray-50 h-[200px] overflow-y-auto">
                                     x

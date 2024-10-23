@@ -57,7 +57,7 @@ export default function Home() {
   return (
     <>
       <section
-        className="text-white bg-center bg-cover bg-repeat w-full h-screen flex items-center justify-center relative"
+        className="text-white bg-center md:p-0 p-2 bg-cover bg-repeat w-full h-screen flex items-center justify-center relative"
         style={{
           backgroundImage: "url('/images/4dx/background.png')",
           backgroundSize: '97%'
@@ -67,47 +67,36 @@ export default function Home() {
           style={{
             boxShadow: "0px 0px 10px rgb(177, 177, 177)",
           }}
-          className="md:w-[60.5%] w-full md:h-[440px] h-fit md:p-12 p-4  shadow-2xl rounded-[1.8rem] border-none">
-          <CardContent className="p-0 flex justify-center">
-            <div className="flex flex-wrap gap-2 h-full w-full justify-center items-center">
-              <div className="flex md:w-fit w-full h-full items-center  p-0">
+          className="md:w-[60.5%] m-2 md:mx-auto w-full md:h-fit lg:h-[440px] h-fit md:p-12 p-4 shadow-2xl rounded-[1.8rem] border-none">
+          <CardContent className="p-0 flex justify-center py-0 px-0">
+            <div className="flex flex-wrap w-full h-full">
+              <div className="flex flex-1 min-w-[200px] h-full w-full md:col-span-2 flex-col justify-center  items-center">
                 <Image
-                  // src={"/images/4dx/4dx_programme_logo.png"}
-                  src={"/images/4dx/new/Stackedate_4DX Summit_Updated_LogoTransp.png"}
+                  src={"/images/4dx/new/stacked w venue_4dx summit logo.png"}
                   width={600}
                   height={600}
                   priority
                   alt="4dx"
-                  className="w-[360px] h-[270px] object-contain"
+                  className="md:size-80 size-60 object-contain"
                 />
               </div>
-              <div className="w-full h-12  md:w-12 md:h-80 md:py-4 flex justify-center">
+              <div className="w-full col-span-1 md:w-4 md:h-80 md:py-4 flex justify-center">
                 <Separator orientation="vertical" className="h-full hidden md:block" />
                 <Separator orientation="horizontal" className="w-full md:hidden" />
               </div>
-              <div className="flex-col p-2 md:max-w-[360px] leading-tight justify-center flex space-y-4 items-center">
-                <div
-                  style={{
-                    fontSize: "clamp(.8rem, 1.25vw, 2rem)",
-                    fontWeight: 400,
-                    lineHeight: "1.7"
-                  }}
-                  className="max-w-[19rem] md:line-clamp-3"
-                >
-                  <h2
-                    className="text-center text-lg">
-                    Welcome to the 4DX CEO Summit,<br />
-                    an exclusive annual event hosted <br />
+              <div className="flex-col w-full h-full p-0 flex-1 leading-tight justify-center flex items-center">
+                <div className="p-5 flex justify-center items-center w-full">
+                  <span
+                    className="p-2 text-center tracking-tight text-pretty text-lg">
+                    Welcome to the 4DX CEO Summit,
+                    an exclusive annual event hosted
                     by 4DX Ventures.
-                  </h2>
+                  </span>
                 </div>
-                <h2
-                  // style={{
-                  //   fontSize: "clamp(.7rem, 1.3vw, 2rem)"
-                  // }}
-                  className="text-secondary-main tracking-tight text-lg font-bold">Click below to complete your registration</h2>
+                <p
+                  className="text-secondary-main text-center text-lg font-medium">Click below to complete your registration</p>
 
-                <div className="flex flex-col items-center py-4 space-y-5 md:px-16">
+                <div className="flex flex-col items-center py-6 space-y-5 md:px-16">
                   <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full">
                     <Button
                       style={{
@@ -168,7 +157,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section>
+      <section className="hidden">
         <div className="container mx-auto">
           <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
           {/* speakers */}
@@ -217,12 +206,16 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="flex flex-col gap-4 text-lg space-y-5">
               <h1 className="text-primary-main font-extrabold text-4xl py-4">Protea Hotel:The Wanderers</h1>
-              <p>
-                Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.<br /><br />
+              <div className="flex flex-col gap-4 text-pretty tracking-wide text-lg">
+                <p>
+                  Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.
+                </p>
+                <p>
+                  Preferred rates have been negotiated specifically for our group at <strong className="font-bold text-secondary-main">$97 per night</strong> . We highly recommend you book your room as soon as you can.
+                </p>
+              </div>
 
-                Preferred rates have been negotiated specifically for our group at <br /> <strong className="font-bold text-secondary-main">$97 per night</strong> . We highly recommend you book your room as soon as you can.
-              </p>
-              <div className="flex gap-0 items-end">
+              <div className="flex gap-1 md:items-end items-start">
                 <Image src="/images/4dx/location.png" width={100} height={100} alt="phone" className="w-8 h-8 mb-1 object-contain" />
                 <p>Corner Corlette Drive and Rudd Road, Illovo, South Africa, 2196.</p>
               </div>
@@ -234,7 +227,7 @@ export default function Home() {
                 height={900}
                 priority
                 alt="4dx"
-                className="md:w-72 w-full h-auto object-cover"
+                className="md:size-64 size-40 object-cover"
               />
             </div>
             <div className="w-fit pt-8 md:col-span-2">
@@ -261,12 +254,11 @@ export default function Home() {
             Airlines, Egypt Airlines, Kenya Airways or South African Airlines for the most direct routes. When booking your flight, use the details
             below for a seamless trip.
           </p>
-
           <div className=" ring-primary-main flex-col space-y-8 ring-1 p-10 rounded-3xl">
             <h1 className="text-primary-main text-xl md:text-3xl text-center items-center justify-center font-extrabold ">
               O.R. TAMBO International Airport, Johannesburg, South Africa.
             </h1>
-            <div className="flex gap-8 items-center flex-wrap px-4 justify-center">
+            <div className="flex gap-8 items-center text-center flex-wrap flex-col md:flex-row px-4 justify-center">
               <Image src="/images/4dx/icon_landing.png" width={100} height={100} alt="landing" className="w-8 h-8 object-contain" />
               <span>Arrive on Sunday 3rd November</span>
               <Separator orientation="horizontal" className="w-16" />
@@ -349,8 +341,8 @@ export default function Home() {
       {/* complete your registration */}
       <section className="py-12 ">
         <div className="container mx-auto">
-          <div className="flex justify-center md:justify-between  md:px-20 md:gap-16 gap-5 items-center w-full md:w-full md:flex-nowrap flex-wrap">
-            <h2 className="md:text-3xl text-xl text-center md:text-start font-semibold flex-1 text-secondary-main">Complete your registration</h2>
+          <div className="flex flex-col md:flex-row justify-center md:justify-between px-4 md:px-20 md:gap-16 gap-5 items-center w-full flex-wrap">
+            <p className="text-xl text-center md:text-start font-medium flex-1 text-secondary-main">Complete your registration</p>
             <div className="flex flex-wrap md:flex-nowrap justify-start items-center flex-1 md:space-x-16 gap-4 h-fit">
               <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full md:w-fit">
                 <Button
