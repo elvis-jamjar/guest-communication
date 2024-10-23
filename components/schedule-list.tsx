@@ -58,7 +58,7 @@ export function ScheduleList(
                                     </p>
                                 </div>,
                                 children: <div key={"main-" + index} className="flex flex-wrap md:flex-nowrap relative gap-4 ">
-                                    <div className="md:max-w-20 w-full md:invisible hidden">
+                                    <div className="md:max-w-20 w-full hidden md:invisible md:grid">
                                         <h2 className={cn("text-2xl font-bold text-primary-main", schedule?.color?.day)}>
                                             {schedule?.day}
                                         </h2>
@@ -67,7 +67,7 @@ export function ScheduleList(
                                         </p>
                                     </div>
                                     <div
-                                        className="flex-grow text-lg font-thin leading-snug tracking-tight text-balance md:p-8">
+                                        className="flex-grow text-lg font-thin leading-snug tracking-tight text-balance md:p-8 md:px-14">
                                         <ConferenceSchedule
                                             {...schedule}
                                         />
