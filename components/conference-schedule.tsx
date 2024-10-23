@@ -56,7 +56,7 @@ export function ConferenceSchedule(
 //   )
 // }
 
-function TimelineItem({ time, isFirst, isTrack, title, sectionTitle, description, speakers, color, fontWeights }: TimelineItemProps) {
+function TimelineItem({ time, isFirst, isTrack, moderators, title, sectionTitle, description, speakers, color, fontWeights }: TimelineItemProps) {
   return (
     <div className='grid md:grid-cols-7 grid-cols-1 relative text-pretty'>
       <div className={cn("flex-1 w-px left-2 bg-secondary-main  z-auto absolute h-full top-5 bottom-0")}></div>
@@ -89,6 +89,7 @@ function TimelineItem({ time, isFirst, isTrack, title, sectionTitle, description
           </p>}
           {description && <p className={cn(color?.description, fontWeights?.description,)}>{description}</p>}
           <SpeakerList speakers={speakers || []} title='Speaker' />
+          <SpeakerList speakers={moderators || []} title='' />
         </div>
       </div>
     </div>
