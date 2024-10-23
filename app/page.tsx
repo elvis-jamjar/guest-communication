@@ -31,7 +31,7 @@ import { getConferenceSchedule, getConferenceSettings, getSpeakers } from "./act
 //   }
 // ]
 
-const sections = ["about", "programme"];
+// const sections = ["about", "programme"];
 // #ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica
 // const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
 // const INTERVAL = 60000; // 1 minute
@@ -50,7 +50,7 @@ export default function Home() {
   const { data: speackers } = useQuery({
     queryKey: ['speakers'],
     queryFn: async () => await getSpeakers(),
-    refetchInterval: 80000, // 1 minute 20 seconds
+    refetchInterval: 90000, // 1 minute 20 seconds
   });
 
 
@@ -205,7 +205,7 @@ export default function Home() {
           <HeadingText text="Accommodation" icon="/images/4dx/accomodation_icon.png" className="w-14 h-12" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="flex flex-col gap-4 text-lg space-y-5">
-              <h1 className="text-primary-main font-extrabold text-4xl py-4">Protea Hotel:The Wanderers</h1>
+              <h1 className="text-primary-main text-center font-extrabold text-4xl py-4">Protea Hotel:The Wanderers</h1>
               <div className="flex flex-col gap-4 text-pretty tracking-wide text-lg">
                 <p>
                   Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.
@@ -230,7 +230,7 @@ export default function Home() {
                 className="md:size-64 size-40 object-cover"
               />
             </div>
-            <div className="w-fit pt-8 md:col-span-2">
+            <div className="w-fit pt-8 md:col-span-2 mx-auto md:mx-0">
               <a target="_blank" href="https://www.marriott.com/event-reservations/reservation-link.mi?id=1708326594696&key=GRP&app=resvlink" className="w-full">
                 <Button
                   style={{
