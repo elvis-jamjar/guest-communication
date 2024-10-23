@@ -61,13 +61,12 @@ export default function Home() {
         style={{
           backgroundImage: "url('/images/4dx/background.png')",
           backgroundSize: '97%'
-        }}
-      >
+        }}>
         <Card
           style={{
             boxShadow: "0px 0px 10px rgb(177, 177, 177)",
           }}
-          className="md:w-[60.5%] m-2 md:mx-auto w-full md:h-fit lg:h-[440px] h-fit md:p-12 p-4 shadow-2xl rounded-[1.8rem] border-none">
+          className="md:w-[60.5%] m-2 md:mx-auto w-full md:h-fit lg:h-[440px] h-fit md:p-12 p-4 py-20 md:py-12 shadow-2xl rounded-[1.8rem] border-none">
           <CardContent className="p-0 flex justify-center py-0 px-0">
             <div className="flex flex-wrap w-full h-full">
               <div className="flex flex-1 min-w-[200px] h-full w-full md:col-span-2 flex-col justify-center  items-center">
