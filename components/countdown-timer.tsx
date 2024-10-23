@@ -24,7 +24,20 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
 
     return timeLeft
   }
-
+  function getLabel(interval: string, value: number) {
+    switch (interval) {
+      case 'days':
+        return value === 1 ? 'day' : 'days'
+      case 'hours':
+        return value === 1 ? 'hr' : 'hrs'
+      case 'minutes':
+        return value === 1 ? 'min' : 'mins'
+      case 'seconds':
+        return value === 1 ? 'sec' : 'secs'
+      default:
+        return ''
+    }
+  }
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft())
@@ -34,22 +47,25 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
   })
 
   const timeComponents = Object.keys(timeLeft).map((interval) => {
+
     if (!timeLeft[interval as keyof typeof timeLeft]) {
       return null
     }
 
+
     return (
       <div key={interval} className="flex flex-col items-center">
-        <span
+        <h2
           style={{
             fontSize: 'clamp(2.5rem,5vw,5.5rem)'
           }}
           className="font-bold text-[#762877]">
           {(timeLeft[interval as keyof typeof timeLeft] as any)?.toString()?.padStart(2, '0')}
-        </span>
+        </h2>
         <span
-          className="uppercase text-primary-main font-semibold mt-2">
-          {interval === 'hours' ? 'Hrs' : interval.slice(0, 3)}
+          className="uppercase text-primary-main mt-2 font-bold">
+          {/* {interval === 'hours' ? 'Hr' : interval.slice(0, 3)} {interval} */}
+          {getLabel(interval, timeLeft[interval as keyof typeof timeLeft] as number)}
         </span>
       </div>
     )
@@ -66,7 +82,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
 
 export function CountdownTimer() {
   // Set the target date to 12 days from now
-  const targetDate = new Date(Date.now() + 12 * 24 * 60 * 60 * 1000)
+  const targetDate = new Date("2024-11-03T17:00:00")
 
   return <Countdown targetDate={targetDate} />
 }

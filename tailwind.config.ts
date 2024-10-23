@@ -11,14 +11,21 @@ const config: Config = withUt({
   ],
   theme: {
     extend: {
-      fontFamily(utils) {
-        return {
-          sans: ["satoshi-medium", "satoshi-light", "satoshi-black"],
-          mono: ["satoshi-medium", "satoshi-black"],
-          display: ["satoshi-medium", "satoshi-black"],
-          body: ["satoshi-light", "satoshi-black"],
-        };
+      fontFamily: {
+        // apply Roboto, Roboto-Medium, Roboto-Bold, Roboto-Black
+        sans: ["Roboto", "sans-serif"],
+        mono: ["Roboto-Mono", "monospace"],
+        thin: ["Roboto", "sans-serif"],
+        extralight: ["Roboto", "sans-serif"],
+        light: ["Roboto", "sans-serif"],
+        normal: ["Roboto", "sans-serif"],
+        medium: ["Roboto-Medium", "sans-serif"],
+        semibold: ["Roboto-Medium", "sans-serif"],
+        bold: ["Roboto-Bold", "sans-serif"],
+        extrabold: ["Roboto-Bold", "sans-serif"],
+        black: ["Roboto-Black", "sans-serif"],
       },
+      // apply Roboto, Roboto-Medium, Roboto-Bold to font weights
       space: {
         mainspacing: "120px",
         sectionspacing: "60px",

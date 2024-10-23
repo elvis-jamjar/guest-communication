@@ -1,6 +1,6 @@
 'use client'
 
-import { ColorType, ConferenceScheduleProps, PageContent, Speaker, TimelineItemProps } from '@/app/types'
+import { ColorType, ConferenceScheduleProps, FontWeight, PageContent, Speaker, TimelineItemProps } from '@/app/types'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -63,6 +63,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <SelectContent>
             <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
             <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+            <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -82,6 +83,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         <SelectContent>
           <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
           <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+          <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
         </SelectContent>
       </Select>
       <Input
@@ -99,6 +101,22 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         <SelectContent>
           <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
           <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+          <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
+        </SelectContent>
+      </Select>
+      <Select
+        value={item?.fontWeights?.title}
+        onValueChange={(value) => onChange({ ...item, fontWeights: { ...item.fontWeights, title: value as FontWeight } })}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Title font weight" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="font-mono" className='border-l-2 font-mono'>Mono</SelectItem>
+          <SelectItem value="font-thin" className='border-l-2 my-1 font-thin'>Thin</SelectItem>
+          <SelectItem value="font-normal" className='border-l-2 my-1 font-normal'>Normal</SelectItem>
+          <SelectItem value="font-medium" className='border-l-2 my-1 font-medium'>Medium</SelectItem>
+          <SelectItem value="font-bold" className='border-l-2 my-1 font-bold'>Bold</SelectItem>
         </SelectContent>
       </Select>
       <Textarea
@@ -106,6 +124,21 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         value={item.description}
         onChange={(e) => onChange({ ...item, description: e.target.value })}
       />
+      <Select
+        value={item?.fontWeights?.description}
+        onValueChange={(value) => onChange({ ...item, fontWeights: { ...item.fontWeights, description: value as FontWeight } })}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Description font weight" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="font-mono" className='border-l-2 font-mono'>Mono</SelectItem>
+          <SelectItem value="font-thin" className='border-l-2 my-1 font-thin'>Thin</SelectItem>
+          <SelectItem value="font-normal" className='border-l-2 my-1 font-normal'>Normal</SelectItem>
+          <SelectItem value="font-medium" className='border-l-2 my-1 font-medium'>Medium</SelectItem>
+          <SelectItem value="font-bold" className='border-l-2 my-1 font-bold'>Bold</SelectItem>
+        </SelectContent>
+      </Select>
 
       <div className="flex items-center space-x-2">
         <Switch
@@ -114,7 +147,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           onCheckedChange={(checked) => onChange({ ...item, isTrack: checked })}
         />
         <Label htmlFor="is-track">
-          No icon, Track Label
+          Bullet Point
         </Label>
       </div>
       {
@@ -132,7 +165,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
               <SelectValue placeholder="Select Icon" />
             </SelectTrigger>
             <SelectContent>
-              {Object.keys(icons).map((icon) => (
+              {Object.keys(icons)?.map((icon) => (
                 <SelectItem key={icon} value={icon}>
                   <div className='flex items-center gap-1'>
                     {icons[icon as keyof typeof icons]}
@@ -145,8 +178,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
       }
       <Select
         value={item?.iconColor}
-        onValueChange={(value) => onChange({ ...item, iconColor: value as "bg-secondary-main" | "bg-primary-main" })}
-      >
+        onValueChange={(value) => onChange({ ...item, iconColor: value as "bg-secondary-main" | "bg-primary-main" })}>
         <SelectTrigger>
           <SelectValue placeholder="Track & Icon color" />
         </SelectTrigger>
@@ -489,8 +521,7 @@ export function ConferenceScheduleForm(
           {/* color */}
           <Select
             value={schedule?.color?.dayTitle}
-            onValueChange={(value) => setSchedule({ ...schedule, color: { ...schedule.color, dayTitle: value as ColorType } })}
-          >
+            onValueChange={(value) => setSchedule({ ...schedule, color: { ...schedule.color, dayTitle: value as ColorType } })}>
             <SelectTrigger>
               <SelectValue placeholder="Title color" />
             </SelectTrigger>
@@ -599,10 +630,10 @@ export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPa
           ))}
         </Accordion>
       </div>
-      <PageContentForm
+      {/* <PageContentForm
         pageContent={pageContent}
         onChange={onPageContentChange}
-      />
+      /> */}
     </div>
   )
 }

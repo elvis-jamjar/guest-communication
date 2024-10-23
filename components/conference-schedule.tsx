@@ -1,4 +1,4 @@
-'use client';
+'use client';;
 import { ConferenceScheduleProps, Speaker, TimelineItemProps } from '@/app/types';
 import { cn } from '@/lib/utils';
 import {
@@ -30,15 +30,10 @@ export function ConferenceSchedule(
   { className, timeLineItems }: ConferenceScheduleProps & { columns?: number }
 ) {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  // check if timeLineItems items is more than 3 then split it into two halves
-  // const firstHalf = timeLineItems?.length > 6 ? timeLineItems.slice(0, Math.ceil(timeLineItems.length / 2)) : timeLineItems;
-  // const secondHalf = timeLineItems?.length > 6 ? timeLineItems.slice(Math.ceil(timeLineItems.length / 2)) : [];
-
-
   return (
     <div
       ref={containerRef}
-      className={cn("md:p-8 py-4 mx-auto w-full", className)}>
+      className={cn("mx-auto w-full space-y-6", className)}>
       {timeLineItems?.map((item, index) => (
         <TimelineItem
           {...item}
@@ -61,63 +56,40 @@ export function ConferenceSchedule(
 //   )
 // }
 
-function TimelineItem({ time, isFirst, title, sectionTitle, description, speakers }: TimelineItemProps) {
+function TimelineItem({ time, isFirst, isTrack, title, sectionTitle, description, speakers, color, fontWeights }: TimelineItemProps) {
   return (
-    // (trackLabel || icon || title) && 
-    // <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white',
-    //   className)}>
-    //   <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
-    //     <div className={cn("text-white w-4 h-4 z-10 rounded-full flex p-2 mt-[3.8rem]", 'bg-secondary-main', iconColor)}>
-    //       {
-    //         !isTrack ? icons[icon as keyof typeof icons] : <div className='flex items-center gap-1'>
-    //           <div className='bg-white w-4 h-4 rounded-full'></div>
-    //           <h2 className="text-white text-sm font-bold">{trackLabel || 'Track 1'}</h2>
-    //         </div>
-    //       }
-    //     </div>
-    //     {!hideLine && <div className={cn("flex-1 w-px bg-gray-300 z-auto absolute h-full", isFirst && 'mt-24', isTrack && "left-[15.6px]")}></div>}
-    //   </div>
-    //   <div className={cn('ps-10 w-full')}>
-    //     {time && <p className={cn("text-xs font-bold whitespace-normal tracking-tight", isTrack && 'pb-2')}>{time}</p>}
-    //     {sectionTitle && <h4 className={cn("text-sm tracking-widest uppercase font-mono py-1", isTrack && "mt-12")}>{sectionTitle}</h4>}
-    //     <h3 className={cn("font-bold text-sm text-secondary-main py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
-    //     {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
-    //     {description && <p className="text-sm text-gray-600">{description}</p>}
-    //     {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' />}
-    //     {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' />}
-    //     {host && <SpeakerList speakers={[host]} title='Host' />}
-    //     {(Number(moderators?.length || 0) > 0) && <SpeakerList speakers={moderators || []} title='moderator' />}
-    //     {children}
-    //     {(bannerPosition === 'bottom') && <Banner banners={banners || []} />}
-    //     {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
-    //   </div>
-    //   {(Number(subItems?.length || 0) > 0) &&
-    //     subItems?.map((item, index) => (
-    //       <TimelineItem {...item} key={index} className={cn('p-0 md:p-0', item?.className)} />
-    //     ))
-    //   }
-    // </div>
-
-    <div className='grid md:grid-cols-7 grid-cols-1 relative gap-5 md:gap-0'>
+    <div className='grid md:grid-cols-7 grid-cols-1 relative text-pretty'>
       <div className={cn("flex-1 w-px left-2 bg-secondary-main z-auto absolute h-full top-auto bottom-0")}></div>
-      <div className={cn('col-span-1 w-4 h-4 flex rounded-full justify-center items-center bg-white z-10')}>
-        <div className={cn('w-2 h-2 rounded-full', isFirst ? 'bg-primary-main' : 'bg-secondary-main')}>
+      <div className={cn('col-span-1 w-4 h-4 flex rounded-full justify-center items-center bg-white z-10', isTrack && "bg-transparent")}>
+        <div className={cn('w-2 h-2 rounded-full', isFirst ? 'bg-primary-main' : 'bg-secondary-main', isTrack && "bg-transparent")}>
         </div>
       </div>
-      <div className='md:col-span-2 md:p-0 ps-5 flex md:flex-col gap-2 md:gap-0'>
+
+      <div className='md:col-span-2 md:p-0 ps-5 flex md:flex-col'>
         {
-          isFirst && <h2 className='text-sm font-extrabold text-secondary-main'>Time</h2>
+          isFirst && <h2 className='text-secondary-main'>Time</h2>
         }
-        <h3 className='text-sm font-normal text-secondary-main'>{time}</h3>
+        <p className={cn('text-secondary-main', color?.time, isTrack && "text-transparent")}>{time}</p>
       </div>
-      <div className='flex flex-col gap-4 md:gap-2 md:p-0 ps-5 md:col-span-4'>
+
+      <div className='flex flex-col md:p-0 ps-5 md:col-span-4'>
         {
-          isFirst && <h2 className='text-sm font-extrabold text-secondary-main'>Activity</h2>
+          isFirst && <h2 className='text-secondary-main'>Activity</h2>
         }
-        <h3 className='text-sm font-semibold text-secondary-main'>{title}</h3>
-        {sectionTitle && <h4 className={cn("text-sm tracking-widest font-mono py-1")}>{sectionTitle}</h4>}
-        <p className='text-sm font-normal text-gray-600'>{description}</p>
-        <SpeakerList speakers={speakers || []} title='Speaker' />
+        {
+          title && <ul className={cn("list-none list-outside", isTrack && 'list-disc')}>
+            <li className={cn(color?.title, fontWeights?.title)}>
+              {title}
+            </li>
+          </ul>
+        }
+        <div className='flex-col space-y-2'>
+          {sectionTitle && <p className={cn("font-mono", color?.sectionTitle)}>
+            {sectionTitle}
+          </p>}
+          {description && <p className={cn(color?.description, fontWeights?.description)}>{description}</p>}
+          <SpeakerList speakers={speakers || []} title='Speaker' />
+        </div>
       </div>
     </div>
   )
@@ -126,16 +98,24 @@ function TimelineItem({ time, isFirst, title, sectionTitle, description, speaker
 
 function SpeakerList({ speakers }: { speakers: Array<Speaker>, title: string }) {
   return (
-    <div className="space-y-2">
+    <div className="grid">
       {/* {(Number(speakers?.length || 0) > 0) && <h2 className="text-sm mt-5 font-semibold uppercase">
         {speakers?.length > 1 ? `${title?.toLowerCase()}s` : `${title?.toLowerCase()}`}
       </h2>} */}
-      {speakers.map((speaker, index) => (
-        <p key={index} className="text-xs text-secondary-main">
-          <span className="font-semibold">{speaker?.name}</span>{speaker?.name && ','}
-          {speaker?.title} <br />
-          {speaker?.bio}
-        </p>
+      {speakers.map((person, index) => (
+        <div key={index} className="text-secondary-main flex items-start">
+          <span>
+            {person?.name} {person?.title || ''} {person?.bio}
+          </span>
+          {/* <Avatar className="h-10 w-10 bg-secondary-main/5  rounded-full flex items-center justify-center">
+            <AvatarImage src={person?.photo} alt={person?.name} />
+            <AvatarFallback
+              className='font-[Roboto-Medium] text-secondary-main/50 text-md'>{person?.name.charAt(0)}</AvatarFallback>
+          </Avatar> */}
+          {/* <div>
+           
+          </div> */}
+        </div>
       ))}
     </div>
   )

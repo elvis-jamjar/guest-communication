@@ -1,6 +1,7 @@
 "use client";;
 import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
 import { ScheduleList } from "@/components/schedule-list";
+import { ScreenSimulator } from "@/components/screen-simulation";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -120,7 +121,7 @@ export default function Home() {
         <ResizablePanelGroup
             direction="horizontal"
             className="min-h-[200px] h-screen max-w-full rounded-lg border md:min-w-[450px]">
-            <ResizablePanel defaultSize={40} minSize={20}>
+            <ResizablePanel defaultSize={20} minSize={20}>
                 <ScrollArea className="h-[99dvh]">
                     <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules}
                         pageContent={pageContent || {}} onPageContentChange={setPageContent}
@@ -143,7 +144,10 @@ export default function Home() {
                             {mutate.isPending ? "Saving..." : "Save changes"}
                         </Button>
                     </div>
-                    <ScheduleList schedules={schedules} />
+                    <ScreenSimulator
+                        desktopContent={<ScheduleList schedules={schedules} />}
+                    // desktopSecondContent={<ScheduleList schedules={schedules} />}
+                    />
                 </div>
             </ResizablePanel>
         </ResizablePanelGroup>

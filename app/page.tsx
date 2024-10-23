@@ -51,60 +51,63 @@ export default function Home() {
   return (
     <>
       <section
-        className="text-white bg-center bg-contain w-full h-screen flex items-center justify-center relative"
+        className="text-white bg-center bg-cover bg-repeat w-full h-screen flex items-center justify-center relative"
         style={{
           backgroundImage: "url('/images/4dx/background.png')",
-          backgroundSize: '100%'
+          backgroundSize: '97%'
         }}
       >
         <Card
           style={{
             boxShadow: "0px 0px 10px rgb(177, 177, 177)",
           }}
-          className="md:py-[4.2rem] px-[1.6rem] shadow-inner rounded-[1.8rem] border-none">
-          <CardContent className="p-2">
-            <div className="flex flex-wrap gap-[3rem] justify-center items-center">
-              <div className="flex flex-1 items-center  p-6">
+          className="md:w-[60.5%] w-full md:h-[440px] h-fit md:p-12 p-4  shadow-2xl rounded-[1.8rem] border-none">
+          <CardContent className="p-0 flex justify-center">
+            <div className="flex flex-wrap gap-2 h-full w-full justify-center items-center">
+              <div className="flex md:w-fit w-full h-full items-center  p-0">
                 <Image
                   src={"/images/4dx/4dx_programme_logo.png"}
                   width={600}
                   height={600}
                   priority
                   alt="4dx"
-                  className="w-[300px] h-[300px] object-contain"
+                  className="w-[360px] h-[270px] object-contain"
                 />
               </div>
-              <Separator orientation="vertical" className="h-[16rem] ml-2 hidden md:block" />
-              <Separator orientation="horizontal" className="w-full md:hidden" />
-              <div className="flex-col leading-tight justify-center flex space-y-4 items-center px-2">
+              <div className="w-full h-12  md:w-12 md:h-80 md:py-4 flex justify-center">
+                <Separator orientation="vertical" className="h-full hidden md:block" />
+                <Separator orientation="horizontal" className="w-full md:hidden" />
+              </div>
+              <div className="flex-col p-2 md:max-w-[360px] leading-tight justify-center flex space-y-4 items-center">
                 <div
                   style={{
                     fontSize: "clamp(.8rem, 1.25vw, 2rem)",
                     fontWeight: 400,
                     lineHeight: "1.7"
                   }}
-                  className=" max-w-[19rem] line-clamp-3"
+                  className="max-w-[19rem] md:line-clamp-3"
                 >
-                  <h3
-                    className="text-center">
-                    Welcome to the 4DX CEO Summit,
-                    an exclusive annual event hosted,
+                  <h2
+                    className="text-center text-lg">
+                    Welcome to the 4DX CEO Summit,<br />
+                    an exclusive annual event hosted <br />
                     by 4DX Ventures.
-                  </h3>
+                  </h2>
                 </div>
                 <h2
-                  style={{
-                    fontSize: "clamp(.7rem, 1.3vw, 2rem)"
-                  }}
-                  className="text-secondary-main font-bold">Click below to complete your registration</h2>
-                <div className="flex flex-col items-center py-4 gap-4 px-12">
+                  // style={{
+                  //   fontSize: "clamp(.7rem, 1.3vw, 2rem)"
+                  // }}
+                  className="text-secondary-main tracking-tight text-lg font-bold">Click below to complete your registration</h2>
+
+                <div className="flex flex-col items-center py-4 space-y-5 md:px-16">
                   <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full">
                     <Button
                       style={{
                         fontSize: "clamp(.9rem, 1.2vw, 1.4rem)"
                       }}
                       variant={"outline"}
-                      className="p-7 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
+                      className="p-8 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
                     >Already in Johannesburg</Button>
                   </a>
                   <a target="_blank" href="https://4dxinternational2024.rsvpify.com/?securityToken=uzRWkiKf9IRQwWkcAocZirJoOQPIogHC" className="w-full">
@@ -113,7 +116,7 @@ export default function Home() {
                         fontSize: "clamp(.9rem, 1.2vw, 1.4rem)"
                       }}
                       variant={"outline"}
-                      className="p-7 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
+                      className="p-8 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
                     >Flying to Johannesburg</Button>
                   </a>
                 </div>
@@ -123,16 +126,14 @@ export default function Home() {
         </Card>
         <ArrowDownButton />
       </section>
-
       <section className="container flex flex-col gap-14 mx-auto py-10 mt-24">
-        <h2
+        <p
           style={{
-            fontWeight: 400,
-            fontSize: "clamp(1rem,1.7vw,2rem)"
+            fontSize: "clamp(1rem,1.7vw,2rem)",
           }}
           className="text-center">
           Join us for insightful discussions, networking opportunities, and strategic <br className="hidden md:block" /> collaborations shaping the future of technology and innovation across Africa.
-        </h2>
+        </p>
         <CountdownTimer />
       </section>
       {/* Program Section */}
@@ -284,8 +285,8 @@ export default function Home() {
 
       </section>
       {/* weather and what to pack */}
-      <section className="p-4 md:px-48 py-20 space-y-12">
-        <div className="container mx-auto space-y-6 text-lg py-10">
+      <section className="p-4 md:px-48 py-10 space-y-12">
+        <div className="container mx-auto space-y-6 text-lg py-5">
           <HeadingText text="Weather" icon="/images/4dx/weather_icon.png" />
           <p>
             The weather in South Africa in November sees a wide range of temperatures across the vast and varied landscape, transitioning into the warm early summer months. On average, the high temperatures range from 25°C to 30°C (77°F-86°F), with minimums dropping to 15°C-20°C (59°F-68°F) in the evening.
@@ -294,7 +295,7 @@ export default function Home() {
             This range indicates a warm climate throughout the country during this time.
           </p>
         </div>
-        <div className="container mx-auto text-lg space-y-5">
+        <div className="container mx-auto text-lg space-y-6">
           <HeadingText text="What to Pack" icon="/images/4dx/pack_icon.png" />
           <p>
             The weather in Johannesburg is getting warmer at this time of the year, please pack business casual outfits with breathable fabrics during the day.
@@ -304,30 +305,32 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <Separator orientation="horizontal" className="w-full bg-secondary-main" />
+      <Separator orientation="horizontal" className="w-full mt-20 bg-secondary-main" />
       {/* complete your registration */}
-      <section className="">
-        <div className="container mx-auto py-8 px-2">
-          <div className="flex justify-between items-center w-full md:w-full md:flex-nowrap flex-wrap gap-4">
-            <h2 className="text-2xl font-bold w-full text-secondary-main">Complete your registration</h2>
-            <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full">
-              <Button
-                style={{
-                  fontSize: "clamp(.9rem, 1.2vw, 1.4rem)"
-                }}
-                variant={"outline"}
-                className="p-7 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
-              >Already in Johannesburg</Button>
-            </a>
-            <a target="_blank" href="https://4dxinternational2024.rsvpify.com/?securityToken=uzRWkiKf9IRQwWkcAocZirJoOQPIogHC" className="w-full">
-              <Button
-                style={{
-                  fontSize: "clamp(.9rem, 1.2vw, 1.4rem)"
-                }}
-                variant={"outline"}
-                className="p-7 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
-              >Flying to Johannesburg</Button>
-            </a>
+      <section className="py-12 ">
+        <div className="container mx-auto">
+          <div className="flex justify-between md:px-20 md:gap-16 gap-5 items-center w-full md:w-full md:flex-nowrap flex-wrap">
+            <h2 className="md:text-3xl text-xl font-semibold flex-1 text-secondary-main">Complete your registration</h2>
+            <div className="flex justify-start items-center flex-1 md:space-x-16 gap-4 h-fit">
+              <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full md:w-fit">
+                <Button
+                  style={{
+                    fontSize: "clamp(.9rem, 1.2vw, 1.4rem)"
+                  }}
+                  variant={"outline"}
+                  className="p-9 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
+                >Already in Johannesburg</Button>
+              </a>
+              <a target="_blank" href="https://4dxinternational2024.rsvpify.com/?securityToken=uzRWkiKf9IRQwWkcAocZirJoOQPIogHC" className="w-full md:w-fit">
+                <Button
+                  style={{
+                    fontSize: "clamp(.9rem, 1.2vw, 1.4rem)"
+                  }}
+                  variant={"outline"}
+                  className="p-9 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
+                >Flying to Johannesburg</Button>
+              </a>
+            </div>
           </div>
         </div>
       </section>

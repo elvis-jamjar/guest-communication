@@ -35,26 +35,28 @@ export function ScheduleList(
 
         <div className="ring-primary-main ring-2 rounded-[30px] mx-2 bg-white">
             <div className="bg-primary-main p-2 flex justify-center rounded-t-[30px]">
-                <div
+                <h3
                     style={{
                         fontSize: "clamp(1rem, 2vw, 2rem)"
                     }}
-                    className="text-white font-semibold">3rd - 6th November</div>
+                    className="text-white font-semibold">3rd - 6th November</h3>
             </div>
-            <div className="md:p-16 p-4">
+            <div className="md:p-16 p-4 space-y-5">
                 {
                     schedules.map((schedule, index) => {
                         return (
-                            <div key={"main-" + index} className="flex flex-wrap md:flex-nowrap relative -space-y-4">
-                                <div className="md:max-w-28">
+                            <div key={"main-" + index} className="flex flex-wrap md:flex-nowrap relative gap-4 ">
+                                <div className="md:max-w-28 w-full">
                                     <h2 className={cn("text-2xl font-bold text-primary-main", schedule?.color?.day)}>
                                         {schedule.day}
                                     </h2>
-                                    <p className={cn("text-orange-500 font-semibold",)}>
+                                    <p className={cn("text-orange-500 font-semibold", schedule?.color?.dayTitle)}>
                                         {schedule?.title}
                                     </p>
                                 </div>
-                                <div className="flex-grow">
+                                <div
+                                    // leading-5 
+                                    className="flex-grow text-lg font-thin leading-snug tracking-tight text-balance">
                                     <ConferenceSchedule
                                         {...schedule}
                                     />

@@ -2,10 +2,24 @@ export interface Speaker {
   name: string;
   title?: string;
   bio: string;
+  photo?: string;
 }
 
-export type ColorType = "text-secondary-main" | "text-primary-main";
+export type ColorType =
+  | "text-secondary-main"
+  | "text-primary-main"
+  | "text-black";
 export type BgColorType = "bg-secondary-main" | "bg-primary-main";
+export type FontWeight =
+  | "font-mono"
+  | "font-thin"
+  | "font-normal"
+  | "font-medium"
+  | "font-bold";
+interface SectionBreakOuts {
+  title?: string;
+  description?: string;
+}
 
 export interface TimelineItemProps {
   id?: string;
@@ -29,6 +43,7 @@ export interface TimelineItemProps {
   host?: Speaker;
   facilitators?: Array<Speaker>;
   moderators?: Array<Speaker>;
+  sectionBreakOuts?: Array<SectionBreakOuts>;
   removedData?: {
     sponsors?: Array<string>;
     speakers?: Array<Speaker>;
@@ -43,6 +58,18 @@ export interface TimelineItemProps {
     time?: ColorType;
     day?: ColorType;
     dayTitle?: ColorType;
+  };
+  fontWeights?: {
+    sectionTitle?: FontWeight;
+    description?: FontWeight;
+    title?: FontWeight;
+    time?: FontWeight;
+  };
+  bulleted?: {
+    sectionTitle?: boolean;
+    description?: boolean;
+    title?: boolean;
+    time?: boolean;
   };
 }
 
