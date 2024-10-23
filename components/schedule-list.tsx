@@ -44,7 +44,7 @@ export function ScheduleList(
                     className="text-white font-semibold">3rd - 6th November</h3>
             </div>
 
-            <div className="md:py-4 md:pb-1 space-y-8">
+            <div className="md:py-4 pb-1 space-y-8">
                 <ReusableAnimatedAccordion
                     items={
                         schedules?.map((schedule, index) => {
