@@ -309,9 +309,9 @@ export default function Home() {
       {/* complete your registration */}
       <section className="py-12 ">
         <div className="container mx-auto">
-          <div className="flex justify-between md:px-20 md:gap-16 gap-5 items-center w-full md:w-full md:flex-nowrap flex-wrap">
-            <h2 className="md:text-3xl text-xl font-semibold flex-1 text-secondary-main">Complete your registration</h2>
-            <div className="flex justify-start items-center flex-1 md:space-x-16 gap-4 h-fit">
+          <div className="flex justify-center md:justify-between  md:px-20 md:gap-16 gap-5 items-center w-full md:w-full md:flex-nowrap flex-wrap">
+            <h2 className="md:text-3xl text-xl text-center md:text-start font-semibold flex-1 text-secondary-main">Complete your registration</h2>
+            <div className="flex flex-wrap md:flex-nowrap justify-start items-center flex-1 md:space-x-16 gap-4 h-fit">
               <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full md:w-fit">
                 <Button
                   style={{

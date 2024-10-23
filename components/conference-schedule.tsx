@@ -67,14 +67,14 @@ function TimelineItem({ time, isFirst, isTrack, title, sectionTitle, description
 
       <div className='md:col-span-2 md:p-0 ps-5 flex md:flex-col'>
         {
-          isFirst && <h2 className='text-secondary-main'>Time</h2>
+          isFirst && <h2 className='text-secondary-main hidden md:block'>Time</h2>
         }
         <p className={cn('text-secondary-main', color?.time, isTrack && "text-transparent")}>{time}</p>
       </div>
 
       <div className='flex flex-col md:p-0 ps-5 md:col-span-4'>
         {
-          isFirst && <h2 className='text-secondary-main'>Activity</h2>
+          isFirst && <h2 className='text-secondary-main hidden md:block'>Activity</h2>
         }
         {
           title && <ul className={cn("list-none list-outside", isTrack && 'list-disc')}>
