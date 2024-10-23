@@ -17,7 +17,7 @@ export function ArrowDownButton() {
             //     height: "max(40px, 3vh)"
             // }}
             onClick={scrollToProgram}
-            className="absolute md:bottom-8 -bottom-0 cursor-pointer flex justify-center items-center rounded-full p-4 w-[3.8rem] h-[3.8rem] hover:bg-secondary-main hover:text-white bg-secondary-main duration-1000 delay-700 animate-bounce"
+            className="absolute md:bottom-8 bottom-0 cursor-pointer flex justify-center items-center rounded-full p-4 w-[3.8rem] h-[3.8rem] hover:bg-secondary-main hover:text-white bg-secondary-main duration-1000 delay-700 animate-bounce"
         >
             <Image src="/images/4dx/arrow_down.png" width={100} height={100} alt="arrow down" className="w-10 h-10 object-contain" />
         </div>

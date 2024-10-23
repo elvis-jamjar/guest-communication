@@ -374,14 +374,14 @@ export default function Home() {
 function HeadingText({ text, icon, iconNode, className }: { text: string, icon?: string, className?: string, iconNode?: React.ReactNode }) {
   return (
     <div
-      style={{
-        fontSize: "clamp(2.2rem, 3.5vw, 3.5rem)"
-      }}
+      // style={{
+      //   fontSize: "clamp(2.2rem, 3.5vw, 3.5rem)"
+      // }}
       className="flex text-secondary-main gap-4 items-center w-full justify-center mb-8">
-      {icon && <Image src={icon} width={100} height={100} alt="icon" className={cn("w-12 h-12 object-contain", className)} />}
+      {icon && <Image src={icon} width={100} height={100} alt="icon" className={cn("size-8 md:size-12 object-contain", className)} />}
       {iconNode && iconNode}
       <h1
-        className="text-center items-center justify-center text-secondary-main font-extrabold ">
+        className="text-center text-2xl leading-tight md:text-4xl lg:text-5xl items-center justify-center text-secondary-main font-bold ">
         {text}
       </h1>
     </div>
