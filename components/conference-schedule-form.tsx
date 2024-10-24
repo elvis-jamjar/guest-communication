@@ -13,6 +13,7 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import SortableList, { SortableItem, SortableKnob } from "react-easy-sort"
 import { icons } from './conference-schedule'
+import ImageCropper from './ImageCropper'
 import { PageContentFormComponent } from './page-content-form'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 
@@ -36,27 +37,15 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
     />
     <div className='flex-col'>
       {/* upload speaker image */}
-      <UploadDropzone
-        endpoint="imageUploader"
-        config={{
-          mode: "auto",
-          appendOnPaste: true
-        }}
-        onClientUploadComplete={(res) => {
-          // Do something with the response.
-          onChange({ ...speaker, photo: res[0]?.url })
-        }}
-        onUploadError={(error: Error) => {
-          // Do something with the error.
-          alert(`ERROR! ${error?.message}`);
-        }}
+      <ImageCropper
+        onCompleteUpload={(url) => onChange({ ...speaker, photo: url })}
       />
-      <div className="flex items-center flex-col space-y-2 py-2 gap-2">
+      {speaker?.photo && <div className="flex items-center flex-col space-y-2 py-2 gap-2">
         <div className="flex w-24 h-24 items-center gap-2">
-          {speaker?.photo && <Image src={speaker?.photo} alt={speaker?.name} width={100} height={100} className="rounded-full w-full h-full object-cover" />}
+          <Image src={speaker?.photo} priority alt={speaker?.name} width={200} height={200} className="rounded-full w-full h-full object-cover" />
         </div>
-        <Button size={"sm"} onClick={() => onChange({ ...speaker, photo: '' })}>Remove Image</Button>
-      </div>
+        <Button size={"sm"} onClick={() => onChange({ ...speaker, photo: '' })}>Remove speaker photo</Button>
+      </div>}
     </div>
     {/* toggle to display speaker on page */}
     <div className="flex items-center space-x-2">
