@@ -10,45 +10,31 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Link, Users2 } from "lucide-react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { getConferenceSchedule } from "./actions/timeline";
 
-// const textIconData = [
-//   {
-//     text: 'www.acgc.africa',
-//     icon: <Globe className="w-4 h-4" />
-//   },
-//   {
-//     text: '@african_inhouse',
-//     // twitter icon
-//     icon: <Twitter className="w-4 h-4" />
-//   },
-//   {
-//     text: 'mail@acgc.africa',
-//     icon: <Mail className="w-4 h-4" />
-//   },
-//   {
-//     text: 'ACGC (African Corprate Government Counsel Forum)',
-//     icon: <Linkedin className="w-4 h-4" />
-//   }
-// ]
 
 // const sections = ["about", "programme"];
 // #ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica
 // const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
 // const INTERVAL = 60000; // 1 minute
 export default function Home() {
+  const query = useSearchParams()
   const { data, isLoading } = useQuery({
     queryKey: ['conference-schedules'],
     queryFn: async () => await getConferenceSchedule(),
-    refetchInterval: 65000, // 1 minute 5 seconds
+    // 2 minutes
+    refetchInterval: 120000,// 2 minutes
   });
-  // const { data: settings } = useQuery({
-  //   queryKey: ['conference-settings'],
-  //   queryFn: async () => await getConferenceSettings(),
-  //   refetchInterval: 80000, // 1 minute 20 seconds
-  // });
 
-
+  // scroll to program id if search query is program
+  useEffect(() => {
+    if (query.get('q') === 'programme') {
+      const program = document.getElementById("programme");
+      program?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
 
   return (
     <>
