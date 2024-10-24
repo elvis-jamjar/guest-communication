@@ -323,8 +323,8 @@ export default function Home() {
       {/* complete your registration */}
       <section className="py-12 ">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-center md:justify-between px-4 md:px-16 md:gap-14 gap-5 items-center w-full flex-wrap">
-            <p className="font-extrabold text-xl text-secondary-main">Complete your registration</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 justify-center gap-4 items-center w-full flex-wrap">
+            <p className="font-extrabold text-xl text-center text-secondary-main">Complete your registration</p>
             <div className="flex flex-wrap md:flex-nowrap justify-start items-center flex-1 md:space-x-16 gap-4 h-fit">
               <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full md:w-fit">
                 <Button

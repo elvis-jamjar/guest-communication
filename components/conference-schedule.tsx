@@ -56,7 +56,7 @@ export function ConferenceSchedule(
 //   )
 // }
 
-function TimelineItem({ time, isFirst, isTrack, moderators, title, sectionTitle, description, speakers, color, fontWeights }: TimelineItemProps) {
+function TimelineItem({ time, isFirst, isTrack, moderators, title, description, speakers, color, fontWeights }: TimelineItemProps) {
   return (
     <div className='grid md:grid-cols-7 grid-cols-1 relative text-pretty'>
       <div className={cn("flex-1 w-px left-2 bg-secondary-main z-auto absolute h-full top-5 bottom-0", isTrack && 'top-0 h-full')}></div>
