@@ -37,10 +37,10 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
     }, [schedules]);
 
     return (
-        <div className={cn("grid grid-cols-1 md:grid-cols-4 gap-4", isAdmin && "md:grid-cols-3")}>
+        <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-4", isAdmin && "md:grid-cols-3")}>
             {
                 speackers?.map((speaker, index) => (
-                    <Card key={index} className="w-full h-full p-4 shadow-none border-0">
+                    <Card key={index} className="w-full h-full p-0 md:p-4 shadow-none border-0">
                         <CardContent className="flex flex-col p-0 items-center space-y-4">
                             <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
                                 <Image
