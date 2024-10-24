@@ -82,7 +82,7 @@ export default function Home() {
               <div className="flex-col w-full h-full p-0 space-y-5 flex-1 leading-tight justify-center flex items-center">
                 <div className="px-4 flex justify-center items-center w-full">
                   <p
-                    className="text-center md:px-10 tracking-normal leading-loose text-lg text-pretty">
+                    className="text-center md:px-10 tracking-normal leading-tight md:leading-loose text-sm md:text-lg text-pretty">
                     Welcome to the 4DX CEO Summit,
                     an exclusive annual event hosted
                     by 4DX Ventures.
