@@ -182,8 +182,8 @@ export default function Home() {
         <div className="mx-auto">
           <HeadingText text="Accommodation" icon="/images/4dx/accomodation_icon.png" className="md:size-16" />
           <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="flex flex-1 flex-col gap-2 text-lg">
-              <h1 className="text-primary-main md:text-left text-center font-extrabold text-3xl mb-12">Protea Hotel:The Wanderers</h1>
+            <div className="flex flex-1 flex-col gap-1 text-lg">
+              <h1 className="text-primary-main text-left font-extrabold text-xl md:text-3xl mb-8">Protea Hotel:The Wanderers</h1>
               <div className="flex w-full flex-col space-y-6 text-pretty">
                 <p>
                   Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.
