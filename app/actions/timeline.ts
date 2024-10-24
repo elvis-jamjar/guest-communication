@@ -67,7 +67,9 @@ export async function getSpeakers(): Promise<Speaker[]> {
       item?.timeLineItems?.forEach((t) => {
         if (t.speakers) {
           t.speakers.forEach((s) => {
-            speakers.push(s);
+            if (s.visibleOnPage && s?.name) {
+              speakers.push(s);
+            }
           });
         }
       });

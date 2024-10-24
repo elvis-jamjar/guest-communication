@@ -41,7 +41,7 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
         onCompleteUpload={(url) => onChange({ ...speaker, photo: url })}
       />
       {speaker?.photo && <div className="flex items-center flex-col space-y-2 py-2 gap-2">
-        <div className="flex w-24 h-24 items-center gap-2">
+        <div className="flex w-24 h-24 bg-white rounded-full items-center gap-2">
           <Image src={speaker?.photo} priority alt={speaker?.name} width={200} height={200} className="rounded-full w-full h-full object-cover" />
         </div>
         <Button size={"sm"} onClick={() => onChange({ ...speaker, photo: '' })}>Remove speaker photo</Button>

@@ -11,19 +11,34 @@ const config: Config = withUt({
   ],
   theme: {
     extend: {
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: "1rem",
+          sm: "1rem",
+          lg: "6rem",
+          xl: "7rem",
+        },
+        screens: {
+          sm: "100%",
+          md: "100%",
+          lg: "1024px",
+          xl: "1280px",
+        },
+      },
       fontFamily: {
         // apply Roboto, Roboto-Medium, Roboto-Bold, Roboto-Black
         sans: ["Roboto", "sans-serif"],
         mono: ["Roboto-Mono", "monospace"],
-        thin: ["Roboto", "sans-serif"],
-        extralight: ["Roboto", "sans-serif"],
-        light: ["Roboto", "sans-serif"],
+        thin: ["Roboto-Light", "sans-serif"],
+        extralight: ["Roboto-Light", "sans-serif"],
+        light: ["Roboto-Light", "sans-serif"],
         normal: ["Roboto", "sans-serif"],
-        medium: ["Roboto-Medium", "sans-serif"],
-        semibold: ["Roboto-Medium", "sans-serif"],
-        bold: ["Roboto-Bold", "sans-serif"],
-        extrabold: ["Roboto-Bold", "sans-serif"],
-        black: ["Roboto-Black", "sans-serif"],
+        medium: ["Roboto", "sans-serif"],
+        semibold: ["Roboto", "sans-serif"],
+        bold: ["Roboto", "sans-serif"],
+        extrabold: ["Roboto-Medium", "sans-serif"],
+        black: ["Roboto-Bold", "sans-serif"],
       },
       // apply Roboto, Roboto-Medium, Roboto-Bold to font weights
       space: {

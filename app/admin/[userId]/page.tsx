@@ -2,6 +2,7 @@
 import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
 import { ScheduleList } from "@/components/schedule-list";
 import { ScreenSimulator } from "@/components/screen-simulation";
+import AllSpeakerList from "@/components/speaker-list";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -151,9 +152,7 @@ export default function Home() {
                     </div>
                     <ScreenSimulator
                         desktopContent={<ScheduleList schedules={schedules} />}
-                    // desktopSecondContent={<SpeakerImageUpdater schedules={speakerSchedules} onChange={(val) => {
-                    //     setSpeakerSchedules(val);
-                    // }} />}
+                        desktopSecondContent={<AllSpeakerList isAdmin={true} schedules={schedules || []} />}
                     />
                 </div>
             </ResizablePanel>
