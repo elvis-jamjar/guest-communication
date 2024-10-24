@@ -2,6 +2,7 @@ import Footer from "@/components/footer";
 import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
 
@@ -28,7 +29,9 @@ export default function RootLayout({
         // }}
         className={cn(``)}>
         <Providers>
-          {children}
+          <Suspense>
+            {children}
+          </Suspense>
           {/* Footer */}
         </Providers>
         <Footer />
