@@ -45,9 +45,11 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
                             <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
                                 <Image
                                     src={speaker?.photo || ''}
-                                    width={400}
-                                    height={400}
+                                    width={300}
+                                    height={300}
                                     priority
+                                    fetchPriority="high"
+                                    loading="eager"
                                     alt="speaker"
                                     className="w-full h-full object-cover"
                                 />
