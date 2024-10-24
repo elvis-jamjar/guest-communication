@@ -152,7 +152,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="hidden  py-10 md:mt-20">
+      <section className="py-10 md:mt-5">
         <div className="container mx-auto">
           <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
           {/* speakers */}
