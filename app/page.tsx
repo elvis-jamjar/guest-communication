@@ -79,7 +79,7 @@ export default function Home() {
                 <Separator orientation="vertical" className="h-full ml-2 hidden md:block" />
                 <Separator orientation="horizontal" className="w-full md:hidden" />
               </div>
-              <div className="flex-col w-full h-full p-0 space-y-4 flex-1 leading-tight justify-center flex items-center">
+              <div className="flex-col w-full h-full p-0 space-y-5 flex-1 leading-tight justify-center flex items-center">
                 <div className="px-4 flex justify-center items-center w-full">
                   <p
                     className="text-center md:px-10 tracking-normal leading-loose text-lg text-pretty">
@@ -88,10 +88,8 @@ export default function Home() {
                     by 4DX Ventures.
                   </p>
                 </div>
-                <p
-                  className="text-secondary-main text-center text-sm md:text-xl py-2 font-extrabold">Click below to complete your registration</p>
-
-                <div className="flex flex-col items-center space-y-6 md:px-16">
+                <p className="text-secondary-main text-center pb-2 text-sm md:text-xl font-extrabold">Click below to complete your registration</p>
+                <div className="flex flex-col items-center space-y-5 md:px-16">
                   <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full">
                     <Button
                       style={{
@@ -277,7 +275,7 @@ export default function Home() {
             <span>Full list of VISA exempt countries/passports</span>
           </a>
           <p className="font-extrabold text-secondary-main text-xl md:text-2xl">Visa Requirements</p>
-          <p className="text-secondary-main font-semibold">
+          <p className="text-secondary-main font-extrabold">
             Please apply for your visa now as processing times may vary. We recommend you check your local South African Embassy or Consulate website for timelines and additional information.
           </p>
 

@@ -41,7 +41,7 @@ export function ScheduleList(
                     style={{
                         fontSize: "clamp(1rem, 2vw, 2rem)"
                     }}
-                    className="text-white font-semibold">3rd - 6th November</h3>
+                    className="text-white font-extrabold">3rd - 6th November</h3>
             </div>
 
             <div className="md:py-4 pb-1 space-y-8">
@@ -50,9 +50,9 @@ export function ScheduleList(
                         schedules?.map((schedule, index) => {
                             return {
                                 title: <div className="flex w-full items-center gap-2">
-                                    <h2 className={cn("md:text-2xl text-lg mr-2 font-bold text-primary-main", schedule?.color?.day)}>
+                                    <p className={cn("md:text-2xl font-extrabold text-lg mr-2  text-primary-main", schedule?.color?.day)}>
                                         {schedule.day}
-                                    </h2>
+                                    </p>
                                     <p className={cn("text-secondary-main md:text-lg text-sm font-semibold", schedule?.color?.dayTitle)}>
                                         {schedule?.title}
                                     </p>
