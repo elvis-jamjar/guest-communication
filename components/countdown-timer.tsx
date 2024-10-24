@@ -58,11 +58,11 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
           // style={{
           //   fontSize: 'clamp(2.5rem,5vw,5.5rem)'
           // }}
-          className="font-black text-7xl text-[#762877]">
+          className="md:font-black font-extrabold text-4xl md:text-7xl text-[#762877]">
           {(timeLeft[interval as keyof typeof timeLeft] as any)?.toString()?.padStart(2, '0')}
         </p>
         <span
-          className="uppercase text-primary-main mt-2 font-normal">
+          className="uppercase text-base text-primary-main mt-2 font-normal">
           {/* {interval === 'hours' ? 'Hr' : interval.slice(0, 3)} {interval} */}
           {getLabel(interval, timeLeft[interval as keyof typeof timeLeft] as number)}
         </span>
@@ -72,7 +72,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="flex space-x-4 md:space-x-24">
+      <div className="flex space-x-9 md:space-x-24">
         {timeComponents}
       </div>
     </div>
