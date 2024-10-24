@@ -167,7 +167,6 @@ export default function Home() {
           <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
           <AllSpeakerList schedules={data || []} />
         </div>
-
       </section>
 
       {/* accommodation */}
