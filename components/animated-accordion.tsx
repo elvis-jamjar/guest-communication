@@ -41,7 +41,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
             {items.map((item, index, arr) => (
                 <div key={index} className={cn("border-2 border-x-[0.0px] border-t-0 border-primary-main rounded-b-3xl overflow-hidden", ((arr?.length - 1) == index) && 'border-0 border-transparent')}>
                     <motion.button
-                        className="flex justify-between items-center w-full px-4 md:px-16 py-4 text-left bg-white hover:bg-secondary-main/10 focus:outline-none"
+                        className="flex justify-between items-center w-full px-2 md:px-16 py-4 text-left bg-white hover:bg-secondary-main/10 focus:outline-none"
                         onClick={() => toggleItem(index)}
                         initial={false}
                         aria-expanded={
@@ -79,7 +79,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                                     {/* <div className="px-4 py-3 text-gray-700 bg-gray-50 h-[200px] overflow-y-auto">
                                     x
                                     </div> */}
-                                    <div className="px-4 py-3">{item.children}</div>
+                                    <div className="px-2 py-2 md:py-0">{item.children}</div>
                                 </motion.div>
                             )}
                     </AnimatePresence>
