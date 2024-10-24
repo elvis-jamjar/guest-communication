@@ -83,7 +83,7 @@ function TimelineItem({ time, isFirst, isTrack, moderators, title, description, 
             </li>
           </ul>
         }
-        <div className={cn('flex-col space-y-2', isTrack && "md:pl-12 pl:5")}>
+        <div className={cn('flex-col space-y-2', isTrack && "md:pl-12 pl-4")}>
           {/* {sectionTitle && <p className={cn("font-mono", color?.sectionTitle)}>
             {sectionTitle}
           </p>} */}
