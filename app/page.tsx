@@ -135,7 +135,7 @@ export default function Home() {
           backgroundAttachment: "local"
         }}
         id="programme"
-        className="bg-right bg-contain py-10 md:mt-20">
+        className="bg-right bg-contain py-10 md:mt-8">
         <div className="container mx-auto">
           <HeadingText text="Program Outline" icon="/images/4dx/program_icon.png" />
           {

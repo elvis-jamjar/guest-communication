@@ -53,14 +53,14 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
     // }
 
     return (
-      <div key={interval} className="flex flex-col items-center">
-        <h2
-          style={{
-            fontSize: 'clamp(2.5rem,5vw,5.5rem)'
-          }}
-          className="font-bold text-[#762877]">
+      <div key={interval} className="flex flex-col items-center mt-5">
+        <p
+          // style={{
+          //   fontSize: 'clamp(2.5rem,5vw,5.5rem)'
+          // }}
+          className="font-black text-7xl text-[#762877]">
           {(timeLeft[interval as keyof typeof timeLeft] as any)?.toString()?.padStart(2, '0')}
-        </h2>
+        </p>
         <span
           className="uppercase text-primary-main mt-2 font-normal">
           {/* {interval === 'hours' ? 'Hr' : interval.slice(0, 3)} {interval} */}

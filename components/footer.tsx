@@ -12,19 +12,19 @@ export default function Footer() {
             <div className="bg-secondary-main mx-auto py-6 px-2">
                 <p className="text-white text-2xl text-center text-pretty tracking-wide font-extrabold">Send inquiries to info@jamjargh.com</p>
             </div>
-            <div className="container py-20 mx-auto flex flex-wrap md:justify-around justify-center gap-y-6">
+            <div className="py-20 mx-auto flex flex-wrap md:justify-around justify-center gap-y-6">
                 <div className="flex flex-wrap gap-5 justify-center items-center">
                     <div className="flex items-center rounded-full p-5 bg-white">
                         <Image
-                            src="/images/4dx/logo.png"
+                            src="/images/4dx/new/4dx_logo.png"
                             width={600}
                             height={600}
                             priority
                             alt="4dx"
-                            className="w-24 h-24 object-contain"
+                            className="size-28 object-contain"
                         />
                     </div>
-                    <p className="text-left text-[0.9rem] max-w-xs">
+                    <p className="text-left text-sm leading-relaxed max-w-xs">
                         4DX Ventures is a Pan-Africa Focused Venture Capital Firm. Our mission is to connect people, ideas, and capital to create a thriving African continent, and a vibrant global community.
                     </p>
                 </div>
