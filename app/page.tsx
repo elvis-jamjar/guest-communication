@@ -137,7 +137,7 @@ export default function Home() {
           backgroundAttachment: "local"
         }}
         id="programme"
-        className="bg-right  py-10 md:mt-20">
+        className="bg-right bg-contain py-10 md:mt-20">
         <div className="container mx-auto">
           <HeadingText text="Program Outline" icon="/images/4dx/program_icon.png" />
           {
@@ -150,12 +150,23 @@ export default function Home() {
             <ScheduleList schedules={data} />
           }
         </div>
+        {/* <div className="container mx-auto py-10 mt-5">
+          <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
+          <AllSpeakerList schedules={data || []} />
+        </div> */}
       </section>
 
-      <section className="py-10 md:mt-5">
+      <section
+        // style={{
+        //   background: "url('/images/4dx/parttern_1.png')",
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundSize: "contain",
+        //   backgroundPosition: "right",
+        //   backgroundAttachment: "local"
+        // }}
+        className="bg-right bg-contain py-10 md:mt-5">
         <div className="container mx-auto">
           <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
-          {/* speakers */}
           <AllSpeakerList schedules={data || []} />
         </div>
 
@@ -170,13 +181,12 @@ export default function Home() {
           // backgroundPosition: "left",
           // backgroundAttachment: "scroll"
         }}
-        className="bg-left-bottom bg-contain bg-no-repeat ">
-
-        <div className="container mx-auto">
+        className="bg-left-bottom bg-contain bg-no-repeat py-8 space-y-10 container mx-auto">
+        <div className="mx-auto">
           <HeadingText text="Accommodation" icon="/images/4dx/accomodation_icon.png" className="md:size-16" />
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="flex flex-1 flex-col gap-2 text-lg">
-              <h1 className="text-primary-main md:text-left text-center font-extrabold text-3xl mb-8">Protea Hotel:The Wanderers</h1>
+              <h1 className="text-primary-main md:text-left text-center font-extrabold text-3xl mb-12">Protea Hotel:The Wanderers</h1>
               <div className="flex w-full flex-col space-y-6 text-pretty">
                 <p>
                   Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.
@@ -218,8 +228,8 @@ export default function Home() {
 
       </section>
       {/* flights */}
-      <section className="">
-        <div className="text-lg py-8 space-y-10 container mx-auto">
+      <section className="mx-auto py-8 mt-8">
+        <div className="text-lg space-y-10 container ">
           <HeadingText text="Flights" icon="/images/4dx/flight_icon.png" />
           <p className="leading-relaxed tracking-wide">
             We recommend you book your flights early to get the best rates. For travel within the continent, we recommend booking on Ethiopian
@@ -248,7 +258,7 @@ export default function Home() {
         backgroundPosition: "right",
         backgroundAttachment: "local"
       }}
-        className="bg-right ">
+        className="bg-right py-8 mt-8">
         <div className="container mx-auto space-y-8 text-lg">
           <HeadingText text="Travel Requirements" icon="/images/4dx/visa_icon.png" />
           <h2 className="font-bold">
@@ -260,19 +270,19 @@ export default function Home() {
             <li>Sufficient funds to pay for your day-to-day expenses during your stay.</li>
             <li>Yellow fever certificates if your journey starts or entails passing through the yellow fever belt of Africa or South America.</li>
           </ol>
-          <h1 className="font-extrabold text-secondary-main text-xl md:text-2xl">Visa Exemptions</h1>
-          <p>Passport holders from the following countries: <strong className="text-secondary-main font-bold">US, UK, Ghana, Kenya, Jordan DO NOT</strong> require a visa to enter South Africa.</p>
+          <p className="font-extrabold text-secondary-main text-xl md:text-2xl">Visa Exemptions</p>
+          <p>Passport holders from the following countries: <strong className="text-secondary-main font-extrabold">US, UK, Ghana, Kenya, Jordan DO NOT</strong> require a visa to enter South Africa.</p>
           <a target="_blank" href="https://www.dha.gov.za/index.php/immigration-services/exempt-countries" className="text-primary-main underline flex gap-2 items-center">
             <Link size={26} />
             <span>Full list of VISA exempt countries/passports</span>
           </a>
-          <h1 className="font-bold text-secondary-main text-xl md:text-2xl">Visa Requirements</h1>
+          <p className="font-extrabold text-secondary-main text-xl md:text-2xl">Visa Requirements</p>
           <p className="text-secondary-main font-semibold">
             Please apply for your visa now as processing times may vary. We recommend you check your local South African Embassy or Consulate website for timelines and additional information.
           </p>
 
           <p>
-            Passport holders from <strong className="text-secondary-main font-bold">Nigeria, Egypt, Ivory Coast, Senegal and Sudan countries DO</strong> require a visa to enter.
+            Passport holders from <strong className="text-secondary-main font-extrabold">Nigeria, Egypt, Ivory Coast, Senegal and Sudan countries DO</strong> require a visa to enter.
           </p>
           <p>
             Click on the link below for more details on the documents required to apply for a visa and the link to the e-visa application process.
@@ -289,7 +299,7 @@ export default function Home() {
 
       </section>
       {/* weather and what to pack */}
-      <section className=" py-10 space-y-12">
+      <section className=" py-10 space-y-14">
         <div className="container mx-auto space-y-6 text-lg py-5">
           <HeadingText text="Weather" icon="/images/4dx/weather_icon.png" />
           <p>
@@ -313,8 +323,8 @@ export default function Home() {
       {/* complete your registration */}
       <section className="py-12 ">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-center md:justify-between px-4 md:px-20 md:gap-16 gap-5 items-center w-full flex-wrap">
-            <p className="text-xl text-center md:text-start font-medium flex-1 text-secondary-main">Complete your registration</p>
+          <div className="flex flex-col md:flex-row justify-center md:justify-between px-4 md:px-16 md:gap-14 gap-5 items-center w-full flex-wrap">
+            <p className="font-extrabold text-xl text-secondary-main">Complete your registration</p>
             <div className="flex flex-wrap md:flex-nowrap justify-start items-center flex-1 md:space-x-16 gap-4 h-fit">
               <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full md:w-fit">
                 <Button

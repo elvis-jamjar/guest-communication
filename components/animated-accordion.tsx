@@ -70,7 +70,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                                     animate="expanded"
                                     exit="collapsed"
                                     variants={{
-                                        expanded: { opacity: 1, maxHeight: isMobile ? "5000px" : "200dvh" },
+                                        expanded: { opacity: 1, maxHeight: isMobile ? "10000px" : "1000dvh" },
                                         collapsed: { opacity: 0, maxHeight: "0px" }
                                     }}
                                     transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}

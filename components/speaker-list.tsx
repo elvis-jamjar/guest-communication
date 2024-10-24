@@ -41,7 +41,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
             {
                 speackers?.map((speaker, index) => (
                     <Card key={index} className="w-full h-full p-4 shadow-none border-0">
-                        <CardContent className="flex flex-col items-center space-y-4">
+                        <CardContent className="flex flex-col p-0 items-center space-y-4">
                             <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
                                 <Image
                                     src={speaker?.photo || ''}
@@ -52,9 +52,10 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <div className=" space-y-0 flex-col">
-                                <h2 className="text-primary-main text-lg text-center font-semibold">{speaker?.name?.replace(':', '')}</h2>
-                                <p className="text-secondary-main text-md text-center">{speaker?.title}</p>
+                            <div className="w-full space-y-0 flex-col font-semibold text-pretty leading-snug">
+                                <p className="text-primary-main text-base text-center font-semibold">{speaker?.name?.replace(':', '')}</p>
+                                <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(0)}</p>
+                                <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(1)}</p>
                             </div>
                         </CardContent>
                     </Card>
