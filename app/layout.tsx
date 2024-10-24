@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "4DX Guest Communication",
-  description: "4DX Guest Communication is a platform for managing guest communication.",
+  description: "The official website for 4DX Guest Communication",
 };
 
 export default function RootLayout({
