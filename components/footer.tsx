@@ -9,8 +9,8 @@ export default function Footer() {
         <footer
 
             className={cn("text-white bg-primary-main", pathName?.includes('/admin') && 'hidden')}>
-            <div className="bg-secondary-main mx-auto py-6">
-                <h1 className="text-white text-center text-xl md:text-2xl font-bold">Send inquiries to info@jamjargh.com</h1>
+            <div className="bg-secondary-main mx-auto py-6 px-2">
+                <p className="text-white text-2xl text-center text-pretty tracking-wide font-extrabold">Send inquiries to info@jamjargh.com</p>
             </div>
             <div className="container py-20 mx-auto flex flex-wrap md:justify-around justify-center gap-y-6">
                 <div className="flex flex-wrap gap-5 justify-center items-center">
