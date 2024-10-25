@@ -183,9 +183,9 @@ export default function Home() {
                   Preferred rates have been negotiated specifically for our group at <strong className="font-extrabold text-secondary-main">$97 per night.</strong> We highly recommend you book your room as soon as you can.
                 </p>
               </div>
-              <div className="flex text-pretty py-5">
-                <Image src="/images/4dx/location.png" width={100} height={100} alt="phone" className="w-6 h-6 object-scale-down" />
-                <span>Corner Corlette Drive and Rudd Road, Illovo, South Africa, 2196.</span>
+              <div className="flex items-start md:items-end text-pretty py-5 text-base">
+                <Image src="/images/4dx/location.png" priority width={100} height={100} alt="loc" className="size-8 object-contain" />
+                <p>Corner Corlette Drive and Rudd Road, Illovo, South Africa, 2196.</p>
               </div>
             </div>
 
