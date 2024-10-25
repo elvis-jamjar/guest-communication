@@ -16,11 +16,17 @@ export const metadata: Metadata = {
     url: "https://4dxceosummit.com",
     images: [
       {
-        url: "/images/4dx/new/Stacked_4DX_Summit_Updated_LogoTransp.png",
+        url: "/images/4dx/new/Horiz_4DX Summit updated LogoTransp.png",
         width: 1200,
         height: 630,
         alt: "4DX CEO Summit 2024",
       },
+      {
+        url: "/images/4dx/new/Stacked w date_4DX Summit Updated LogoTransp.png",
+        width: 600,
+        height: 630,
+        alt: "4DX CEO Summit 2024",
+      }
     ],
     type: 'website',
     locale: 'en_US',
@@ -30,7 +36,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "4DX CEO Summit 2024",
     description: "Join us for insightful discussions, networking opportunities, and strategic collaborations shaping the future of technology and innovation across Africa",
-    images: ["https://4dxceosummit.com/images/4dx/new/Stacked_4DX_Summit_Updated_LogoTransp.png"],
+    images: [
+      "https://4dxceosummit.com/images/4dx/new/Stacked w date_4DX Summit Updated LogoTransp.png",
+      "https://4dxceosummit.com/images/4dx/new/Stacked_4DX_Summit_Updated_LogoTransp.png",
+      "https://4dxceosummit.com/images/4dx/new/Horiz_4DX Summit updated LogoTransp.png"
+
+    ],
   },
 };
 
