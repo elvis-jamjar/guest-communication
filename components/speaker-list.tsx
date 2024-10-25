@@ -9,7 +9,7 @@ import { HeadingText } from "./heading-text";
 import { Card, CardContent } from "./ui/card";
 
 export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin?: boolean, schedules: ConferenceScheduleProps[] }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     // const { data: speackers } = useQuery({
     //     queryKey: ['speakers'],
     //     queryFn: async () => await getSpeakers(),
@@ -64,8 +64,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
                 initial={false}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen ? "true" : "false"}
-                aria-controls={`accordion-content`}
-            >
+                aria-controls={`accordion-content`}>
                 <HeadingText
                     containerClassName={cn("w-fit py-0 md:py-0 p-0 m-0")}
                     text="Speakers" iconNode={<Users className="text-secondary-main w-12 h-12" />} />
@@ -97,32 +96,35 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
                     <motion.div
                         variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
                         transition={{ duration: 0.4 }}
-
-                        className={cn("grid grid-cols-2 pb-4 md:grid-cols-4 gap-4", isAdmin && "md:grid-cols-3")}>
+                        className={cn("grid grid-cols-2 pb-4 md:grid-cols-4 gap-4 justify-center items-center", isAdmin && "md:grid-cols-3")}>
                         {
-                            speackers?.map((speaker, index) => (
-                                <Card key={index} className="w-full h-full p-0 md:p-4 shadow-none border-0">
-                                    <CardContent className="flex flex-col p-0 items-center space-y-4">
-                                        <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
-                                            <Image
-                                                src={speaker?.photo || ''}
-                                                width={400}
-                                                height={400}
-                                                priority
-                                                fetchPriority="high"
-                                                loading="eager"
-                                                alt="speaker"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="w-full space-y-0 flex-col font-semibold text-pretty leading-snug">
-                                            <p className="text-primary-main text-base text-center font-semibold">{speaker?.name?.replace(':', '')}</p>
-                                            <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(0)}</p>
-                                            <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(1)}</p>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))
+                            speackers?.map((speaker, index) => {
+
+                                return (
+                                    <Card key={index} className={cn("w-full h-full p-0 md:p-4 shadow-none border-0")}>
+                                        <CardContent className="flex flex-col p-0 items-center space-y-4">
+                                            <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
+                                                <Image
+                                                    src={speaker?.photo || ''}
+                                                    width={400}
+                                                    height={400}
+                                                    priority
+                                                    fetchPriority="high"
+                                                    loading="eager"
+                                                    alt="speaker"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                            <div className="w-full space-y-0 flex-col font-semibold text-pretty leading-snug">
+                                                <p className="text-primary-main text-base text-center font-semibold">{speaker?.name?.replace(':', '')}</p>
+                                                <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(0)}</p>
+                                                <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(1)}</p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+
+                                )
+                            })
                         }
                     </motion.div>
                 </motion.div>}
