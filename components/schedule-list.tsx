@@ -58,7 +58,7 @@ export function ScheduleList(
                                     </p>
                                 </div>,
                                 children: <div key={"main-" + index} className="flex flex-wrap md:flex-nowrap relative gap-4 ">
-                                    <div className="md:max-w-20 w-full hidden md:invisible md:grid">
+                                    <div className="md:max-w-14 w-full hidden md:invisible md:grid">
                                         <h2 className={cn("text-2xl font-bold text-primary-main", schedule?.color?.day)}>
                                             {schedule?.day}
                                         </h2>
