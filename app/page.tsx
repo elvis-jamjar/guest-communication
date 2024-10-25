@@ -32,7 +32,12 @@ export default function Home() {
   useEffect(() => {
     if (query.get('q') === 'programme') {
       const program = document.getElementById("programme");
-      program?.scrollIntoView({ behavior: "smooth" });
+      // wait few seconds before scrolling
+      setTimeout(() => {
+        program?.scrollIntoView({ behavior: "smooth" });
+        // remove the query
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }, 1000);
     }
   }, []);
 
