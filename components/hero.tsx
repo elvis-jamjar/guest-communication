@@ -31,8 +31,8 @@ export default function Hero() {
                             />
                         </div>
                         <div className="w-full col-span-1 md:w-2 md:h-80 md:py-8 flex justify-center">
-                            <Separator orientation="vertical" className="h-full ml-2 hidden md:block" />
-                            <Separator orientation="horizontal" className="w-full md:hidden" />
+                            <Separator orientation="vertical" className="h-full ml-2 border-[0.2px] hidden md:block" />
+                            <Separator orientation="horizontal" className="w-full border-[0.2px] md:hidden" />
                         </div>
                         <div className="flex-col w-full h-full p-0 space-y-5 flex-1 leading-tight justify-center flex items-center">
                             <div className="md:px-4 px-0 flex justify-center items-center w-full">
