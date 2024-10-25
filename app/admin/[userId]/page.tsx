@@ -8,6 +8,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Save } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
     createConferenceSchedules,
@@ -20,8 +21,8 @@ import { ConferenceScheduleProps, PageContent } from "../../types";
 // import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-    const [columns, setColumns] = useState<number>(2);
-
+    // const [columns, setColumns] = useState<number>(2);
+    const pathName = usePathname();
     const { data, refetch } = useQuery({
         queryKey: ['conference-schedules'],
         queryFn: async () => await getConferenceSchedule(),
@@ -66,11 +67,11 @@ export default function Home() {
     }, [data]);
 
     useEffect(() => {
-        if (settings) {
-            // alert(`Settings fetched ${settings?.columns}`)
-            setColumns(settings?.columns || 2);
+        if (pathName) {
+            // hide hero-section
+            document.getElementById('hero-section')?.classList.add('hidden');
         }
-    }, [settings]);
+    }, [pathName]);
 
     // set page content
     useEffect(() => {

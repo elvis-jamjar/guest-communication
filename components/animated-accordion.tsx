@@ -66,20 +66,34 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                             && (
                                 <motion.div
                                     id={`accordion-content-${index}`}
+                                    // initial="collapsed"
+                                    // animate="expanded"
+                                    // exit="collapsed"
+                                    // variants={{
+                                    //     expanded: { opacity: 1, maxHeight: isMobile ? "10000px" : "1000dvh" },
+                                    //     collapsed: { opacity: 0, maxHeight: "0px" }
+                                    // }}
+                                    // transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                                    // className="overflow-hidden"
                                     initial="collapsed"
-                                    animate="expanded"
+                                    animate="open"
                                     exit="collapsed"
                                     variants={{
-                                        expanded: { opacity: 1, maxHeight: isMobile ? "10000px" : "1000dvh" },
-                                        collapsed: { opacity: 0, maxHeight: "0px" }
+                                        open: { opacity: 1, height: "auto" },
+                                        collapsed: { opacity: 0, height: 0 }
                                     }}
                                     transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                                    className="overflow-hidden"
                                 >
                                     {/* <div className="px-4 py-3 text-gray-700 bg-gray-50 h-[200px] overflow-y-auto">
                                     x
                                     </div> */}
-                                    <div className="px-2 py-2 md:py-0">{item.children}</div>
+                                    <motion.div
+                                        variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
+                                        transition={{ duration: 0.4 }}
+                                        className="px-2 py-2 md:py-0">
+
+                                        {item.children}
+                                    </motion.div>
                                 </motion.div>
                             )}
                     </AnimatePresence>

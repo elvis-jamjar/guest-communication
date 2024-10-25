@@ -1,12 +1,12 @@
 "use client";;
 import { CountdownTimer } from "@/components/countdown-timer";
+import { HeadingText } from "@/components/heading-text";
 import { ScheduleList } from "@/components/schedule-list";
 import AllSpeakerList from "@/components/speaker-list";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Link, Users2 } from "lucide-react";
+import { Link } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -75,23 +75,11 @@ export default function Home() {
             <ScheduleList schedules={data} />
           }
         </div>
-        {/* <div className="container mx-auto py-10 mt-5">
-          <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
-          <AllSpeakerList schedules={data || []} />
-        </div> */}
       </section>
-
+      {/* speaker section */}
       <section
-        // style={{
-        //   background: "url('/images/4dx/parttern_1.png')",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundSize: "contain",
-        //   backgroundPosition: "right",
-        //   backgroundAttachment: "local"
-        // }}
         className="bg-right bg-contain py-10 md:mt-5">
         <div className="container mx-auto">
-          <HeadingText text="Speakers" iconNode={<Users2 className="text-secondary-main w-12 h-12" />} />
           <AllSpeakerList schedules={data || []} />
         </div>
       </section>
@@ -277,22 +265,6 @@ export default function Home() {
 }
 
 
-function HeadingText({ text, icon, iconNode, className }: { text: string, icon?: string, className?: string, iconNode?: React.ReactNode }) {
-  return (
-    <div
-      // style={{
-      //   fontSize: "clamp(2.2rem, 3.5vw, 3.5rem)"
-      // }}
-      className="flex text-secondary-main gap-4 items-center w-full justify-center mb-8">
-      {icon && <Image src={icon} width={100} height={100} alt="icon" className={cn("size-8 md:size-12 object-contain", className)} />}
-      {iconNode && iconNode}
-      <h1
-        className="text-center text-2xl leading-tight md:text-4xl lg:text-5xl items-center justify-center text-secondary-main font-extrabold ">
-        {text}
-      </h1>
-    </div>
-  )
-}
 
 
 

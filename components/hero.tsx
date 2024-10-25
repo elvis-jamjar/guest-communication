@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import { ArrowDownButton } from "./arrowdown";
@@ -5,10 +6,10 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
 export default function Hero() {
-
     return (
         <section
-            className="text-white bg-center md:p-0 p-2 bg-cover bg-repeat w-full h-screen flex items-center justify-center relative"
+            id="hero-section"
+            className={cn("text-white bg-center md:p-0 p-2 bg-cover bg-repeat w-full h-screen flex items-center justify-center relative")}
             style={{
                 backgroundImage: "url('/images/4dx/background.png')",
                 backgroundSize: '97%'
