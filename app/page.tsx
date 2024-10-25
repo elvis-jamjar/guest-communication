@@ -4,7 +4,9 @@ import { HeadingText } from "@/components/heading-text";
 import { ScheduleList } from "@/components/schedule-list";
 import AllSpeakerList from "@/components/speaker-list";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "lucide-react";
 import Image from "next/image";
@@ -66,9 +68,26 @@ export default function Home() {
         <div className="container mx-auto">
           <HeadingText text="Program Outline" icon="/images/4dx/program_icon.png" />
           {
-            isLoading && <div className="text-center">
-              <p>Loading...</p>
-            </div>
+            isLoading &&
+            <Card className="w-full mx-auto rounded-3xl border-2 border-primary-main">
+              <CardHeader className="bg-primary-main rounded-t-2xl">
+                <Skeleton className="h-6 w-48 mx-auto bg-white/50" />
+              </CardHeader>
+              <CardContent className="p-0 ">
+                {[1, 2, 3, 4].map((day) => (
+                  <div key={day} className="border-b last:border-b-0">
+                    <div className="flex justify-between items-center py-2 px-4 md:px-16">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-4 w-16 bg-primary-main/40" />
+                        <Skeleton className="h-4 w-40 bg-secondary-main/40" />
+                      </div>
+                      <Skeleton className="h-4 w-4 rounded-full bg-secondary-main/40" />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
           }
           {
             data &&
