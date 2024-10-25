@@ -1,4 +1,4 @@
-'use client';;
+'use client';
 import { ConferenceScheduleProps, Speaker } from "@/app/types";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -96,7 +96,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
                     <motion.div
                         variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
                         transition={{ duration: 0.4 }}
-                        className={cn("grid grid-cols-2 pb-4 md:grid-cols-4 gap-4 justify-center items-center", isAdmin && "md:grid-cols-3")}>
+                        className={cn("grid grid-cols-2 pb-4 md:grid-cols-4 gap-3 justify-center items-center", isAdmin && "md:grid-cols-3")}>
                         {
                             speackers?.map((speaker, index) => {
 

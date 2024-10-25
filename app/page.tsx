@@ -78,8 +78,8 @@ export default function Home() {
       </section>
       {/* speaker section */}
       <section
-        className="bg-right bg-contain py-10 md:mt-5">
-        <div className="container mx-auto">
+        className="bg-right container bg-contain py-10 md:mt-5">
+        <div className="mx-auto">
           <AllSpeakerList schedules={data || []} />
         </div>
       </section>
