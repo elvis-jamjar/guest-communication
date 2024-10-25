@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/4dx/new/Stacked_4DX_Summit_Updated_LogoTransp.png",
-        width: 600,
+        width: 1200,
         height: 630,
         alt: "4DX CEO Summit 2024",
       }
