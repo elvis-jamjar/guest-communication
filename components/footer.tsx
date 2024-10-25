@@ -30,8 +30,12 @@ export default function Footer() {
                 </div>
                 <div className="flex gap-6 flex-col items-center justify-center">
                     <div className="flex gap-4">
-                        <Image src="/images/4dx/linkedin.png" width={200} height={200} alt="linkedin" className="w-12 h-12 object-contain" />
-                        <Image src="/images/4dx/globe.png" width={200} height={200} alt="twitter" className="w-12 h-12 object-contain" />
+                        <a href="https://www.linkedin.com/company/4dx-ventures/" target="_blank" rel="noreferrer">
+                            <Image src="/images/4dx/linkedin.png" width={200} height={200} alt="linkedin" className="w-12 h-12 object-contain" />
+                        </a>
+                        <a href="https://www.4dxventures.com/" target="_blank" rel="noreferrer">
+                            <Image src="/images/4dx/globe.png" width={200} height={200} alt="twitter" className="w-12 h-12 object-contain" />
+                        </a>
                     </div>
                     <p className="w-fit text-lg font-medium">&copy; {new Date().getFullYear()} 4DX Ventures</p>
                 </div>

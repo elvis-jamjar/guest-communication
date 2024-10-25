@@ -173,9 +173,9 @@ export default function Home() {
         <div className="mx-auto">
           <HeadingText text="Accommodation" icon="/images/4dx/accomodation_icon.png" className="md:size-16" />
           <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="flex flex-1 flex-col gap-1 text-lg">
+            <div className="flex flex-1 flex-col gap-1 text-pretty leading-relaxed tracking-normal">
               <h1 className="text-primary-main text-left font-extrabold text-xl md:text-3xl mb-8">Protea Hotel:The Wanderers</h1>
-              <div className="flex w-full flex-col space-y-6 text-pretty">
+              <div className="flex w-full flex-col space-y-6 ">
                 <p>
                   Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.
                 </p>
@@ -183,8 +183,8 @@ export default function Home() {
                   Preferred rates have been negotiated specifically for our group at <strong className="font-extrabold text-secondary-main">$97 per night.</strong> We highly recommend you book your room as soon as you can.
                 </p>
               </div>
-              <div className="flex items-start md:items-end text-pretty py-5 text-base">
-                <Image src="/images/4dx/location.png" priority width={100} height={100} alt="loc" className="size-8 object-contain" />
+              <div className="flex space-x-1 items-center md:items-baseline leading-relaxed tracking-normal py-5 ">
+                <Image src="/images/4dx/location.png" priority width={100} height={100} alt="loc" className="md:size-6 size-4 object-contain" />
                 <p>Corner Corlette Drive and Rudd Road, Illovo, South Africa, 2196.</p>
               </div>
             </div>
@@ -219,7 +219,7 @@ export default function Home() {
       <section className="mx-auto py-8 mt-8">
         <div className="text-lg space-y-10 container ">
           <HeadingText text="Flights" icon="/images/4dx/flight_icon.png" />
-          <p className="leading-relaxed tracking-wide">
+          <p className="leading-relaxed tracking-normal">
             We recommend you book your flights early to get the best rates. For travel within the continent, we recommend booking on Ethiopian
             Airlines, Egypt Airlines, Kenya Airways or South African Airlines for the most direct routes. When booking your flight, use the details
             below for a seamless trip.
@@ -247,16 +247,16 @@ export default function Home() {
         backgroundAttachment: "local"
       }}
         className="bg-right py-8 mt-8">
-        <div className="container mx-auto space-y-8 text-lg">
+        <div className="container mx-auto space-y-8 leading-relaxed tracking-normal">
           <HeadingText text="Travel Requirements" icon="/images/4dx/visa_icon.png" />
-          <h2 className="font-bold">
+          <p className="font-extrabold font-[Roboto-Bold]">
             For entry into South Africa, visitors are expected to have the following:
-          </h2>
-          <ol className="list-decimal list-inside space-y-2">
-            <li>An international passport with 6 months validity and at least two blank pages.</li>
-            <li>A valid visa, if required.</li>
-            <li>Sufficient funds to pay for your day-to-day expenses during your stay.</li>
-            <li>Yellow fever certificates if your journey starts or entails passing through the yellow fever belt of Africa or South America.</li>
+          </p>
+          <ol className="list-decimal list-outside space-y-2 pl-5">
+            <li className="pl-1">An international passport with 6 months validity and at least two blank pages.</li>
+            <li className="pl-1">A valid visa, if required.</li>
+            <li className="pl-1">Sufficient funds to pay for your day-to-day expenses during your stay.</li>
+            <li className="pl-1">Yellow fever certificates if your journey starts or entails passing through the yellow fever belt of Africa or South America.</li>
           </ol>
           <p className="font-extrabold text-secondary-main text-xl md:text-2xl">Visa Exemptions</p>
           <p>Passport holders from the following countries: <strong className="text-secondary-main font-extrabold">US, UK, Ghana, Kenya, Jordan DO NOT</strong> require a visa to enter South Africa.</p>
