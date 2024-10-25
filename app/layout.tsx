@@ -1,4 +1,5 @@
 import Footer from "@/components/footer";
+import Hero from "@/components/hero";
 import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -56,6 +57,7 @@ export default function RootLayout({
         //   backgroundImage: "url('/images/4dx/parttern_2.png')",
         // }}
         className={cn(``)}>
+        <Hero />
         <Providers>
           <Suspense>
             {children}
