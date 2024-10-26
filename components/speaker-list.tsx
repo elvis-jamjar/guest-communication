@@ -11,16 +11,11 @@ import { Skeleton } from "./ui/skeleton";
 
 export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }: { isAdmin?: boolean, schedules: ConferenceScheduleProps[], isLoading: boolean }) {
     const [isOpen, setIsOpen] = useState(true);
-    // const { data: speackers } = useQuery({
-    //     queryKey: ['speakers'],
-    //     queryFn: async () => await getSpeakers(),
-    //     refetchInterval: 90000, // 1 minute 20 seconds
-    // });
     const [speackers, setSpeackers] = useState<Speaker[]>([]);
 
     useEffect(() => {
         function onInit() {
-            const speakers: Speaker[] = [];
+            let speakers: Speaker[] = [];
             schedules.forEach((item) => {
                 if (item.timeLineItems) {
                     item?.timeLineItems?.forEach((t) => {
@@ -35,6 +30,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                 }
             });
             setSpeackers(speakers);
+
         }
         if (Number(schedules?.length) > 0) {
             onInit();
@@ -69,7 +65,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                 aria-controls={`accordion-content`}>
                 <HeadingText
                     containerClassName={cn("w-fit py-0 md:py-0 p-0 m-0")}
-                    text="Speakers" iconNode={<Users className="text-secondary-main w-12 h-12" />} />
+                    text="Speakers" iconNode={<Users className="text-secondary-main size-8 md:size-12" />} />
                 {/* <div className="flex items-center gap-4">
                     <Users className="text-secondary-main size-8" />
                     <span className="text-secondary-main text-2xl text-pretty font-semibold">Speakers</span>
@@ -80,7 +76,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                     }}
                     transition={{ duration: 0.3 }}
                 >
-                    <ChevronDown className="w-8 h-8 text-secondary-main" aria-hidden="true" />
+                    <ChevronDown className="size-8 text-secondary-main" aria-hidden="true" />
                 </motion.span>
             </motion.button>
 
@@ -110,12 +106,11 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                     <motion.div
                         variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
                         transition={{ duration: 0.4 }}
-                        className={cn("grid grid-cols-2 pb-4 md:grid-cols-4 gap-3 justify-center items-center", isAdmin && "md:grid-cols-3")}>
+                        className={cn(`grid grid-cols-2 pb-4 md:grid-cols-4 gap-4 justify-center items-center`, isAdmin && "md:grid-cols-3")}>
                         {
                             speackers?.map((speaker, index) => {
-
                                 return (
-                                    <Card key={index} className={cn("w-full h-full p-0 md:p-4 shadow-none border-0")}>
+                                    <Card key={index} className={cn("w-full h-full p-0 md:p-2 shadow-none border-0")}>
                                         <CardContent className="flex flex-col p-0 items-center space-y-4">
                                             <div className="w-28 h-28 rounded-full bg-gray-50 overflow-hidden">
                                                 <Image
