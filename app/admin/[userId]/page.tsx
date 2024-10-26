@@ -153,7 +153,7 @@ export default function Home() {
                     </div>
                     <ScreenSimulator
                         desktopContent={<ScheduleList schedules={schedules} />}
-                        desktopSecondContent={<AllSpeakerList isAdmin={true} schedules={schedules || []} />}
+                        desktopSecondContent={<AllSpeakerList isAdmin={true} schedules={schedules || []} isLoading={false} />}
                     />
                 </div>
             </ResizablePanel>

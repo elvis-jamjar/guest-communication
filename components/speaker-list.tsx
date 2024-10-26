@@ -7,8 +7,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { HeadingText } from "./heading-text";
 import { Card, CardContent } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
-export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin?: boolean, schedules: ConferenceScheduleProps[] }) {
+export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }: { isAdmin?: boolean, schedules: ConferenceScheduleProps[], isLoading: boolean }) {
     const [isOpen, setIsOpen] = useState(true);
     // const { data: speackers } = useQuery({
     //     queryKey: ['speakers'],
@@ -39,6 +40,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
             onInit();
         }
     }, [schedules]);
+
 
     return (
         // <div>
@@ -83,7 +85,19 @@ export default function AllSpeakerList({ isAdmin = false, schedules }: { isAdmin
             </motion.button>
 
             <AnimatePresence initial={false}>
-                {isOpen && <motion.div
+                {
+                    isOpen && isLoading && <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-4">
+                        {Array.from({ length: 8 })?.map((_, index) => (
+                            <div key={index} className="flex flex-col items-center space-y-2">
+                                <Skeleton className="h-24 w-24 rounded-full" />
+                                <Skeleton className="h-4 w-32" />
+                                <Skeleton className="h-3 w-40" />
+                                <Skeleton className="h-3 w-36" />
+                            </div>
+                        ))}
+                    </div>
+                }
+                {isOpen && !isLoading && <motion.div
                     initial="collapsed"
                     animate="open"
                     exit="collapsed"

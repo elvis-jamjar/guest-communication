@@ -1,7 +1,7 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Person {
   name: string;
@@ -21,12 +21,12 @@ export function PeopleList({ people = [] }: { people: Person[] }) {
               <AvatarFallback>{person.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle>{person.name}</CardTitle>
-              {person.title && <p className="text-sm text-muted-foreground">{person.title}</p>}
+              <CardTitle>{person?.name}</CardTitle>
+              {person?.title && <p className="text-sm text-muted-foreground">{person?.title}</p>}
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-sm">{person.bio}</p>
+            <p className="text-sm">{person?.bio}</p>
           </CardContent>
         </Card>
       ))}

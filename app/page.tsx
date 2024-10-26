@@ -99,7 +99,7 @@ export default function Home() {
       <section
         className="bg-right container bg-contain py-10 md:mt-5">
         <div className="mx-auto">
-          <AllSpeakerList schedules={data || []} />
+          <AllSpeakerList schedules={data || []} isLoading={isLoading} />
         </div>
       </section>
 
