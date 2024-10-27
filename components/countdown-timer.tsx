@@ -11,7 +11,12 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
 
   function calculateTimeLeft() {
     const difference = +targetDate - +new Date()
-    let timeLeft = {}
+    let timeLeft = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0
+    }
 
     if (difference > 0) {
       timeLeft = {
