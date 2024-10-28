@@ -38,6 +38,7 @@
     "react-easy-sort": "^1.6.0",
     "react-image-crop": "^11.0.7",
     "react-resizable-panels": "^2.1.4",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^7.0.2"
