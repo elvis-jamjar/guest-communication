@@ -7,25 +7,27 @@ import React, { useState } from 'react';
 interface AccordionItem {
     title: string | React.ReactNode,
     className?: string,
+    iconClassName?: string,
     children: React.ReactNode | string
 }
 
 interface AnimatedAccordionProps {
+    className?: string,
     items: AccordionItem[]
 }
 
-export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
+export function ReusableAnimatedAccordion({ items, className }: AnimatedAccordionProps) {
     const [expandedIndices, setExpandedIndices] = useState<number[] | null>(null)
-    const [isMobile, setIsMobile] = React.useState(false);
-    React.useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setIsMobile(window.innerWidth < 768);
-        }
-        // onpage resize listen to window size
-        window.addEventListener('resize', () => {
-            setIsMobile(window.innerWidth < 768);
-        });
-    }, []);
+    // const [isMobile, setIsMobile] = React.useState(false);
+    // React.useEffect(() => {
+    //     if (typeof window !== 'undefined') {
+    //         setIsMobile(window.innerWidth < 768);
+    //     }
+    //     // onpage resize listen to window size
+    //     window.addEventListener('resize', () => {
+    //         setIsMobile(window.innerWidth < 768);
+    //     });
+    // }, []);
     const toggleItem = (index: number) => {
         setExpandedIndices((prev) => {
             if (prev?.includes(index)) {
@@ -38,10 +40,10 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
 
     return (
         <div className="w-full">
-            {items.map((item, index, arr) => (
-                <div key={index} className={cn("border-2 border-x-[0.0px] border-t-0 border-primary-main rounded-b-3xl overflow-hidden", ((arr?.length - 1) == index) && 'border-b-2 border-transparent')}>
+            {items?.map((item, index) => (
+                <div key={index} className={cn("border-2 border-x-[0.0px] border-t-0 border-primary-main rounded-b-3xl overflow-hidden last:border-b-2 last:border-transparent", className)}>
                     <motion.button
-                        className="flex justify-between items-center w-full px-2 md:px-16 py-5 text-left bg-white hover:bg-secondary-main/10 focus:outline-none"
+                        className={cn("flex justify-between items-center w-full px-2 md:px-16 py-5 text-left bg-white hover:bg-secondary-main/10 focus:outline-none", item?.className)}
                         onClick={() => toggleItem(index)}
                         initial={false}
                         aria-expanded={
@@ -50,7 +52,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                         aria-controls={`accordion-content-${index}`}
                     >
                         {/* <span className={cn("font-medium text-gray-900", item?.className)}></span> */}
-                        {item.title}
+                        {item?.title}
                         <motion.span
                             animate={{
                                 rotate:
@@ -58,7 +60,7 @@ export function ReusableAnimatedAccordion({ items }: AnimatedAccordionProps) {
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            <ChevronDown className="w-8 h-8 text-secondary-main" aria-hidden="true" />
+                            <ChevronDown className={cn("w-8 h-8 text-secondary-main", item?.iconClassName)} aria-hidden="true" />
                         </motion.span>
                     </motion.button>
                     <AnimatePresence initial={false}>

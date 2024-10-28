@@ -1,6 +1,7 @@
 "use client";;
 import { CountdownTimer } from "@/components/countdown-timer";
 import { HeadingText } from "@/components/heading-text";
+import { QuickLinks } from "@/components/quick-links-section";
 import { ScheduleList } from "@/components/schedule-list";
 import AllSpeakerList from "@/components/speaker-list";
 import { Button } from "@/components/ui/button";
@@ -44,8 +45,12 @@ export default function Home() {
 
   return (
     <>
-
-      <section className="container flex flex-col gap-14 mx-auto py-10 mt-24">
+      <section className={cn("container flex flex-col gap-14 mx-auto py-4 mt-16", !data?.isEventStarted && "hidden")}>
+        <div className="mx-auto">
+          <QuickLinks data={data?.quickLinkData} />
+        </div>
+      </section>
+      <section className={cn("container flex flex-col gap-14 mx-auto py-8 mt-14", data?.isEventStarted && "hidden")}>
         <p
           style={{
             fontSize: "clamp(1rem,1.7vw,2rem)",
@@ -88,11 +93,10 @@ export default function Home() {
                 ))}
               </CardContent>
             </Card>
-
           }
           {
             data &&
-            <ScheduleList schedules={data} />
+            <ScheduleList schedules={data?.schedule || []} />
           }
         </div>
       </section>
@@ -100,7 +104,7 @@ export default function Home() {
       <section
         className="bg-right container bg-contain py-10 md:mt-5">
         <div className="mx-auto">
-          <AllSpeakerList schedules={data || []} isLoading={isLoading} />
+          <AllSpeakerList schedules={data?.schedule || []} isLoading={isLoading} />
         </div>
       </section>
 

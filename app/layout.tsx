@@ -57,8 +57,9 @@ export default function RootLayout({
         //   backgroundImage: "url('/images/4dx/parttern_2.png')",
         // }}
         className={cn(``)}>
-        <Hero />
+
         <Providers>
+          <Hero />
           <Suspense>
             {children}
           </Suspense>

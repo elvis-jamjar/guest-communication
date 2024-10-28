@@ -1,21 +1,27 @@
-'use client'
-
-import { ColorType, ConferenceScheduleProps, FontWeight, PageContent, Speaker, TimelineItemProps } from '@/app/types'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
-import { UploadDropzone } from '@/lib/utils'
-import { GripVertical, PlusCircle } from 'lucide-react'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
-import SortableList, { SortableItem, SortableKnob } from "react-easy-sort"
-import { icons } from './conference-schedule'
-import ImageCropper from './ImageCropper'
-import { PageContentFormComponent } from './page-content-form'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
+'use client';;
+import {
+  ColorType,
+  ConferenceScheduleData,
+  ConferenceScheduleProps,
+  FontWeight,
+  QuickLinkData,
+  Speaker,
+  TimelineItemProps,
+} from '@/app/types';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { UploadDropzone } from '@/lib/utils';
+import { GripVertical, PlusCircle } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
+import { ReusableAnimatedAccordion } from './animated-accordion';
+import ImageCropper from './ImageCropper';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -60,6 +66,139 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
   </div>
 )
 
+function FontWeightSelector({ value, onChange, title }: { value?: FontWeight, onChange: (value: FontWeight) => void, title: string }) {
+
+  return (
+    <SelectGroup>
+      <SelectLabel>{title}</SelectLabel>
+      <Select
+        value={value}
+        onValueChange={(value) => onChange(value as FontWeight)}>
+        <SelectTrigger>
+          <SelectValue placeholder={title} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="font-mono" className='border-l-2 font-mono'>Mono</SelectItem>
+          <SelectItem value="font-thin" className='border-l-2 my-1 font-thin'>Thin</SelectItem>
+          <SelectItem value="font-normal" className='border-l-2 my-1 font-normal'>Normal</SelectItem>
+          <SelectItem value="font-medium" className='border-l-2 my-1 font-medium'>Medium</SelectItem>
+          <SelectItem value="font-bold" className='border-l-2 my-1 font-bold'>Bold</SelectItem>
+        </SelectContent>
+      </Select>
+    </SelectGroup>
+  )
+}
+
+function TextColorSelector({ value, onChange, title }: { value?: ColorType, onChange: (value: ColorType) => void, title: string }) {
+
+  return (
+    <SelectGroup className='space-y-2'>
+      <SelectLabel>{title}</SelectLabel>
+      <Select
+        value={value}
+        onValueChange={(value) => onChange(value as ColorType)}>
+        <SelectTrigger>
+          <SelectValue placeholder={title} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
+          <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
+          <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
+        </SelectContent>
+      </Select>
+    </SelectGroup>
+  )
+}
+
+// quik link form QuickLinkData
+export function QuickLinksForm({ data, onChnage }: { data: QuickLinkData, onChnage: (data: QuickLinkData) => void }) {
+
+  return (
+    <div className="space-y-8 p-4 border rounded-md">
+      <div className='space-y-2 flex-col'>
+        <Input
+          placeholder="Links Section Title"
+          value={data?.title}
+          onChange={(e) => onChnage({ ...data, title: e.target.value })}
+        />
+        <TextColorSelector
+          title='Title color'
+          value={data?.style?.title?.color}
+          onChange={(value) => onChnage({ ...data, style: { ...data?.style, title: { ...data?.style?.title, color: value } } })}
+        />
+        <FontWeightSelector
+          title='Font weight'
+          value={data?.style?.title?.fontWeights}
+          onChange={(value) => onChnage({
+            ...data, style: {
+              ...data.style,
+              title: { ...data.style?.title, fontWeights: value }
+            }
+          })}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Links</Label>
+        <div className="grid grid-cols-1 gap-12">
+          {data?.links?.map((link, index) => (
+            <div key={index} className="flex flex-col items-center gap-6">
+              <Input
+                placeholder='Link Title'
+                value={link?.title}
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])]
+                  newLinks[index] = { ...link, title: e.target.value }
+                  onChnage({ ...data, links: newLinks })
+                }}
+              />
+              {/* description */}
+              <Textarea
+                placeholder="Description"
+                value={link?.description}
+                className='h-52'
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])]
+                  newLinks[index] = { ...link, description: e.target.value }
+                  onChnage({ ...data, links: newLinks })
+                }}
+              />
+              {/* links */}
+              <Input
+                placeholder="Link"
+                type='url'
+                value={link?.link}
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])]
+                  newLinks[index] = { ...link, link: e.target.value }
+                  onChnage({ ...data, links: newLinks })
+                }}
+              />
+              {/* button label */}
+              <Input
+                placeholder="Button Label"
+                value={link?.buttonLabel}
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])]
+                  newLinks[index] = { ...link, buttonLabel: e.target.value }
+                  onChnage({ ...data, links: newLinks })
+                }}
+              />
+              <Button className='self-start' size={"sm"} variant="destructive" onClick={() => {
+                const newLinks = [...(data.links || [])]
+                newLinks.splice(index, 1)
+                onChnage({ ...data, links: newLinks })
+              }}>Remove</Button>
+            </div>
+          ))}
+        </div>
+        <Button size={"lg"} className='w-full' onClick={() => onChnage({
+          ...data, links: [...(data?.links || []), { link: '' }]
+        })}>Add Link</Button>
+      </div>
+    </div>
+  )
+}
+
 const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProps, onChange: (item: TimelineItemProps) => void, onRemove: () => void }) => {
   const [showSpeakers, setShowSpeakers] = useState(Number(item.speakers?.length) > 0)
   const [showHost, setShowHost] = useState(!!item.host)
@@ -75,19 +214,11 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           value={item.time}
           onChange={(e) => onChange({ ...item, time: e.target.value })}
         />
-        <Select
+        <TextColorSelector
+          title='Time color'
           value={item?.color?.time}
-          onValueChange={(value) => onChange({ ...item, color: { ...item?.color, time: value as ColorType } })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Time color" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-            <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
-            <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
-          </SelectContent>
-        </Select>
+          onChange={(value) => onChange({ ...item, color: { ...item?.color, time: value } })}
+        />
       </div>
 
       <div className='space-y-2 hidden'>
@@ -96,73 +227,37 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           value={item.sectionTitle}
           onChange={(e) => onChange({ ...item, sectionTitle: e.target.value })}
         />
-        <Select
+        <TextColorSelector
+          title='Section Title color'
           value={item?.color?.sectionTitle}
-          onValueChange={(value) => onChange({ ...item, color: { ...item?.color, sectionTitle: value as ColorType } })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Section Title color" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-            <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
-            <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
-          </SelectContent>
-        </Select>
+          onChange={(value) => onChange({ ...item, color: { ...item?.color, sectionTitle: value } })}
+        />
       </div>
       <Input
         placeholder="Title"
         value={item.title}
         onChange={(e) => onChange({ ...item, title: e.target.value })}
       />
-      <Select
+      <TextColorSelector
+        title='Title color'
         value={item?.color?.title}
-        onValueChange={(value) => onChange({ ...item, color: { ...item?.color, title: value as ColorType } })}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Title color" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="text-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
-          <SelectItem value="text-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
-          <SelectItem value="text-black" className='border-l-2 my-1 text-black hover:text-black'>Black</SelectItem>
-        </SelectContent>
-      </Select>
-      <Select
+        onChange={(value) => onChange({ ...item, color: { ...item?.color, title: value } })}
+      />
+      <FontWeightSelector
+        title='Title font weight'
         value={item?.fontWeights?.title}
-        onValueChange={(value) => onChange({ ...item, fontWeights: { ...item.fontWeights, title: value as FontWeight } })}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Title font weight" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="font-mono" className='border-l-2 font-mono'>Mono</SelectItem>
-          <SelectItem value="font-thin" className='border-l-2 my-1 font-thin'>Thin</SelectItem>
-          <SelectItem value="font-normal" className='border-l-2 my-1 font-normal'>Normal</SelectItem>
-          <SelectItem value="font-medium" className='border-l-2 my-1 font-medium'>Medium</SelectItem>
-          <SelectItem value="font-bold" className='border-l-2 my-1 font-bold'>Bold</SelectItem>
-        </SelectContent>
-      </Select>
+        onChange={(value) => onChange({ ...item, fontWeights: { ...item.fontWeights, title: value } })}
+      />
       <Textarea
         placeholder="Description"
         value={item.description}
         onChange={(e) => onChange({ ...item, description: e.target.value })}
       />
-      <Select
-        value={item?.fontWeights?.description}
-        onValueChange={(value) => onChange({ ...item, fontWeights: { ...item.fontWeights, description: value as FontWeight } })}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Description font weight" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="font-mono" className='border-l-2 font-mono'>Mono</SelectItem>
-          <SelectItem value="font-thin" className='border-l-2 my-1 font-thin'>Thin</SelectItem>
-          <SelectItem value="font-normal" className='border-l-2 my-1 font-normal'>Normal</SelectItem>
-          <SelectItem value="font-medium" className='border-l-2 my-1 font-medium'>Medium</SelectItem>
-          <SelectItem value="font-bold" className='border-l-2 my-1 font-bold'>Bold</SelectItem>
-        </SelectContent>
-      </Select>
+      <TextColorSelector
+        title='Description color'
+        value={item?.color?.description}
+        onChange={(value) => onChange({ ...item, color: { ...item?.color, description: value } })}
+      />
 
       <div className="flex items-center space-x-2">
         <Switch
@@ -174,14 +269,15 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           Bullet Point
         </Label>
       </div>
-      {
-        item?.isTrack ? <div className='flex items-center space-x-2'>
+      {/* {
+        <div className='flex items-center space-x-2'>
           <Input
             placeholder="Track Label"
             value={item.trackLabel}
             onChange={(e) => onChange({ ...item, trackLabel: e.target.value })}
           />
-        </div> :
+        </div>
+         :
           <Select
             value={item.icon}
             onValueChange={(value) => onChange({ ...item, icon: value })}>
@@ -199,8 +295,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
               ))}
             </SelectContent>
           </Select>
-      }
-      <Select
+      } */}
+      {/* <Select
         value={item?.iconColor}
         onValueChange={(value) => onChange({ ...item, iconColor: value as "bg-secondary-main" | "bg-primary-main" })}>
         <SelectTrigger>
@@ -210,15 +306,15 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <SelectItem value="bg-primary-main" className='border-l-2 border-l-primary-main text-primary-main hover:text-primary-main'>Primary</SelectItem>
           <SelectItem value="bg-secondary-main" className='border-l-2 my-1 border-l-secondary-main hover:text-secondary-main'>Secondary</SelectItem>
         </SelectContent>
-      </Select>
-      <div className="flex items-center space-x-2">
+      </Select> */}
+      {/* <div className="flex items-center space-x-2">
         <Switch
           id="hide-line"
           checked={item.hideLine}
           onCheckedChange={(checked) => onChange({ ...item, hideLine: checked })}
         />
         <Label htmlFor="hide-line">Hide Line</Label>
-      </div>
+      </div> */}
       {/* <div className="flex items-center space-x-2">
         <Switch
           id="is-first"
@@ -227,7 +323,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         />
         <Label htmlFor="is-first">Is First</Label>
       </div> */}
-      <div className="space-y-2">
+      <div className="space-y-2 hidden">
         <Label>Images</Label>
         <UploadDropzone
           endpoint="imageUploader"
@@ -275,7 +371,8 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           </SelectContent>
         </Select>
       </div>
-      <div className="space-y-2">
+
+      <div className="space-y-2 hidden">
         <Label>Sponsors</Label>
         <UploadDropzone
           endpoint="imageUploader"
@@ -293,7 +390,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             alert(`ERROR! ${error?.message}`);
           }}
         />
-        <div className="flex items-center flex-wrap gap-2">
+        <div className="flex  items-center flex-wrap gap-2">
           {item?.sponsors?.map((sponsor, index) => (
             sponsor.startsWith('http') ?
               <div className='flex flex-col shadow-lg p-2 rounded-lg gap-1' key={index}>
@@ -331,11 +428,10 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           ))}
         </div>
         {/*  add named sponsors */}
-        <Button size={"sm"} onClick={() => {
+        {/* <Button size={"sm"} onClick={() => {
           onChange({ ...item, sponsors: [...(item.sponsors || []), 'Sponsor name'] })
-        }}>Add Named Sponsor</Button>
+        }}>Add Named Sponsor</Button> */}
       </div>
-
 
       <div className="space-y-2">
         <div className="flex items-center space-x-2">
@@ -558,9 +654,9 @@ export function ConferenceScheduleForm(
       </div>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Timeline Items</h2>
+          <h2 className="text-lg font-semibold">Timeline Items</h2>
           <Button onClick={() => setSchedule({ ...schedule, timeLineItems: [...schedule.timeLineItems, {}] })}>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Timeline Item
+            <PlusCircle className="mr-2 h-4 w-4" /> Add Timeline
           </Button>
         </div>
         <Accordion
@@ -613,40 +709,55 @@ export function ConferenceScheduleForm(
 }
 
 // list of conference schedule forms
-export function ConferenceScheduleForms({ schedules, onChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void }) {
+export function ConferenceScheduleForms({ scheduleData, onChange }: { scheduleData: ConferenceScheduleData, onChange: (schedules: ConferenceScheduleData) => void }) {
   return (
     <div className="px-4 max-w-4xl mx-auto">
       <div className="px-8 py-4 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
         <h1 className="text-xl font-bold">Daily Schedules</h1>
-        <Button size={"sm"} onClick={() => onChange([...schedules, { day: '', title: '', timeLineItems: [] }])}>
+        <Button size={"sm"} onClick={() => onChange({
+          ...scheduleData,
+          schedule: [...(scheduleData?.schedule || []), { day: `Day ${Number(scheduleData?.schedule?.length || 0) + 1}`, title: '', timeLineItems: [] }]
+        })}>
           <PlusCircle className="mr-2 h-4 w-4" /> Add Schedule
         </Button>
       </div>
+      {/* event live mode toggle */}
+      <div className="flex items-center space-x-2 p-4">
+        <Switch
+          id="is-live"
+          checked={scheduleData?.isEventStarted}
+          onCheckedChange={(checked) => onChange({ ...scheduleData, isEventStarted: checked })}
+        />
+        <Label htmlFor="is-live"
+          className='text-sm font-bold'>
+          Event started
+        </Label>
+      </div>
       <div className="space-y-8">
         <Accordion type="single" collapsible>
-          {schedules?.map((schedule, index) => (
+          {scheduleData?.schedule?.map((schedule, index) => (
             <AccordionItem key={`day-key-${index}`} value={`${index}`} className='shadow-sm rounded-md hover:bg-primary-main/5 pr-4 my-4'>
               <AccordionTrigger className='cursor-pointer w-full decoration-transparent hover:decoration-transparent'>
                 <div className="flex items-center md:px-4 justify-between">
-                  <h2 className="text-md font-semibold text-white rounded-3xl px-2 py-1 bg-primary-main">{schedule?.day || `Day ${schedules?.length}`}</h2>
+                  <h2 className="text-md font-semibold text-white rounded-3xl px-2 py-1 bg-primary-main">{schedule?.day || `Day ${Number(scheduleData?.schedule?.length || 1)}`}</h2>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
                 <ConferenceScheduleForm
                   scheduleDay={schedule}
                   onChange={(data) => {
-                    const newSchedules = [...schedules]
+                    const newSchedules = [...scheduleData.schedule]
                     newSchedules[index] = data
-                    onChange(newSchedules)
+                    onChange({ ...scheduleData, schedule: newSchedules })
                   }}
                 />
                 {/* remove */}
                 <Button
                   variant="destructive"
                   onClick={() => {
-                    const newSchedules = [...schedules]
+                    const newSchedules = [...scheduleData.schedule]
                     newSchedules.splice(index, 1)
-                    onChange(newSchedules)
+                    onChange({ ...scheduleData, schedule: newSchedules })
                   }}
                 > Remove Schedule</Button>
               </AccordionContent>
@@ -654,26 +765,27 @@ export function ConferenceScheduleForms({ schedules, onChange }: { schedules: Co
           ))}
         </Accordion>
       </div>
-      {/* <PageContentForm
-        pageContent={pageContent}
-        onChange={onPageContentChange}
-      /> */}
+      <div>
+        <ReusableAnimatedAccordion
+          className='rounded-none'
+          items={[
+            {
+              title: <h2 className='text-left'>{"Quick Links"}</h2>,
+              className: 'p-5 md:px-2 md:pr-10 round-b-none rounded-sm justify-between',
+              iconClassName: 'size-5',
+              children: (<QuickLinksForm
+                data={scheduleData?.quickLinkData || {}}
+                onChnage={(data) => onChange({ ...scheduleData, quickLinkData: data })}
+              />)
+            }
+          ]}
+        />
+
+      </div>
     </div>
   )
 }
 
-
-export function PageContentForm({ pageContent, onChange }: { pageContent: PageContent, onChange: (pageContent: PageContent) => void }) {
-  return (
-    <div className='px-8 py-4 flex flex-col justify-between bg-white w-full'>
-      <h1 className="text-xl font-bold py-2">Page Content</h1>
-      <PageContentFormComponent
-        pageContent={pageContent}
-        onPageContentChange={onChange}
-      />
-    </div>
-  )
-}
 
 // update speakers images and toggle whether to display them or not on the website
 // export function SpeakerImageUpdater(

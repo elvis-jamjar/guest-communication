@@ -17,6 +17,11 @@ export type FontWeight =
   | "font-normal"
   | "font-medium"
   | "font-bold";
+
+export interface ItemStyle {
+  color?: ColorType;
+  fontWeights?: FontWeight;
+}
 interface SectionBreakOuts {
   title?: string;
   description?: string;
@@ -85,8 +90,26 @@ export interface ConferenceScheduleProps {
   timeLineItems: TimelineItemProps[];
 }
 
+export interface ConferenceScheduleData {
+  schedule: ConferenceScheduleProps[];
+  quickLinkData?: QuickLinkData;
+  settings?: Settings;
+  pageContent?: PageContent;
+  isEventStarted?: boolean;
+}
+
 export interface Settings {
   columns?: number;
+}
+
+export interface QuickLinkData {
+  title?: string;
+  links?: QuickLinks[];
+  style?: {
+    title?: ItemStyle;
+    description?: ItemStyle;
+    buttonLabel?: ItemStyle;
+  };
 }
 
 export interface QuickLinks {
