@@ -39,7 +39,7 @@ export default function Home() {
         program?.scrollIntoView({ behavior: "smooth" });
         // remove the query
         window.history.replaceState({}, document.title, window.location.pathname);
-      }, 600);
+      }, 620);
     }
   }, []);
 
