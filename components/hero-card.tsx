@@ -9,7 +9,7 @@ import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
 
 export function HeroCard() {
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['conference-schedules'],
         queryFn: async () => await getConferenceSchedule(),
         // staleTime: 1000 * 60 * 10 // 
@@ -36,13 +36,13 @@ export function HeroCard() {
                         <Separator orientation="vertical" className="h-full ml-2 border-[0.2px] hidden md:block" />
                         <Separator orientation="horizontal" className="w-full border-[0.2px] md:hidden" />
                     </div>
-                    <div className="flex-col w-full h-full flex-1 justify-center gap-5 flex items-center">
-                        <div className={cn("flex flex-col font-semibold text-md md:text-lg text-pretty items-center text-center", data?.isEventStarted && "md:text-xl")}>
+                    <div className="flex-col transition-all duration-700 w-full h-full flex-1 justify-center gap-5 flex items-center">
+                        <div className={cn("flex flex-col font-semibold text-md md:text-lg text-pretty items-center text-center")}>
                             <span>Welcome to the 4DX CEO Summit,</span>
                             <span>an exclusive annual event hosted</span>
                             <span>by 4DX Ventures.</span>
                         </div>
-                        {!data?.isEventStarted && <div className="flex-col flex gap-4">
+                        {!isLoading && !data?.isEventStarted && <div className="flex-col flex gap-4">
                             <p className="text-secondary-main text-center pb-2 text-sm md:text-xl font-extrabold">Click below to complete your registration</p>
                             <div className="flex flex-col items-center space-y-5 md:px-16">
                                 <a target="_blank" href="https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1" className="w-full">
