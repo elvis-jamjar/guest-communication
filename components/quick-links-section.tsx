@@ -18,13 +18,13 @@ export function QuickLinks({ data }: { data?: QuickLinkData }) {
                 {data?.links?.map((link, index) => (
                     <Card key={index} className="w-full gap-0 space-y-0 flex-col flex md:w-[30%] shadow-none border-0">
                         <CardHeader className="">
-                            <h1 className={cn(data?.style?.title?.color, data?.style?.title?.fontWeights)}>{link.title}</h1>
+                            <h1 className={cn("text-center", data?.style?.title?.color, data?.style?.title?.fontWeights)}>{link.title}</h1>
                         </CardHeader>
-                        <CardContent className="flex-1">
-                            <CardDescription className="text-base">
+                        {link?.description && <CardContent className="flex-1">
+                            <CardDescription className="text-base text-pretty text-center">
                                 <p className="line-clamp-6">{link?.description}</p>
                             </CardDescription>
-                        </CardContent>
+                        </CardContent>}
                         <CardFooter>
                             <a target="_blank" href={link?.link || "#"} className="w-full">
                                 <Button
