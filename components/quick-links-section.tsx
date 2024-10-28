@@ -6,14 +6,40 @@ import { ArrowUpRight, Link } from "lucide-react";
 import { HeadingText } from "./heading-text";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
-export function QuickLinks({ data }: { data?: QuickLinkData }) {
+export function QuickLinks({ data, isLoading }: { data?: QuickLinkData, isLoading?: boolean }) {
     return (
         <div>
-            {/* <h1>{data?.title || "Quick Links"}</h1> */}
             <HeadingText text={data?.title || "Quick Links"}
                 iconNode={<Link size={32} />}
             />
+            {
+                isLoading && <div className="container mx-auto px-4 py-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Get Started Section */}
+                        <div className="space-y-4">
+                            <Skeleton className="h-8 w-3/4 mx-auto" />
+                            <Skeleton className="h-20 w-full" />
+                            <Skeleton className="h-12 w-40 mx-auto" />
+                        </div>
+
+                        {/* Customer Support Section */}
+                        <div className="space-y-4">
+                            <Skeleton className="h-8 w-3/4 mx-auto" />
+                            <Skeleton className="h-32 w-full" />
+                            <Skeleton className="h-12 w-48 mx-auto" />
+                        </div>
+
+                        {/* Exclusive Member Benefits Section */}
+                        <div className="space-y-4">
+                            <Skeleton className="h-8 w-3/4 mx-auto" />
+                            <Skeleton className="h-32 w-full" />
+                            <Skeleton className="h-12 w-40 mx-auto" />
+                        </div>
+                    </div>
+                </div>
+            }
             <div className="flex flex-wrap justify-center gap-2 auto-rows-max">
                 {data?.links?.map((link, index) => (
                     <Card key={index} className="w-full gap-0 space-y-0 flex-col flex md:w-[30%] shadow-none border-0">
@@ -21,7 +47,7 @@ export function QuickLinks({ data }: { data?: QuickLinkData }) {
                             <h1 className={cn("text-center", data?.style?.title?.color, data?.style?.title?.fontWeights)}>{link.title}</h1>
                         </CardHeader>
                         {link?.description && <CardContent className="flex-1">
-                            <CardDescription className="text-base text-pretty text-center">
+                            <CardDescription className="text-base  text-center">
                                 <p className="line-clamp-6">{link?.description}</p>
                             </CardDescription>
                         </CardContent>}

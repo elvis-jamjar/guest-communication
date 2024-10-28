@@ -47,7 +47,7 @@ export default function Home() {
     <>
       <section className={cn("container flex flex-col gap-14 mx-auto py-4 mt-16", !data?.isEventStarted && "hidden")}>
         <div className="mx-auto">
-          <QuickLinks data={data?.quickLinkData} />
+          <QuickLinks data={data?.quickLinkData} isLoading={isLoading} />
         </div>
       </section>
       <section className={cn("container flex flex-col gap-14 mx-auto py-8 mt-14", data?.isEventStarted && "hidden")}>
