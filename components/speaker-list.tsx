@@ -16,21 +16,30 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
     useEffect(() => {
         function onInit() {
             let speakers: Speaker[] = [];
+            let moderators: Speaker[] = [];
             schedules.forEach((item) => {
                 if (item.timeLineItems) {
                     item?.timeLineItems?.forEach((t) => {
-                        if (t.speakers) {
-                            t.speakers.forEach((s) => {
-                                if (s.visibleOnPage && s?.name) {
+                        if (t?.speakers) {
+                            t?.speakers?.forEach((s) => {
+                                if (s?.visibleOnPage && s?.name) {
                                     speakers.push(s);
+                                }
+                            });
+                        }
+                        if (t?.moderators) {
+                            t?.moderators.forEach((s) => {
+                                if (s?.visibleOnPage && s?.name) {
+                                    // replace  Moderated by: with empty string
+                                    const _name = s.name.replace('Moderated by:', '').replaceAll(':', '')?.trim();
+                                    moderators.push({ ...s, name: _name });
                                 }
                             });
                         }
                     });
                 }
             });
-            setSpeackers(speakers);
-
+            setSpeackers([...speakers, ...moderators]);
         }
         if (Number(schedules?.length) > 0) {
             onInit();
@@ -101,8 +110,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                         open: { opacity: 1, height: "auto" },
                         collapsed: { opacity: 0, height: 0 }
                     }}
-                    transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                >
+                    transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}>
                     <motion.div
                         variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
                         transition={{ duration: 0.4 }}

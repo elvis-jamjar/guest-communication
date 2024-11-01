@@ -8,9 +8,10 @@ import { SheetComponent } from './ui/sheet';
 
 interface ImageCropperProps {
     onCompleteUpload: (url: string) => void;
+    btnTitle: string;
 }
 
-const ImageCropper: React.FC<ImageCropperProps> = ({ onCompleteUpload }) => {
+const ImageCropper: React.FC<ImageCropperProps> = ({ btnTitle, onCompleteUpload }) => {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area>();
@@ -75,7 +76,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ onCompleteUpload }) => {
                 <Button
                     disabled={isUploading}
                     size={"sm"}
-                    className='bg-secondary-main text-white hover:bg-secondary-main/95' onClick={() => imageInputRef.current?.click()}>Upload speaker photo</Button>
+                    className='bg-secondary-main text-white hover:bg-secondary-main/95' onClick={() => imageInputRef.current?.click()}>{btnTitle}</Button>
                 <input
                     ref={imageInputRef}
                     className="border hidden border-gray-300 p-5"

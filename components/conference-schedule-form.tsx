@@ -24,7 +24,7 @@ import ImageCropper from './ImageCropper';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
 
-const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
+const SpeakerForm = ({ speaker, onChange, onRemove, title }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void, title: string }) => (
   <div className="space-y-4 p-4 border rounded-md">
     <Input
       placeholder="Name"
@@ -44,13 +44,14 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
     <div className='flex-col'>
       {/* upload speaker image */}
       <ImageCropper
+        btnTitle={`Upload ${title} photo`}
         onCompleteUpload={(url) => onChange({ ...speaker, photo: url })}
       />
       {speaker?.photo && <div className="flex items-center flex-col space-y-2 py-2 gap-2">
         <div className="flex w-24 h-24 bg-white rounded-full items-center gap-2">
           <Image src={speaker?.photo} priority alt={speaker?.name} width={200} height={200} className="rounded-full w-full h-full object-cover" />
         </div>
-        <Button size={"sm"} onClick={() => onChange({ ...speaker, photo: '' })}>Remove speaker photo</Button>
+        <Button size={"sm"} onClick={() => onChange({ ...speaker, photo: '' })}>Remove {title} photo</Button>
       </div>}
     </div>
     {/* toggle to display speaker on page */}
@@ -60,9 +61,9 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
         checked={speaker?.visibleOnPage}
         onCheckedChange={(checked) => onChange({ ...speaker, visibleOnPage: checked })}
       />
-      <Label htmlFor="is-displayed">Display Speaker</Label>
+      <Label htmlFor="is-displayed">Display {title}</Label>
     </div>
-    <Button variant="destructive" onClick={onRemove}>Remove Speaker</Button>
+    <Button variant="destructive" onClick={onRemove}>Remove {title}</Button>
   </div>
 )
 
@@ -454,6 +455,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <div className="space-y-4">
             {item?.speakers?.map((speaker, index) => (
               <SpeakerForm
+                title='Speaker'
                 key={index}
                 speaker={speaker}
                 onChange={(updatedSpeaker) => {
@@ -491,6 +493,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         </div>
         {showHost && item.host && (
           <SpeakerForm
+            title='Host'
             speaker={item.host}
             onChange={(updatedHost) => onChange({ ...item, host: updatedHost })}
             onRemove={() => onChange({ ...item, host: undefined })}
@@ -520,6 +523,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <div className="space-y-4">
             {item.facilitators?.map((facilitator, index) => (
               <SpeakerForm
+                title='Facilitator'
                 key={index}
                 speaker={facilitator}
                 onChange={(updatedFacilitator) => {
@@ -560,6 +564,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <div className="space-y-4">
             {item.moderators?.map((moderator, index) => (
               <SpeakerForm
+                title='Moderator'
                 key={index}
                 speaker={moderator}
                 onChange={(updatedModerator) => {
