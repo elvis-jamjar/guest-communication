@@ -16,7 +16,6 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
     useEffect(() => {
         function onInit() {
             let speakers: Speaker[] = [];
-            let moderators: Speaker[] = [];
             schedules.forEach((item) => {
                 if (item.timeLineItems) {
                     item?.timeLineItems?.forEach((t) => {
@@ -32,14 +31,14 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                                 if (s?.visibleOnPage && s?.name) {
                                     // replace  Moderated by: with empty string
                                     const _name = s.name.replace('Moderated by:', '').replaceAll(':', '')?.trim();
-                                    moderators.push({ ...s, name: _name });
+                                    speakers.push({ ...s, name: _name });
                                 }
                             });
                         }
                     });
                 }
             });
-            setSpeackers([...speakers, ...moderators]);
+            setSpeackers([...speakers]);
         }
         if (Number(schedules?.length) > 0) {
             onInit();
