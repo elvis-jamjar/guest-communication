@@ -30,7 +30,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                             t?.moderators.forEach((s) => {
                                 if (s?.visibleOnPage && s?.name) {
                                     // replace  Moderated by: with empty string
-                                    const _name = s.name.replace('Moderated by:', '').replaceAll(':', '')?.trim();
+                                    const _name = s?.name?.replace('Moderated by:', '').replaceAll(':', '')?.trim();
                                     speakers.push({ ...s, name: _name });
                                 }
                             });
