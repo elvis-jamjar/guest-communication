@@ -1,16 +1,16 @@
 "use client"
 
+import { HashTags } from "@/components/hashtasg";
+import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
+import { ScheduleList } from "@/components/schedule-list";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { Separator } from "@/components/ui/separator"
-import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { ScheduleList } from "@/components/schedule-list";
-import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
-import { HashTags } from "@/components/hashtasg";
 
 const textIconData = [
   {
@@ -99,7 +99,9 @@ export default function Home() {
       <header className="bg-white py-4 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto  max-w-5xl md:px-8 flex justify-between items-center">
           {/* <h1 className="text-2xl font-bold">ACGC</h1> */}
-          <Image src="/images/logo.png" width={400} height={400} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
+          <a href="https://acgc.africa" target="_blank" className="text-2xl font-bold">
+            <Image src="/images/logo.png" width={400} height={400} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
+          </a>
           <nav className="flex items-center gap-2">
             {
               sections?.map((section, index) => {
@@ -127,7 +129,9 @@ export default function Home() {
           {/* Header Section */}
           <header className="flex items-center py-4">
             <div className="flex flex-wrap items-center md:px-8">
-              <Image src="/images/logo.png" width={400} height={400} alt="ACGC Logo" className="w-64 h-auto rounded-xl" />
+              <a href="https://acgc.africa" target="_blank" className="text-2xl font-bold">
+                <Image src="/images/logo.png" width={400} height={400} alt="ACGC Logo" className="w-64 h-auto rounded-xl" />
+              </a>
             </div>
           </header>
           {/* Conference Title */}
