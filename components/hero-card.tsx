@@ -42,7 +42,8 @@ export function HeroCard() {
                             <span>an exclusive annual event hosted</span>
                             <span>by 4DX Ventures.</span> */}
                             <h1 className="text-center max-w-xs">
-                                Welcome to the 4DX CEO Summit, an exclusive annual event hosted by 4DX Ventures.
+                                {/* Welcome to the 4DX CEO Summit, an exclusive annual event hosted by 4DX Ventures. */}
+                                Welcome to the 4DX CEO Summit website. We look forward to engaging sessions with you. Thank you for attending.
                             </h1>
                         </div>
                         {!isLoading && !data?.isEventStarted && <div className="flex-col flex gap-4">
