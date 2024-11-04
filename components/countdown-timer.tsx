@@ -45,6 +45,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
   }
   useEffect(() => {
     const timer = setTimeout(() => {
+      console.log('timer')
       setTimeLeft(calculateTimeLeft())
     }, 1000)
 

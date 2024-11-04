@@ -50,7 +50,7 @@ export default function Home() {
           <QuickLinks data={data?.quickLinkData} isLoading={isLoading} />
         </div>
       </section>
-      <section className={cn("container flex flex-col gap-14 mx-auto py-8 mt-14", data?.isEventStarted && "hidden")}>
+      {data?.isEventStarted === false && <section className={cn("container flex flex-col gap-14 mx-auto py-8 mt-14")}>
         <p
           style={{
             fontSize: "clamp(1rem,1.7vw,2rem)",
@@ -59,7 +59,7 @@ export default function Home() {
           Join us for insightful discussions, networking opportunities, and strategic <br className="hidden md:block" /> collaborations shaping the future of technology and innovation across Africa.
         </p>
         <CountdownTimer />
-      </section>
+      </section>}
       {/* Program Section */}
       <section
         style={{
