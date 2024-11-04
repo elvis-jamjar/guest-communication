@@ -40,9 +40,9 @@ export function QuickLinks({ data, isLoading }: { data?: QuickLinkData, isLoadin
                     </div>
                 </div>
             }
-            <div className="flex flex-wrap w-full justify-center gap-2">
+            <div className="flex flex-wrap w-full gap-12 justify-center">
                 {data?.links?.map((link, index) => (
-                    <Card key={index} className="w-full gap-0 space-y-2 flex-col flex md:w-[30%] shadow-none border-0">
+                    <Card key={index} className="w-full  gap-0 space-y-2 flex-col flex md:w-[30%] shadow-none border-0">
                         <CardHeader className="p-0">
                             <h1 className={cn("text-center", data?.style?.title?.color, data?.style?.title?.fontWeights)}>{link.title}</h1>
                         </CardHeader>
