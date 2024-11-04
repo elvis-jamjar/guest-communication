@@ -1,6 +1,6 @@
 'use client';;
-import { ConferenceScheduleProps, Speaker, TimelineItemProps } from '@/app/types';
 import { cn } from '@/lib/utils';
+import { ConferenceScheduleProps, Speaker, TimelineItemProps } from '@/types';
 import {
   Camera,
   Coffee,

@@ -1,9 +1,9 @@
 'use client'
 
-import { PageContent } from "@/app/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import { PageContent } from "@/types"
 import { ArrowUpRight } from "lucide-react"
 
 

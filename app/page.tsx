@@ -257,7 +257,7 @@ export default function Home() {
       </section>
       <Separator orientation="horizontal" className="w-full mt-20 bg-secondary-main" />
       {/* complete your registration */}
-      <section className="py-12 ">
+      <section className={cn("py-12", data?.isEventStarted && "hidden")}>
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 justify-center gap-4 items-center w-full flex-wrap">
             <p className="font-extrabold text-xl text-center text-secondary-main">Complete your registration</p>

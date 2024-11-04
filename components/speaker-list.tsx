@@ -1,6 +1,6 @@
 'use client';
-import { ConferenceScheduleProps, Speaker } from "@/app/types";
 import { cn } from "@/lib/utils";
+import { ConferenceScheduleProps, Speaker } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Users } from "lucide-react";
 import Image from "next/image";

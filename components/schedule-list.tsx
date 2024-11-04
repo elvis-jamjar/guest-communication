@@ -1,6 +1,6 @@
 'use client';;
-import { ConferenceScheduleProps } from "@/app/types";
 import { cn } from "@/lib/utils";
+import { ConferenceScheduleProps } from "@/types";
 import { ReusableAnimatedAccordion } from "./animated-accordion";
 import { ConferenceSchedule } from "./conference-schedule";
 

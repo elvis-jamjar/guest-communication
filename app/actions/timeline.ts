@@ -1,6 +1,6 @@
 "use server";
-import { ConferenceScheduleData } from "@/app/types";
 import { redis } from "@/lib/db";
+import { ConferenceScheduleData } from "@/types";
 
 const DATA_KEY = "4dx-conference-schedules-lts";
 const OLD_DATA_KEY = "4dx-conference-schedules";

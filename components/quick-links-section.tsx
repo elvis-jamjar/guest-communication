@@ -1,7 +1,7 @@
 "use client"
 
-import { QuickLinkData } from "@/app/types";
 import { cn } from "@/lib/utils";
+import { QuickLinkData } from "@/types";
 import { ArrowUpRight, Link } from "lucide-react";
 import { HeadingText } from "./heading-text";
 import { Button } from "./ui/button";
@@ -10,7 +10,7 @@ import { Skeleton } from "./ui/skeleton";
 
 export function QuickLinks({ data, isLoading }: { data?: QuickLinkData, isLoading?: boolean }) {
     return (
-        <div>
+        <div className="mx-auto w-full">
             <HeadingText text={data?.title || "Quick Links"}
                 iconNode={<Link size={32} />}
             />
@@ -40,18 +40,18 @@ export function QuickLinks({ data, isLoading }: { data?: QuickLinkData, isLoadin
                     </div>
                 </div>
             }
-            <div className="flex flex-wrap justify-center gap-2 auto-rows-max">
+            <div className="flex flex-wrap w-full justify-center gap-2">
                 {data?.links?.map((link, index) => (
-                    <Card key={index} className="w-full gap-0 space-y-0 flex-col flex md:w-[30%] shadow-none border-0">
-                        <CardHeader className="">
+                    <Card key={index} className="w-full gap-0 space-y-2 flex-col flex md:w-[30%] shadow-none border-0">
+                        <CardHeader className="p-0">
                             <h1 className={cn("text-center", data?.style?.title?.color, data?.style?.title?.fontWeights)}>{link.title}</h1>
                         </CardHeader>
-                        {link?.description && <CardContent className="flex-1">
-                            <CardDescription className="text-base  text-center">
+                        {link?.description && <CardContent className="flex-1 p-0">
+                            <CardDescription className="text-base p-0 text-center">
                                 <p className="line-clamp-6">{link?.description}</p>
                             </CardDescription>
                         </CardContent>}
-                        <CardFooter>
+                        <CardFooter className="p-0 mt-1">
                             <a target="_blank" href={link?.link || "#"} className="w-full">
                                 <Button
                                     style={{

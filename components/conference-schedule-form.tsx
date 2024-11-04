@@ -1,4 +1,11 @@
 'use client';;
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { UploadDropzone } from '@/lib/utils';
 import {
   ColorType,
   ConferenceScheduleData,
@@ -7,14 +14,7 @@ import {
   QuickLinkData,
   Speaker,
   TimelineItemProps,
-} from '@/app/types';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { UploadDropzone } from '@/lib/utils';
+} from '@/types';
 import { GripVertical, PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';

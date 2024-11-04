@@ -38,9 +38,12 @@ export function HeroCard() {
                     </div>
                     <div className="flex-col transition-all duration-700 w-full h-full flex-1 justify-center gap-5 flex items-center">
                         <div className={cn("flex flex-col font-semibold text-md md:text-lg text-pretty items-center text-center")}>
-                            <span>Welcome to the 4DX CEO Summit,</span>
+                            {/* <span>Welcome to the 4DX CEO Summit,</span>
                             <span>an exclusive annual event hosted</span>
-                            <span>by 4DX Ventures.</span>
+                            <span>by 4DX Ventures.</span> */}
+                            <h1 className="text-center max-w-xs">
+                                Welcome to the 4DX CEO Summit, an exclusive annual event hosted by 4DX Ventures.
+                            </h1>
                         </div>
                         {!isLoading && !data?.isEventStarted && <div className="flex-col flex gap-4">
                             <p className="text-secondary-main text-center pb-2 text-sm md:text-xl font-extrabold">Click below to complete your registration</p>

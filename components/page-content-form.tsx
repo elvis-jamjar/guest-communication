@@ -1,12 +1,12 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { PageContent } from '@/types'
 import { PlusCircle, Trash2 } from 'lucide-react'
-import { PageContent } from '@/app/types'
 
 interface PageContentFormProps {
   pageContent: PageContent
