@@ -134,31 +134,32 @@ export const ChatBot = () => {
     };
 
     return (
-        <motion.div
-            className="max-w-3xl mx-auto mb-8 mr-8 fixed bottom-0 right-0"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}>
+        <>
             <motion.div
-                className="relative group"
-                whileHover={{ y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-                <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm border pointer-events-none whitespace-nowrap">
-                    Ask ACGC AI anything!
-                </div>
-                <ChevronDown className="h-4 w-4 absolute -top-5 left-1/2 -translate-x-1/2  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none " />
-                {/* <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2 h-2 bg-background/95 rotate-45 border-r border-b opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div> */}
-                <Button
-                    variant="default"
-                    size="lg"
-                    className="h-12 px-4 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-lg transition-all duration-200"
-                    onClick={() => setIsOpen(!isOpen)}
+                className="fixed bottom-4 right-4 md:right-8 w-auto z-10"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}>
+                <motion.div
+                    className="relative group"
+                    whileHover={{ y: -2 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                    <MessageSquare className="h-5 w-5 mr-2" />
-                    <span className="font-medium">Ask ACGC</span>
-                </Button>
+                    <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm border pointer-events-none whitespace-nowrap">
+                        Ask ACGC AI anything!
+                    </div>
+                    <ChevronDown className="h-4 w-4 absolute -top-5 left-1/2 -translate-x-1/2  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none " />
+                    <Button
+                        variant="default"
+                        size="lg"
+                        className="h-12 px-4 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-lg transition-all duration-200"
+                        onClick={() => setIsOpen(!isOpen)}
+                    >
+                        <MessageSquare className="h-5 w-5 mr-2" />
+                        <span className="font-medium">Ask ACGC</span>
+                    </Button>
+                </motion.div>
             </motion.div>
 
             <AnimatePresence>
@@ -168,9 +169,8 @@ export const ChatBot = () => {
                         animate={{ height: "80dvh", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                        className="fixed bottom-0 right-0 w-full md:w-[400px] bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden"
-                    >
-                        <div className="flex flex-col h-full">
+                        className="fixed bottom-0 z-50 left-0 right-0 w-full md:w-[400px] md:left-auto md:right-0 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden">
+                        <div className="flex flex-col h-full w-full">
                             <div className="p-4 border-b flex items-center justify-between">
                                 <h2 className="text-lg font-semibold">ACGC AI</h2>
                                 <Button
@@ -284,6 +284,6 @@ export const ChatBot = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.div>
+        </>
     )
 }
