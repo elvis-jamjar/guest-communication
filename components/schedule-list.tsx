@@ -16,7 +16,7 @@ export function ScheduleList(
     // const defaultValue = userId ? [`item-0`] : ["item-0"];
     return (
         <Accordion type={'multiple'} className="mx-auto max-w-5xl">
-            {schedules?.map((schedule, index) => (
+            {schedules?.map((schedule: ConferenceScheduleProps, index: number) => (
                 <AccordionItem value={`item-${index}`} key={index} className="my-1 border-none p-2">
                     <AccordionTrigger className="decoration-transparent rounded-md py-1 flex justify-start">
                         <div className={cn("flex gap-3 md:gap-5 w-full items-center flex-wrap p-2 justify-start bg-primary-purple/10 rounded-3xl md:rounded-full")}>

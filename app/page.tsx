@@ -3,7 +3,6 @@
 import { HashTags } from "@/components/hashtasg";
 import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
 import { ScheduleList } from "@/components/schedule-list";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +10,7 @@ import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
+import Link from "next/link";
 
 const textIconData = [
   {
@@ -56,24 +56,6 @@ export default function Home() {
   });
 
   const [isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
-  // const [isClicked, setIsClicked] = React.useState<boolean>(false);
-  function scrollToSection(id: string) {
-    // setIsClicked(true);
-    setIsSelectedSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    // setTimeout(() => setIsClicked(false), 1000);
-  }
-
-  // scroll to program section on load
-  // React.useEffect(() => {
-  //   const element = document.getElementById("program");
-  //   if (element) {
-  //     element.scrollIntoView({ behavior: "smooth", block: "start" });
-  //   }
-  // }, []);
 
   // listen for scroll events to update the selected section
   React.useEffect(() => {
@@ -106,14 +88,12 @@ export default function Home() {
             {
               sections?.map((section, index) => {
                 return (
-                  <Button
+                  <Link
                     key={section}
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() => scrollToSection(section)}
+                    href={`#${section}`}
                     className={cn("px-2 py-1 text-xs font-semibold rounded-md hover:opacity-80 transition-all duration-500 hover:bg-primary-main hover:text-gray-100" + (isSelectedSection === section ? " bg-primary-main text-gray-100" : ""), (index > 2) && 'hidden md:flex')}>
                     {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </Button>
+                  </Link>
                 )
               })
             }
@@ -199,7 +179,7 @@ export default function Home() {
         }
         {
           data &&
-          <ScheduleList schedules={data} columns={settings?.columns} />
+          <ScheduleList schedules={data || []} columns={settings?.columns} />
         }
       </section>
       {/* quick links */}

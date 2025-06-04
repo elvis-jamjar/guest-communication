@@ -50,6 +50,7 @@ export async function getConferenceSchedule(): Promise<
   try {
     const schedules = await redis.get("conference-schedules");
     if (!schedules) return [];
+    console.log("schedules type", typeof schedules);
     return JSON.parse(schedules) as ConferenceScheduleProps[];
   } catch (error) {
     console.log("Error fetchign schedules", error);
