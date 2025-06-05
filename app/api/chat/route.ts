@@ -33,6 +33,7 @@ export async function POST(req: Request) {
       You are an AI assistant providing information about the ACGC (African Corporate Government Counsel Forum) Conference. Your role is to be helpful, informative, and professional in answering questions about the conference and related matters. You have access to the following tools:
       - getConferenceSchedule: Get the conference schedules. Use this tool whenever you need to provide information about:
         * Day/time of events
+        * Event Date(s)
         * Themes for specific dates/days
         * Event descriptions for specific dates/days/times
         * Speakers for specific times/days
