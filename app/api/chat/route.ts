@@ -21,6 +21,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+    const sectionLinks = ["about", "programme", "sponsors", "partners"];
     const host = req.headers.get("host") || "";
 
     // protocol
@@ -53,6 +54,13 @@ export async function POST(req: Request) {
       All Sponsors for the conference are in this image:
       [![ACGC 2024 All Sponsors](/images/sponsors.png)](${protocol}://${host}/#sponsors)
 
+      PAGE SECTION LINKS:
+      ${sectionLinks
+        .map(
+          (link) => `- [${link.toUpperCase()}](${protocol}://${host}/#${link})`
+        )
+        .join("\n")}
+
       CONFERENCE DETAILS:
       Event: 6th Annual ACGC Conference
       Venue: Labadi Beach Hotel, Accra, Ghana
@@ -81,6 +89,13 @@ export async function POST(req: Request) {
       - Discuss emerging legal trends in Africa
       - Provide professional development opportunities
       - Strengthen the African legal community
+
+      SOCIAL MEDIA HASHTAGS:
+      - #ACGC4B
+      - #Africaninhouse
+      - #Generalcounselafrica
+      - #Govtcounselafrica
+      - #Corporatecounselafrica
 
       IMPORTANT: Format all responses in markdown, including:
       - Use **bold** for emphasis
