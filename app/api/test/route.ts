@@ -1,17 +1,45 @@
-// app/api/test/route.ts
-import { getConferenceSchedule } from "@/app/actions/timeline";
-import { NextResponse } from "next/server";
+import { google } from "@ai-sdk/google";
+import { streamText, tool } from "ai";
+import { z } from "zod";
 
-export async function GET(): Promise<NextResponse> {
-  // Simulate some data fetching or processing
-  const data = {
-    message: "This is a GET request",
-    timestamp: new Date().toISOString(),
-  };
+export const maxDuration = 30;
 
-  // Optionally, you can add a delay to simulate processing time
-  //   await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
-  const schedules = await getConferenceSchedule();
+export async function POST(req: Request) {
+  const { messages } = await req.json();
 
-  return NextResponse.json(schedules);
+  const result = streamText({
+    model: google("gemini-2.0-flash-exp"),
+    messages,
+    tools: {
+      weather: tool({
+        description: "Get the weather in a location (fahrenheit)",
+        parameters: z.object({
+          location: z.string().describe("The location to get the weather for"),
+        }),
+        execute: async ({ location }) => {
+          const temperature = Math.round(Math.random() * (90 - 32) + 32);
+          return {
+            location,
+            temperature,
+          };
+        },
+      }),
+      convertFahrenheitToCelsius: tool({
+        description: "Convert a temperature in fahrenheit to celsius",
+        parameters: z.object({
+          temperature: z
+            .number()
+            .describe("The temperature in fahrenheit to convert"),
+        }),
+        execute: async ({ temperature }) => {
+          const celsius = Math.round((temperature - 32) * (5 / 9));
+          return {
+            celsius,
+          };
+        },
+      }),
+    },
+  });
+
+  return result.toDataStreamResponse();
 }

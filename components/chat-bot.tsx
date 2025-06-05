@@ -6,17 +6,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { Textarea } from './ui/textarea';
-import { Send, Loader2, MessageSquare, UserCircle, MessageCircle, Info, X, ChevronDown } from 'lucide-react';
+import { Send, MessageSquare, UserCircle, MessageCircle, Info, X, ChevronDown, StopCircle, ExternalLink } from 'lucide-react';
 import Markdown from 'react-markdown';
-import { cn } from '@/lib/utils';
 import { getGreeting } from '@/utils/date';
 import { toast } from 'sonner';
-import { useMobile } from '@/hooks/use-mobile';
-// import Turnstile from "react-cloudflare-turnstile";
+import { ChatBotStateUpdate } from './chat-bot-state-update';
+import Image from 'next/image';
 
-// interface ChatBotProps {
-//     onHumanCheck?: (isHuman: boolean) => void;
-// }
 
 export const ChatBot = () => {
     // const [isHuman, setIsHuman] = useState(false);
@@ -25,7 +21,7 @@ export const ChatBot = () => {
     // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const isMobile = useMobile();
+    // const isMobile = useMobile();
 
 
     const adjustTextareaHeight = () => {
@@ -40,7 +36,7 @@ export const ChatBot = () => {
         adjustTextareaHeight();
     }, [input]);
 
-    const { handleSubmit, messages, status, setInput: setChatInput } = useChat({
+    const { handleSubmit, messages, status, setInput: setChatInput, stop } = useChat({
         api: '/api/chat',
         initialMessages: [
             {
@@ -52,7 +48,6 @@ export const ChatBot = () => {
         onFinish: () => {
             setIsSending(false);
         },
-
         onError: (error) => {
             if (error?.cause || error?.name) {
                 toast.error(error.message || "Something went wrong");
@@ -71,6 +66,7 @@ export const ChatBot = () => {
     });
 
     const isDisabled = Boolean(status === 'streaming' || !input.trim() || isSending);
+    const isStreaming = Boolean(status === 'streaming' || isSending);
     // Add ref for the scroll area
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -136,7 +132,7 @@ export const ChatBot = () => {
     return (
         <>
             <motion.div
-                className="fixed bottom-4 right-4 md:right-8 w-auto z-10"
+                className="fixed bottom-4 right-4 w-auto z-10"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -169,7 +165,7 @@ export const ChatBot = () => {
                         animate={{ height: "80dvh", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                        className="fixed bottom-0 z-50 left-0 right-0 w-full md:w-[400px] md:left-auto md:right-0 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden">
+                        className="fixed bottom-20 z-50 right-1 w-full min-w-[20rem] max-w-sm md:max-w-[400px] md:left-auto md:right-5 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden">
                         <div className="flex flex-col h-full w-full">
                             <div className="p-4 border-b flex items-center justify-between">
                                 <h2 className="text-lg font-semibold">ACGC AI</h2>
@@ -188,22 +184,22 @@ export const ChatBot = () => {
                                         <Info className="h-4 w-4" />
                                         <p>Note: Conversations are not stored. Please stay on this page to continue your chat.</p>
                                     </div>
+
                                     {messages?.map((message, index) => (
                                         <motion.div
                                             key={index}
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.3 }}
-                                            className={`p-4 rounded-xl prose shadow-none w-fit max-w-[85%] ${message.role === 'assistant'
+                                            className={`p-4 rounded-xl shadow-none w-fit max-w-[85%] ${message.role === 'assistant'
                                                 ? 'bg-muted/80 border border-border/50'
                                                 : 'bg-primary/20 border border-primary/20 ml-auto'
-                                                }`}
-                                        >
-                                            <h3 className="font-medium mb-2 text-sm text-foreground/80 flex items-center gap-2">
+                                                }`}>
+                                            <div className="h-fit text-foreground/80 flex items-center justify-start gap-0.5">
                                                 {message.role === 'assistant' ? (
                                                     <>
-                                                        <MessageCircle className="h-4 w-4" />
-                                                        ACGC AI
+                                                        <span className="text-sm font-bold">Assistant</span>
+                                                        {(isStreaming && index === messages.length - 1) ? <ChatBotStateUpdate /> : ''}
                                                     </>
                                                 ) : (
                                                     <>
@@ -211,22 +207,64 @@ export const ChatBot = () => {
                                                         You
                                                     </>
                                                 )}
-                                            </h3>
+                                            </div>
                                             {message.role === 'assistant' ? (
-                                                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:font-semibold">
+                                                <div className="prose prose-xs dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-sm prose-headings:font-semibold">
+                                                    {/* display tool results */}
                                                     <Markdown
                                                         components={{
                                                             a: ({ children, href }) => (
-                                                                <a href={href} target="_blank" rel="noopener noreferrer">
-                                                                    {children}
+                                                                <a href={href} target={href?.includes("#") ? undefined : "_blank"}
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-primary-main w-fit flex items-center gap-1 border border-primary-main rounded-lg px-2 py-1 font-semibold no-underline hover:bg-primary-main/10 hover:text-primary-main"
+                                                                >
+                                                                    {children} <ExternalLink className="h-4 w-4" />
                                                                 </a>
+                                                            ),
+                                                            img: ({ src, alt }) => (
+                                                                <Image
+                                                                    src={src || ''} alt={alt || ''}
+                                                                    width={200} height={200}
+                                                                    priority
+                                                                    loading="eager"
+                                                                    className="w-full h-auto object-contain" />
                                                             )
-                                                        }}
-                                                    >{message.content as string}</Markdown>
+                                                        }}>
+                                                        {message.content as string}
+                                                    </Markdown>
+                                                    <Markdown
+                                                        components={{
+                                                            a: ({ children, href }) => (
+                                                                <a href={href} target={href?.includes("#") ? undefined : "_blank"}
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-primary-main w-fit flex items-center gap-1 border border-primary-main rounded-lg px-2 py-1 font-semibold no-underline hover:bg-primary-main/10 hover:text-primary-main"
+                                                                >
+                                                                    {children} <ExternalLink className="h-4 w-4" />
+                                                                </a>
+                                                            ),
+                                                            img: ({ src, alt }) => (
+                                                                <Image
+                                                                    src={src || ''} alt={alt || ''}
+                                                                    width={200} height={200}
+                                                                    priority
+                                                                    loading="eager"
+                                                                    className="w-full h-auto object-contain" />
+                                                            )
+                                                        }}>
+                                                        {message?.parts?.map((part: any) => {
+                                                            switch (part.type) {
+                                                                case 'tool-invocation':
+                                                                    return part.toolInvocation.result;
+                                                                default:
+                                                                    return ""
+                                                            }
+                                                        }).join('')}
+                                                    </Markdown>
                                                 </div>
                                             ) : (
-                                                <p className="text-foreground whitespace-pre-wrap leading-relaxed">{message.content as string}</p>
+                                                <p className="text-sm text-foreground/80">{message.content as string}</p>
                                             )}
+
                                         </motion.div>
                                     ))}
                                 </div>
@@ -260,13 +298,18 @@ export const ChatBot = () => {
                                             maxLength={200}
                                         />
                                         <Button
-                                            type="submit"
+                                            type={isStreaming ? "button" : "submit"}
                                             variant={isDisabled ? "outline" : "default"}
                                             disabled={isDisabled}
                                             className="self-end hover:text-primary hover:bg-primary/90 size-9 p-0 m-0.5"
+                                            onClick={() => {
+                                                if (isStreaming) {
+                                                    stop();
+                                                }
+                                            }}
                                         >
-                                            {isSending ? (
-                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                            {isStreaming ? (
+                                                <StopCircle className="h-4 w-4" />
                                             ) : (
                                                 <Send className="h-4 w-4" />
                                             )}
