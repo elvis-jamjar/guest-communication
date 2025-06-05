@@ -65,7 +65,7 @@ export const ChatBot = () => {
         },
     });
 
-    const isDisabled = Boolean(status === 'streaming' || !input.trim() || isSending);
+    const isDisabled = Boolean(!input.trim() && !isSending);
     const isStreaming = Boolean(status === 'streaming' || isSending);
     // Add ref for the scroll area
     const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -128,6 +128,13 @@ export const ChatBot = () => {
             setIsSending(false);
         }
     };
+
+    const handleStop = () => {
+        if (isStreaming) {
+            stop();
+            setIsSending(false);
+        }
+    }
 
     return (
         <>
@@ -195,7 +202,7 @@ export const ChatBot = () => {
                                                 ? 'bg-muted/80 border border-border/50'
                                                 : 'bg-primary-main/20 border border-primary/20 ml-auto'
                                                 }`}>
-                                            <div className="h-fit text-primary-main text-foreground/80 flex items-center justify-start gap-0.5">
+                                            <div className="h-fit flex flex-col text-primary-main text-foreground/80 items-start justify-start gap-0.5">
                                                 {message.role === 'assistant' ? (
                                                     <>
                                                         <span className="text-sm font-bold">Assistant</span>
@@ -299,14 +306,10 @@ export const ChatBot = () => {
                                         />
                                         <Button
                                             type={isStreaming ? "button" : "submit"}
-                                            variant={isDisabled ? "outline" : "default"}
+                                            variant={"outline"}
                                             disabled={isDisabled}
-                                            className="self-end hover:text-primary hover:bg-primary/90 size-9 p-0 m-0.5"
-                                            onClick={() => {
-                                                if (isStreaming) {
-                                                    stop();
-                                                }
-                                            }}
+                                            className="self-end hover:text-white hover:bg-primary-main/90 size-9 p-0 m-0.5"
+                                            onClick={handleStop}
                                         >
                                             {isStreaming ? (
                                                 <StopCircle className="h-4 w-4" />

@@ -40,6 +40,11 @@ export async function POST(req: Request) {
         * Track information (isTrack)
         * Sponsor(s) of specific day(s)/date(s)/time(s)
 
+      IMPORTANT: When users request summaries or information about the schedule:
+      - Ask them to specify which aspect they're interested in (e.g., specific date, day, time, subject, or track)
+      - If they request a general summary, guide them to be more specific to get more focused and useful information
+      - For example, instead of "What's happening at the conference?", suggest they ask about "What's happening on Day 1 morning?" or "What sessions are there about AI?"
+
       ABOUT ACGC:
       The African Corporate Government Counsel Forum (ACGC) is a premier platform that:
       - Creates connections for members across jurisdictions, industries, and sectors in Africa and beyond
@@ -122,11 +127,11 @@ export async function POST(req: Request) {
       model: google("gemini-2.0-flash-exp"),
       system: systemInstructions,
       messages: _messages,
-      onFinish: (response) => {
-        console.log(response.usage);
+      onFinish: () => {
+        // console.log(response.usage);
       },
-      onStepFinish: (step) => {
-        console.log(step.toolResults);
+      onStepFinish: () => {
+        // console.log(step.toolResults);
       },
       tools: {
         getConferenceSchedule: tool({
@@ -164,16 +169,16 @@ export async function POST(req: Request) {
                 model: google("gemini-2.0-flash-exp"),
                 system:
                   "You are a helpful assistant that explains conference schedules in a clear and engaging way using markdown formatting. When responding to schedule queries:\n" +
-                  "1. Use **bold** for important information like dates, times, and speaker names\n" +
-                  "2. Use *italics* for themes and track names\n" +
-                  "3. Format all links as [text](url)\n" +
-                  "4. Use bullet points (-) for lists of events or speakers\n" +
-                  "5. Use headers (#) for different sections\n" +
-                  "6. Use tables for structured schedule information\n" +
+                  "1. Provide brief, contextual summaries focusing on the specific information requested\n" +
+                  "2. Use **bold** for important information like dates, times, and speaker names\n" +
+                  "3. Use *italics* for themes and track names\n" +
+                  "4. Format all links as [text](url)\n" +
+                  "5. Use bullet points (-) for key points only\n" +
+                  "6. Keep responses concise and focused on the specific query\n" +
                   "7. For sponsor information:\n" +
                   "   - If URL is from utfs.io domain or ends with .jpg/.png/.gif/.webp, use ![sponsor](url)\n" +
                   "   - For other URLs, use [sponsor name](url)\n" +
-                  "Focus on the specific aspects being asked about while maintaining a natural, conversational manner.",
+                  "Focus on providing a brief, natural summary of the requested information rather than detailed tables or extensive lists.",
                 messages: [
                   {
                     role: "user",

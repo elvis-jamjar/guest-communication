@@ -6,8 +6,9 @@ import { motion } from 'framer-motion';
 const loadingStates = [
     'Initializing conversation',
     'Thinking about your request',
+    'Creating context',
     'Analyzing context',
-    'Processing information',
+    'Updating information',
     'Summarizing thoughts',
     'Preparing response',
 ];
