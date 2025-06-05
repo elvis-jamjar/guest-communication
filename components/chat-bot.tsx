@@ -193,9 +193,9 @@ export const ChatBot = () => {
                                             transition={{ duration: 0.3 }}
                                             className={`p-4 rounded-xl shadow-none w-fit max-w-[85%] ${message.role === 'assistant'
                                                 ? 'bg-muted/80 border border-border/50'
-                                                : 'bg-primary/20 border border-primary/20 ml-auto'
+                                                : 'bg-primary-main/20 border border-primary/20 ml-auto'
                                                 }`}>
-                                            <div className="h-fit text-foreground/80 flex items-center justify-start gap-0.5">
+                                            <div className="h-fit text-primary-main text-foreground/80 flex items-center justify-start gap-0.5">
                                                 {message.role === 'assistant' ? (
                                                     <>
                                                         <span className="text-sm font-bold">Assistant</span>
@@ -203,7 +203,7 @@ export const ChatBot = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <UserCircle className="h-4 w-4 text-primary" />
+                                                        {/* <UserCircle className="h-4 w-4 text-primary-main" /> */}
                                                         You
                                                     </>
                                                 )}
