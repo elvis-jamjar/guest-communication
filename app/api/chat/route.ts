@@ -63,17 +63,14 @@ export async function POST(req: Request) {
       Twitter: [Follow ACGC on Twitter](https://twitter.com/african_inhouse)
 
       QUICK LINKS:
-      - **[ACGC 2025 Survey](https://www.surveymonkey.com/r/2025-African-GC-Perspective)**
+      - **[AFRIWISE SURVEY](https://www.surveymonkey.com/r/2025-African-GC-Perspective)**
         *Description:* In this survey, we aim to investigate the challenges, disruptors and opportunities GCs across Africa face today and anticipate in the near future. Any data collected in this survey will be completely anonymized
-        *Button:* AFRIWISE SURVEY
 
-      - **[Conference Feedback Form](https://docs.google.com/forms/d/e/1FAIpQLSfjewnTstUvBK4OB10_JROT19bu_O2Pb8S7aS6NyrGU_Gzg1g/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link)**
+      - **[Leave Feedback](https://docs.google.com/forms/d/e/1FAIpQLSfjewnTstUvBK4OB10_JROT19bu_O2Pb8S7aS6NyrGU_Gzg1g/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link)**
         *Description:* ACGC 6th Annual Conference and Training Institute Feedback Form
-        *Button:* Leave Feedback
 
       - **[ACGC 2024 Pictures](https://we.tl/On2FL7FxBm)**
         *Description:* Photos from Day 1 and Day 2
-        *Button:* See Images
 
       - **[ACGC 2024 Headshot Images](https://we.tl/oCFsKmx4ax)**
         *Description:* Headshot images from all the days.
