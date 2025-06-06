@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       - getConferenceSchedule: Get the conference schedules. Use this tool whenever you need to provide information about:
         * Day/time of events
         * Event Date(s)
+        * Event Day(s)
         * Themes for specific dates/days
         * Event descriptions for specific dates/days/times
         * Speakers for specific times/days
