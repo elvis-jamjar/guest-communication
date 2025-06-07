@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
-import { ChatBot } from "@/components/chat-bot";
+import { PopOverChat } from "@/components/chat-bot";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -64,7 +64,7 @@ export default function RootLayout({
         className={cn(`text-foreground bg-background antialiased scroll-smooth`)}>
         <Providers>
           {children}
-          <ChatBot />
+          <PopOverChat />
         </Providers>
       </body>
     </html>

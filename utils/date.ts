@@ -42,9 +42,10 @@ export const formatDateTime = (
  * @returns Formatted time string
  */
 export const formatTime = (
-  date: Date | string | number,
+  date: Date | string | number | undefined,
   format: string = "HH:mm"
 ): string => {
+  if (!date) return "";
   return moment(date).format(format);
 };
 

@@ -94,3 +94,12 @@ body {
     font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
   }
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

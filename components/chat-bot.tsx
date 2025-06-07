@@ -1,48 +1,67 @@
 "use client";
-import { useEffect, useState, useRef } from 'react';
-// import { verifyTurnstile } from "@/lib/verification/turnstile";
+
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
-import { Textarea } from './ui/textarea';
-import { Send, MessageSquare, UserCircle, MessageCircle, Info, X, ChevronDown, StopCircle, ExternalLink } from 'lucide-react';
+import { Send, MessageSquare, X, ChevronDown, StopCircle, ExternalLink } from 'lucide-react';
 import Markdown from 'react-markdown';
-import { getGreeting } from '@/utils/date';
+import { formatTime, getGreeting } from '@/utils/date';
 import { toast } from 'sonner';
 import { ChatBotStateUpdate } from './chat-bot-state-update';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import { useChatBotStore } from '@/lib/store';
+// import { useKeyboardStatus } from '@/hooks/use-keyboad';
+import { useMobile } from '@/hooks/use-mobile';
+import { ChatBotQuestionSuggestions } from './chat-bot-question-suggestions';
 
 
-export const ChatBot = () => {
-    // const [isHuman, setIsHuman] = useState(false);
-    const [input, setInput] = useState('');
+
+const RenderMessage = ({ message }: { message: string }) => {
+    return (
+        <Markdown
+            components={{
+                a: ({ children, href }) => (
+                    <a href={href} target={href?.includes("#") ? undefined : "_blank"}
+                        rel="noopener noreferrer"
+                        className="text-primary-main w-fit flex items-center gap-1 border border-primary-main rounded-lg px-2 py-1 font-medium no-underline hover:bg-primary/10 hover:text-primary-main"
+                    >
+                        {children} <ExternalLink className="h-4 w-4" />
+                    </a>
+                ),
+                img: ({ src, alt }) => (
+                    <Image
+                        src={src as string} alt={alt || ''}
+                        width={200} height={200}
+                        priority
+                        loading="eager"
+                        className="w-full h-auto object-contain" />
+                )
+            }}
+        >
+            {message}
+        </Markdown>
+    )
+}
+
+
+export const PopOverChat = () => {
     const [isSending, setIsSending] = useState(false);
-    // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-    const [isOpen, setIsOpen] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    // const isMobile = useMobile();
+    const { isOpen, toggleIsOpen } = useChatBotStore();
+    const isMobile = useMobile();
+    // const isKeyboardOpen = useKeyboardStatus();
 
 
-    const adjustTextareaHeight = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = `${textarea.scrollHeight}px`;
-        }
-    };
-
-    useEffect(() => {
-        adjustTextareaHeight();
-    }, [input]);
-
-    const { handleSubmit, messages, status, setInput: setChatInput, stop } = useChat({
+    const { handleSubmit, messages, handleInputChange, status, setInput: setChatInput, input, stop } = useChat({
         api: '/api/chat',
         initialMessages: [
             {
                 id: '0',
                 role: 'assistant',
-                content: `**${getGreeting()}**, I'm **ACGC AI**, your personal assistant. How can I help you today?`
+                content: `**${getGreeting()}**, I'm **ACGC AI**, your personal assistant. How can I help you today?`,
             }
         ],
         onFinish: () => {
@@ -66,9 +85,39 @@ export const ChatBot = () => {
     });
 
     const isDisabled = Boolean(!input.trim() && !isSending);
-    const isStreaming = Boolean(status === 'streaming' || isSending);
+    const isStreaming = status === 'streaming' || isSending;
     // Add ref for the scroll area
     const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+
+    const adjustTextareaHeight = useCallback(() => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+
+        // Reset height to auto to get the correct scrollHeight
+        textarea.style.height = 'auto';
+        // Set the height to scrollHeight to fit content
+        textarea.style.height = `${textarea.scrollHeight}px`;
+    }, []);
+
+    useEffect(() => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+
+        // Adjust height on input change
+        const handleInput = () => {
+            adjustTextareaHeight();
+        };
+
+        textarea.addEventListener('input', handleInput);
+        const resizeObserver = new ResizeObserver(adjustTextareaHeight);
+        resizeObserver.observe(textarea);
+
+        return () => {
+            textarea.removeEventListener('input', handleInput);
+            resizeObserver.disconnect();
+        };
+    }, [adjustTextareaHeight]);
 
     // Scroll to bottom when messages change
     useEffect(() => {
@@ -79,40 +128,13 @@ export const ChatBot = () => {
             });
             scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
         }
-    }, [messages]);
-
-    useEffect(() => {
-        if (input.trim()) {
-            setChatInput(input);
-        }
-    }, [input, setChatInput]);
-
-
-    // const verifyHuman = useCallback(async () => {
-    //     if (turnstileToken && !isHuman) {
-    //         // verify the turnstile token
-    //         const isVerified = await verifyTurnstile(turnstileToken);
-    //         if (isVerified) {
-    //             setIsHuman(true);
-    //             onHumanCheck?.(true);
-    //         }
-    //     }
-    // }, [turnstileToken, isHuman, onHumanCheck]);
-
-    // useEffect(() => {
-    //     verifyHuman();
-    // }, [verifyHuman]);
+    }, [messages.length]);
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isSending) return;
         try {
-            // if (!isHuman) {
-            //     toast.error("Please complete the verification");
-            //     return;
-            // }
             setIsSending(true);
-            setChatInput(input);
             // remove the empty message
             handleSubmit(undefined, {
                 allowEmptySubmit: false,
@@ -121,11 +143,22 @@ export const ChatBot = () => {
                     messages: messages,
                 }
             });
-            setInput('');
             // setTurnstileToken(null);
+            setChatInput('');
         } catch (err) {
             console.error("error", err);
             setIsSending(false);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter') {
+            if (e.shiftKey) {
+                // Allow Shift+Enter for new lines
+                return;
+            }
+            e.preventDefault();
+            onSubmit(e);
         }
     };
 
@@ -149,183 +182,130 @@ export const ChatBot = () => {
                     whileHover={{ y: -2 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                    <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm border pointer-events-none whitespace-nowrap">
-                        Ask ACGC AI anything!
-                    </div>
-                    <ChevronDown className="h-4 w-4 absolute -top-5 left-1/2 -translate-x-1/2  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none " />
+                    {!isOpen && <div className="absolute -top-14 right-8 translate-x-1/2 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm border pointer-events-none whitespace-nowrap">
+                        Ask ACGC
+                    </div>}
+                    {!isOpen && <ChevronDown className="h-4 w-4 absolute -top-5 right-6 translate-x-1/2  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none " />}
+
                     <Button
                         variant="default"
                         size="lg"
-                        className="h-12 px-4 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-lg transition-all duration-200"
-                        onClick={() => setIsOpen(!isOpen)}
+                        className="size-12 px-4 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-lg transition-all duration-200"
+                        onClick={toggleIsOpen}
                     >
-                        <MessageSquare className="h-5 w-5 mr-2" />
-                        <span className="font-medium">Ask ACGC</span>
+                        {isOpen ? (
+                            <X className="h-5 w-5 transition-all duration-300 ease-in-out rotate-0" />
+                        ) : (
+                            <MessageSquare className="h-5 w-5 transition-all duration-300 ease-in-out" />
+                        )}
+                        <span className="sr-only"> {isOpen ? "Close" : "Open"} Chat</span>
                     </Button>
                 </motion.div>
             </motion.div>
-
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "80dvh", opacity: 1 }}
+                        animate={{ height: isMobile ? "100dvh" : "80dvh", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                        className="fixed bottom-20 z-50 right-1 w-full min-w-[20rem] max-w-sm md:max-w-[400px] md:left-auto md:right-5 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden">
-                        <div className="flex flex-col h-full w-full">
-                            <div className="p-4 border-b flex items-center justify-between">
-                                <h2 className="text-lg font-semibold">ACGC AI</h2>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 hover:bg-muted"
-                                    onClick={() => setIsOpen(false)}
-                                >
+                        className={cn(
+                            "fixed z-50 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden flex flex-col",
+                            "w-full h-[100dvh] bottom-0 right-0 md:bottom-20  md:h-[80dvh] md:min-w-[20rem] md:max-w-[400px] md:left-auto md:right-5 md:rounded-b-lg",
+                            // isKeyboardOpen && "bottom-[50vh]"
+                        )}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center gap-3 p-4 border-b bg-background/95">
+                            <div className="relative flex items-center">
+                                <Image src="/images/logo.png" alt="ACGC Logo" width={60} height={60} className="rounded-sm bg-white border" />
+                                <span className="absolute -bottom-1 -right-1 w-3 h-3 animate-pulse bg-green-500 border-2 border-background rounded-full" title="Online"></span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-semibold text-base leading-tight">Assistant</span>
+                                {/* <span className="text-xs text-muted-foreground">AI Assistant</span> */}
+                                <ChatBotQuestionSuggestions />
+                            </div>
+                            <div className="ml-auto flex items-center gap-2">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted" onClick={toggleIsOpen}>
                                     <X className="h-4 w-4" />
                                 </Button>
                             </div>
-                            <ScrollArea viewportRef={scrollAreaRef} className="flex-1 px-4 h-[calc(80dvh-10rem)]">
-                                <div className="space-y-6 py-4 pb-24">
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <Info className="h-4 w-4" />
-                                        <p>Note: Conversations are not stored. Please stay on this page to continue your chat.</p>
-                                    </div>
-
-                                    {messages?.map((message, index) => (
-                                        <motion.div
-                                            key={index}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className={`p-4 rounded-xl shadow-none w-fit max-w-[85%] ${message.role === 'assistant'
-                                                ? 'bg-muted/80 border border-border/50'
-                                                : 'bg-primary-main/20 border border-primary/20 ml-auto'
-                                                }`}>
-                                            <div className="h-fit flex flex-col text-primary-main text-foreground/80 items-start justify-start gap-0.5">
-                                                {message.role === 'assistant' ? (
-                                                    <>
-                                                        <span className="text-sm font-bold">Assistant</span>
-                                                        {(isStreaming && index === messages.length - 1) ? <ChatBotStateUpdate /> : ''}
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        {/* <UserCircle className="h-4 w-4 text-primary-main" /> */}
-                                                        You
-                                                    </>
-                                                )}
-                                            </div>
-                                            {message.role === 'assistant' ? (
-                                                <div className="prose prose-xs dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:text-sm prose-headings:font-semibold">
-                                                    {/* display tool results */}
-                                                    <Markdown
-                                                        components={{
-                                                            a: ({ children, href }) => (
-                                                                <a href={href} target={href?.includes("#") ? undefined : "_blank"}
-                                                                    rel="noopener noreferrer"
-                                                                    className="text-primary-main w-fit flex items-center gap-1 border border-primary-main rounded-lg px-2 py-1 font-semibold no-underline hover:bg-primary-main/10 hover:text-primary-main"
-                                                                >
-                                                                    {children} <ExternalLink className="h-4 w-4" />
-                                                                </a>
-                                                            ),
-                                                            img: ({ src, alt }) => (
-                                                                <Image
-                                                                    src={src || ''} alt={alt || ''}
-                                                                    width={200} height={200}
-                                                                    priority
-                                                                    loading="eager"
-                                                                    className="w-full h-auto object-contain" />
-                                                            )
-                                                        }}>
-                                                        {message.content as string}
-                                                    </Markdown>
-                                                    <Markdown
-                                                        components={{
-                                                            a: ({ children, href }) => (
-                                                                <a href={href} target={href?.includes("#") ? undefined : "_blank"}
-                                                                    rel="noopener noreferrer"
-                                                                    className="text-primary-main w-fit flex items-center gap-1 border border-primary-main rounded-lg px-2 py-1 font-semibold no-underline hover:bg-primary-main/10 hover:text-primary-main"
-                                                                >
-                                                                    {children} <ExternalLink className="h-4 w-4" />
-                                                                </a>
-                                                            ),
-                                                            img: ({ src, alt }) => (
-                                                                <Image
-                                                                    src={src || ''} alt={alt || ''}
-                                                                    width={200} height={200}
-                                                                    priority
-                                                                    loading="eager"
-                                                                    className="w-full h-auto object-contain" />
-                                                            )
-                                                        }}>
-                                                        {message?.parts?.map((part: any) => {
-                                                            switch (part.type) {
-                                                                case 'tool-invocation':
-                                                                    return part.toolInvocation.result;
-                                                                default:
-                                                                    return ""
-                                                            }
-                                                        }).join('')}
-                                                    </Markdown>
+                        </div>
+                        {/* Messages */}
+                        <ScrollArea viewportRef={scrollAreaRef} className="flex-1 px-4 h-[calc(80dvh-12rem)] bg-background">
+                            <div className="space-y-4 py-4 pb-24">
+                                {messages?.map((message, index) => {
+                                    let schedule = null;
+                                    const parts = message.parts
+                                    if (parts) {
+                                        parts.forEach(part => {
+                                            if (part.type === 'tool-invocation') {
+                                                schedule = part.toolInvocation.state === 'result' ? part.toolInvocation.result : null;
+                                            }
+                                        });
+                                    }
+                                    return (
+                                        <div key={index} className={`flex w-full ${message.role === 'assistant' ? 'justify-start' : 'justify-end'}`}>
+                                            {message.role === 'assistant' && (
+                                                <div className="flex flex-col items-center mr-1.5">
+                                                    <Image src="/images/logo.png" alt="ACGC Logo" width={30} height={30} className="rounded-sm bg-white border" />
                                                 </div>
-                                            ) : (
-                                                <p className="text-sm text-foreground/80">{message.content as string}</p>
                                             )}
-
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            </ScrollArea>
-                            <div className="p-4 border-t bg-background/95 backdrop-blur-sm">
-                                <form onSubmit={onSubmit} className="flex flex-col gap-2">
-                                    <div className="relative flex flex-row items-center gap-0 rounded-lg">
-                                        <Textarea
-                                            ref={textareaRef}
-                                            id="chat-input"
-                                            placeholder="Type question..."
-                                            value={input}
-                                            onInput={(e) => {
-                                                setInput(e.currentTarget.value);
-                                                adjustTextareaHeight();
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && !e.shiftKey) {
-                                                    e.preventDefault();
-                                                    if (input.trim()) {
-                                                        onSubmit(e);
-                                                    }
-                                                }
-                                            }}
-                                            className="pt-2 flex-1 min-h-[30px] w-full h-auto placeholder:text-sm resize-none max-h-[200px] overflow-y-auto outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none bg-gray-200/50 border border-primary"
-                                            rows={1}
-                                            disabled={status === 'streaming'}
-                                            enterKeyHint="send"
-                                            inputMode="text"
-                                            tabIndex={0}
-                                            maxLength={200}
-                                        />
-                                        <Button
-                                            type={isStreaming ? "button" : "submit"}
-                                            variant={"outline"}
-                                            disabled={isDisabled}
-                                            className="self-end hover:text-white hover:bg-primary-main/90 size-9 p-0 m-0.5"
-                                            onClick={handleStop}
-                                        >
-                                            {isStreaming ? (
-                                                <StopCircle className="h-4 w-4" />
-                                            ) : (
-                                                <Send className="h-4 w-4" />
-                                            )}
-                                        </Button>
-                                    </div>
-                                    <div className="text-xs text-muted-foreground text-center flex items-center justify-start gap-1">
-                                        <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted rounded-md border">⇧</kbd>
-                                        <span>+</span>
-                                        <kbd className="px-1.5 py-0.5 text-xs font-semibold text-muted-foreground bg-muted rounded-md border">↵</kbd>
-                                        <span>= next line</span>
-                                    </div>
-                                </form>
+                                            <div className="flex flex-col w-full">
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    className={`rounded-2xl px-4 py-2 max-w-[80%] shadow-none ${message.role === 'assistant' ? 'bg-muted/80 border border-border/50 text-foreground rounded-tl-none' : 'bg-primary/70 text-white ml-auto rounded-br-none'} flex flex-col`}>
+                                                    {message.role === 'assistant' ? (
+                                                        <div className="w-full prose max-w-none">
+                                                            {(isStreaming && index === messages.length - 1) ? <ChatBotStateUpdate /> : ''}
+                                                            <RenderMessage message={message.content as string} />
+                                                            {schedule && <RenderMessage message={schedule} />}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-sm min-w-full mr-2 self-start text-left w-full">{message.content as string}</span>
+                                                    )}
+                                                </motion.div>
+                                                <span className={cn("text-xs mx-2 font-medium text-muted-foreground mt-1", message.role === 'assistant' ? 'text-left' : 'text-right')}>{formatTime(message.createdAt)}</span>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                             </div>
+                        </ScrollArea>
+                        {/* Input */}
+                        <div className="p-4 border-t bg-background/95 backdrop-blur-sm">
+                            <form onSubmit={onSubmit} className="flex w-full items-center gap-2">
+                                <div className="flex flex-row w-full flex-1 h-auto">
+                                    <textarea
+                                        ref={textareaRef}
+                                        id="chat-input"
+                                        placeholder="Ask me anything"
+                                        value={input}
+                                        rows={1}
+                                        onChange={handleInputChange}
+                                        onKeyDown={handleKeyDown}
+                                        className="w-full max-h-16 md:max-h-20 no-scrollbar rounded-sm border resize-none border-primary-main bg-gray-200/50 p-2 text-sm shadow-none outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        disabled={status === 'streaming'}
+                                        maxLength={200}
+                                    />
+                                    <Button
+                                        type={isStreaming ? "button" : "submit"}
+                                        variant={"ghost"}
+                                        disabled={isDisabled}
+                                        className="size-8 p-0 text-primary-main rounded-full flex self-end items-center justify-center shadow-none"
+                                        onClick={handleStop}
+                                    >
+                                        {isStreaming ? (
+                                            <StopCircle className="h-4 w-4" />
+                                        ) : (
+                                            <Send className="h-4 w-4" />
+                                        )}
+                                    </Button>
+                                </div>
+                            </form>
                         </div>
                     </motion.div>
                 )}
