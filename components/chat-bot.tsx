@@ -66,6 +66,11 @@ export const PopOverChat = () => {
         ],
         onFinish: () => {
             setIsSending(false);
+            if (!isMobile) {
+                setTimeout(() => {
+                    textareaRef.current?.focus();
+                }, 500);
+            }
         },
         onError: (error) => {
             if (error?.cause || error?.name) {
