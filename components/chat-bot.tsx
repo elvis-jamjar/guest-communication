@@ -54,7 +54,7 @@ export const PopOverChat = () => {
     const isMobile = useMobile();
     // const isKeyboardOpen = useKeyboardStatus();
 
-    const { handleSubmit, messages, handleInputChange, status, setInput: setChatInput, input, stop } = useChat({
+    const { handleSubmit, messages, handleInputChange, status, setInput: setChatInput, input, stop, isLoading } = useChat({
         api: '/api/chat',
         initialMessages: [
             {
@@ -133,34 +133,21 @@ export const PopOverChat = () => {
         }
     }, [messages.length]);
 
-    const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!input.trim() || isStreaming) return;
-
-        try {
-            setIsSending(true);
-            handleSubmit(undefined, {
-                allowEmptySubmit: false,
-                body: {
-                    prompt: input,
-                    messages: messages,
-                }
-            });
-            setChatInput('');
-        } catch (err) {
-            console.error("error", err);
-            setIsSending(false);
-        }
-    };
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter') {
-            if (e.shiftKey) {
-                // Allow Shift+Enter for new lines
-                return;
-            }
+        if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            onSubmit(e);
+            if (isLoading) {
+                // Stop the current stream if loading and mark it as stopped
+                stop();
+            } else if (input.trim()) {
+                // Clear stopped state when sending new message
+                // Submit the form if not loading and input is not empty
+                const form = e.currentTarget.form;
+                if (form) {
+                    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                    form.dispatchEvent(submitEvent);
+                }
+            }
         }
     };
 
@@ -207,9 +194,9 @@ export const PopOverChat = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ height: 0, opacity: 0, width: 0 }}
-                        animate={{ height: isMobile ? "100dvh" : "80dvh", opacity: 1, width: isMobile ? "100dvw" : "auto" }}
-                        exit={{ height: 0, opacity: 0, width: 0 }}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: isMobile ? "100dvh" : "80dvh", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                         className={cn(
                             "fixed z-50 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden flex flex-col",
@@ -268,7 +255,6 @@ export const PopOverChat = () => {
                                                     className={`rounded-2xl px-4 py-2 max-w-[80%] shadow-none ${message.role === 'assistant' ? 'bg-muted/80 border border-border/50 text-foreground rounded-tl-none' : 'bg-primary/70 text-white ml-auto rounded-br-none'} flex flex-col`}>
                                                     {message.role === 'assistant' ? (
                                                         <div className="w-full prose max-w-none">
-                                                            {(isStreaming && index === messages.length - 1) ? <ChatBotStateUpdate /> : ''}
                                                             <RenderMessage message={message.content as string} />
                                                             {schedule && <RenderMessage message={schedule} />}
                                                         </div>
@@ -281,44 +267,26 @@ export const PopOverChat = () => {
                                         </div>
                                     )
                                 })}
-                                {/* Show AI avatar with loading when starting a new response */}
-                                {isStreaming && messages[messages.length - 1]?.role === 'user' && (
-                                    <div className="flex w-full justify-start">
-                                        <div className="flex flex-col items-center mr-1.5">
-                                            <div className="relative">
-                                                <Image src="/images/logo.png" alt="ACGC Logo" width={30} height={30} className="rounded-sm bg-white border" />
-                                                <div className="absolute -right-1 -bottom-1 bg-background rounded-full p-0.5">
-                                                    <Loader2 className="h-3 w-3 animate-spin text-primary" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col w-full">
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.3 }}
-                                                className="rounded-2xl px-4 py-2 max-w-[80%] shadow-none bg-muted/80 border border-border/50 text-foreground rounded-tl-none flex flex-col">
-                                                <div className="w-full prose max-w-none">
-                                                    <ChatBotStateUpdate />
-                                                </div>
-                                            </motion.div>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         </ScrollArea>
                         {/* Input */}
                         <div className="p-4 border-t bg-background/95 backdrop-blur-sm">
-                            <form onSubmit={onSubmit} className="flex w-full items-center gap-2">
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+
+                                if (!input.trim() || isLoading) return;
+                                // Call the original handleSubmit
+                                handleSubmit(e);
+                            }} className="flex w-full items-center gap-2">
                                 <div className="flex flex-row w-full flex-1 h-auto">
                                     <textarea
                                         ref={textareaRef}
                                         id="chat-input"
                                         placeholder={isStreaming ? "Waiting for response..." : "Ask me anything"}
                                         value={input}
-                                        rows={1}
                                         onChange={handleInputChange}
                                         onKeyDown={handleKeyDown}
+                                        rows={1}
                                         className="w-full max-h-16 md:max-h-20 no-scrollbar rounded-sm border resize-none border-primary-main bg-gray-200/50 p-2 text-sm shadow-none outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
                                         disabled={isStreaming}
                                         maxLength={200}
