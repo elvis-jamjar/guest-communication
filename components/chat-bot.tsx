@@ -5,7 +5,7 @@ import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
-import { Send, MessageSquare, X, ChevronDown, StopCircle, ExternalLink } from 'lucide-react';
+import { Send, MessageSquare, X, ChevronDown, StopCircle, ExternalLink, Loader2 } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { formatTime, getGreeting } from '@/utils/date';
 import { toast } from 'sonner';
@@ -54,7 +54,6 @@ export const PopOverChat = () => {
     const isMobile = useMobile();
     // const isKeyboardOpen = useKeyboardStatus();
 
-
     const { handleSubmit, messages, handleInputChange, status, setInput: setChatInput, input, stop } = useChat({
         api: '/api/chat',
         initialMessages: [
@@ -73,9 +72,9 @@ export const PopOverChat = () => {
             }
         },
         onError: (error) => {
+            setIsSending(false);
             if (error?.cause || error?.name) {
                 toast.error(error.message || "Something went wrong");
-                setIsSending(false);
                 return;
             }
             const errorMessage = JSON.parse(error.message) as {
@@ -85,12 +84,11 @@ export const PopOverChat = () => {
                 cause: string;
             };
             toast.error(errorMessage.message || "Something went wrong");
-            setIsSending(false);
         },
     });
 
-    const isDisabled = Boolean(!input.trim() && !isSending);
     const isStreaming = status === 'streaming' || isSending;
+    const isDisabled = !input.trim() || isStreaming;
     // Add ref for the scroll area
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -137,10 +135,10 @@ export const PopOverChat = () => {
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!input.trim() || isSending) return;
+        if (!input.trim() || isStreaming) return;
+
         try {
             setIsSending(true);
-            // remove the empty message
             handleSubmit(undefined, {
                 allowEmptySubmit: false,
                 body: {
@@ -148,7 +146,6 @@ export const PopOverChat = () => {
                     messages: messages,
                 }
             });
-            // setTurnstileToken(null);
             setChatInput('');
         } catch (err) {
             console.error("error", err);
@@ -210,13 +207,13 @@ export const PopOverChat = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: isMobile ? "100dvh" : "80dvh", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        initial={{ height: 0, opacity: 0, width: 0 }}
+                        animate={{ height: isMobile ? "100dvh" : "80dvh", opacity: 1, width: isMobile ? "100dvw" : "auto" }}
+                        exit={{ height: 0, opacity: 0, width: 0 }}
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                         className={cn(
                             "fixed z-50 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden flex flex-col",
-                            "w-full h-[100dvh] bottom-0 right-0 md:bottom-20  md:h-[80dvh] md:min-w-[20rem] md:max-w-[400px] md:left-auto md:right-5 md:rounded-b-lg",
+                            "w-full h-[100dvh] bottom-0 right-0 md:bottom-20  md:h-[80dvh] md:min-w-[20rem] md:max-w-3xl md:left-auto md:right-5 md:rounded-b-lg",
                             // isKeyboardOpen && "bottom-[50vh]"
                         )}
                     >
@@ -224,11 +221,10 @@ export const PopOverChat = () => {
                         <div className="flex items-center gap-3 p-4 border-b bg-background/95">
                             <div className="relative flex items-center">
                                 <Image src="/images/logo.png" alt="ACGC Logo" width={60} height={60} className="rounded-sm bg-white border" />
-                                <span className="absolute -bottom-1 -right-1 w-3 h-3 animate-pulse bg-green-500 border-2 border-background rounded-full" title="Online"></span>
+                                <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 animate-pulse border-2 border-background rounded-full" title="Online"></span>
                             </div>
                             <div className="flex flex-col">
                                 <span className="font-semibold text-base leading-tight">Assistant</span>
-                                {/* <span className="text-xs text-muted-foreground">AI Assistant</span> */}
                                 <ChatBotQuestionSuggestions />
                             </div>
                             <div className="ml-auto flex items-center gap-2">
@@ -254,7 +250,14 @@ export const PopOverChat = () => {
                                         <div key={index} className={`flex w-full ${message.role === 'assistant' ? 'justify-start' : 'justify-end'}`}>
                                             {message.role === 'assistant' && (
                                                 <div className="flex flex-col items-center mr-1.5">
-                                                    <Image src="/images/logo.png" alt="ACGC Logo" width={30} height={30} className="rounded-sm bg-white border" />
+                                                    <div className="relative">
+                                                        <Image src="/images/logo.png" alt="ACGC Logo" width={30} height={30} className="rounded-sm bg-white border" />
+                                                        {isStreaming && index === messages.length - 1 && (
+                                                            <div className="absolute -right-1 -bottom-1 bg-background rounded-full p-0.5">
+                                                                <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
                                             <div className="flex flex-col w-full">
@@ -278,6 +281,30 @@ export const PopOverChat = () => {
                                         </div>
                                     )
                                 })}
+                                {/* Show AI avatar with loading when starting a new response */}
+                                {isStreaming && messages[messages.length - 1]?.role === 'user' && (
+                                    <div className="flex w-full justify-start">
+                                        <div className="flex flex-col items-center mr-1.5">
+                                            <div className="relative">
+                                                <Image src="/images/logo.png" alt="ACGC Logo" width={30} height={30} className="rounded-sm bg-white border" />
+                                                <div className="absolute -right-1 -bottom-1 bg-background rounded-full p-0.5">
+                                                    <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col w-full">
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="rounded-2xl px-4 py-2 max-w-[80%] shadow-none bg-muted/80 border border-border/50 text-foreground rounded-tl-none flex flex-col">
+                                                <div className="w-full prose max-w-none">
+                                                    <ChatBotStateUpdate />
+                                                </div>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </ScrollArea>
                         {/* Input */}
@@ -287,21 +314,21 @@ export const PopOverChat = () => {
                                     <textarea
                                         ref={textareaRef}
                                         id="chat-input"
-                                        placeholder="Ask me anything"
+                                        placeholder={isStreaming ? "Waiting for response..." : "Ask me anything"}
                                         value={input}
                                         rows={1}
                                         onChange={handleInputChange}
                                         onKeyDown={handleKeyDown}
-                                        className="w-full max-h-16 md:max-h-20 no-scrollbar rounded-sm border resize-none border-primary-main bg-gray-200/50 p-2 text-sm shadow-none outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                                        disabled={status === 'streaming'}
+                                        className="w-full max-h-16 md:max-h-20 no-scrollbar rounded-sm border resize-none border-primary-main bg-gray-200/50 p-2 text-sm shadow-none outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled={isStreaming}
                                         maxLength={200}
                                     />
                                     <Button
                                         type={isStreaming ? "button" : "submit"}
                                         variant={"ghost"}
                                         disabled={isDisabled}
-                                        className="size-8 p-0 text-primary-main rounded-full flex self-end items-center justify-center shadow-none"
-                                        onClick={handleStop}
+                                        className="size-8 p-0 text-primary-main rounded-full flex self-end items-center justify-center shadow-none disabled:opacity-50"
+                                        onClick={isStreaming ? handleStop : undefined}
                                     >
                                         {isStreaming ? (
                                             <StopCircle className="h-4 w-4" />
