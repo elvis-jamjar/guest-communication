@@ -227,10 +227,6 @@ const createConferenceScheduleTool = () => {
 export async function POST(req: Request) {
   try {
     const { messages }: ChatRequest = await req.json();
-    // console.log(
-    //   "last user message: ",
-    //   messages.findLast((message) => message.role === "user")
-    // );
 
     // Validate message
     const validationError = validateMessage(messages);
@@ -241,11 +237,6 @@ export async function POST(req: Request) {
     // Get request context
     const host = req.headers.get("host") || "";
     const protocol = req.headers.get("x-forwarded-proto") || "https";
-
-    // Filter out empty messages
-    // const filteredMessages = messages.filter(
-    //   (message) => message.content !== ""
-    // );
 
     // Build system instructions
     const systemInstructions = buildSystemInstructions(protocol, host);
