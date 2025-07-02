@@ -6,38 +6,42 @@ import {
   Settings,
   TimelineItemProps,
 } from "@/app/types";
+import { DATABASE_KEYS } from "@/lib/db";
 
 /**
  * create new timeline item
  * @param item
  * @returns
  */
-export async function createTimelineItem(item: TimelineItemProps) {
-  const items = await getTimelineItems();
-  items.push(item);
-  await redis.set("timeline-items", JSON.stringify(items));
-}
+// export async function createTimelineItem(item: TimelineItemProps) {
+//   const items = await getTimelineItems();
+//   items.push(item);
+//   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, JSON.stringify(items));
+// }
 
 /**
  * update timeline item
  * @param item
  * @returns
  */
-export async function updateTimelineItem(item: TimelineItemProps) {
-  const items = await getTimelineItems();
-  if (!items) return;
-  const index = items.findIndex((i) => i.id === item.id);
-  if (index === -1) return;
-  items[index] = item;
-  await redis.set("timeline-items", JSON.stringify(items));
-}
+// export async function updateTimelineItem(item: TimelineItemProps) {
+//   const items = await getTimelineItems();
+//   if (!items) return;
+//   const index = items.findIndex((i) => i.id === item.id);
+//   if (index === -1) return;
+//   items[index] = item;
+//   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, JSON.stringify(items));
+// }
 
 // create update or create shedules
 export async function createConferenceSchedules(
   schedules: ConferenceScheduleProps[]
 ) {
   try {
-    await redis.set("conference-schedules", JSON.stringify(schedules));
+    await redis.set(
+      DATABASE_KEYS.CONFERENCE_SCHEDULES,
+      JSON.stringify(schedules)
+    );
   } catch (error) {
     console.log(error);
     throw Error("Failed to save schedules");
@@ -48,7 +52,7 @@ export async function getConferenceSchedule(): Promise<
   ConferenceScheduleProps[]
 > {
   try {
-    const schedules = await redis.get("conference-schedules");
+    const schedules = await redis.get(DATABASE_KEYS.CONFERENCE_SCHEDULES);
     if (!schedules) return [];
     console.log("schedules type", typeof schedules);
     return JSON.parse(schedules) as ConferenceScheduleProps[];
@@ -58,20 +62,20 @@ export async function getConferenceSchedule(): Promise<
   }
 }
 
-export async function getTimelineItems(): Promise<TimelineItemProps[]> {
-  const items = await redis.get("timeline-items");
-  if (!items) return [];
-  return JSON.parse(items);
-}
+// export async function getTimelineItems(): Promise<TimelineItemProps[]> {
+//   const items = await redis.get(DATABASE_KEYS.TIMELINE_ITEMS);
+//   if (!items) return [];
+//   return JSON.parse(items);
+// }
 
 // create setting for the conference
 export async function createConferenceSettings(settings: Settings) {
-  await redis.set("conference-settings", JSON.stringify(settings));
+  await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, JSON.stringify(settings));
 }
 
 // get settings for the conference
 export async function getConferenceSettings(): Promise<Settings> {
-  const settings = await redis.get("conference-settings");
+  const settings = await redis.get(DATABASE_KEYS.CONFERENCE_SETTINGS);
   if (!settings)
     return {
       columns: 1,
@@ -81,12 +85,37 @@ export async function getConferenceSettings(): Promise<Settings> {
 
 // page content PageContent
 export async function createPageContent(content: PageContent) {
-  await redis.set("page-content", JSON.stringify(content));
+  await redis.set(DATABASE_KEYS.PAGE_CONTENT, JSON.stringify(content));
 }
 
 // get page content
 export async function getPageContent(): Promise<PageContent> {
-  const content = await redis.get("page-content");
+  const content = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
   if (!content) return {};
   return JSON.parse(content);
+}
+
+// migrate data from old database to new database using old keys to new keys
+export async function migrateData() {
+  // const oldTimelineItems = await redis.get(DATABASE_KEYS.OLD_TIMELINE_ITEMS);
+  const oldConferenceSchedules = await redis.get(
+    DATABASE_KEYS.OLD_CONFERENCE_SCHEDULES
+  );
+  const oldConferenceSettings = await redis.get(
+    DATABASE_KEYS.OLD_CONFERENCE_SETTINGS
+  );
+  const oldPageContent = await redis.get(DATABASE_KEYS.OLD_PAGE_CONTENT);
+
+  // if (oldTimelineItems) {
+  //   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, oldTimelineItems);
+  // }
+  if (oldConferenceSchedules) {
+    await redis.set(DATABASE_KEYS.CONFERENCE_SCHEDULES, oldConferenceSchedules);
+  }
+  if (oldConferenceSettings) {
+    await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, oldConferenceSettings);
+  }
+  if (oldPageContent) {
+    await redis.set(DATABASE_KEYS.PAGE_CONTENT, oldPageContent);
+  }
 }
