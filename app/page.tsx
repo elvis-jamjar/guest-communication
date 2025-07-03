@@ -11,26 +11,27 @@ import Image from "next/image";
 import React from "react";
 import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
 import Link from "next/link";
+import HeroSection from "@/components/hero-section";
 
-const textIconData = [
-  {
-    text: 'www.acgc.africa',
-    icon: <Globe className="w-4 h-4" />
-  },
-  {
-    text: '@african_inhouse',
-    // twitter icon
-    icon: <Twitter className="w-4 h-4" />
-  },
-  {
-    text: 'mail@acgc.africa',
-    icon: <Mail className="w-4 h-4" />
-  },
-  {
-    text: 'ACGC (African Corprate Government Counsel Forum)',
-    icon: <Linkedin className="w-4 h-4" />
-  }
-]
+// const textIconData = [
+//   {
+//     text: 'www.acgc.africa',
+//     icon: <Globe className="w-4 h-4" />
+//   },
+//   {
+//     text: '@african_inhouse',
+//     // twitter icon
+//     icon: <Twitter className="w-4 h-4" />
+//   },
+//   {
+//     text: 'mail@acgc.africa',
+//     icon: <Mail className="w-4 h-4" />
+//   },
+//   {
+//     text: 'ACGC (African Corprate Government Counsel Forum)',
+//     icon: <Linkedin className="w-4 h-4" />
+//   }
+// ]
 
 const sections = ["about", "programme", "sponsors", "partners"];
 // #ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica
@@ -78,9 +79,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
-      <header className="bg-white py-4 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
+      {/* <header className="bg-white py-4 px-1.5 sticky z-30 top-0 backdrop-blur-sm bg-opacity-80 w-full">
         <div className="container mx-auto  max-w-5xl md:px-8 flex justify-between items-center">
-          {/* <h1 className="text-2xl font-bold">ACGC</h1> */}
           <a href="https://acgc.africa" target="_blank" className="text-2xl font-bold">
             <Image src="/images/logo.png" width={400} height={400} alt="ACGC" className="w-16 md:w-24 h-12 object-contain rounded-xl" />
           </a>
@@ -99,75 +99,22 @@ export default function Home() {
             }
           </nav>
         </div>
-      </header>
+      </header> */}
 
       {/* Hero Section */}
-      <section id={"about"} className="text-white bg-gray-50 h-fit w-full relative"
-        style={{ backgroundImage: "url('/images/ACGC_bg_2024.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
+      <section id={"about"} className=" w-full relative h-auto"
+        style={{
+          backgroundImage: "url('/images/ACGC_bg_2025_dark.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          backgroundBlendMode: "overlay",
+          // backgroundColor: "rgba(0, 0, 0, 0.8)",
+          minHeight: "100dvh",
+        }}
       >
-        <div className="max-w-5xl flex flex-col gap-6 mx-auto p-4">
-          {/* Header Section */}
-          <header className="flex items-center py-4">
-            <div className="flex flex-wrap items-center md:px-8">
-              <a href="https://acgc.africa" target="_blank" className="text-2xl font-bold">
-                <Image src="/images/logo.png" width={400} height={400} alt="ACGC Logo" className="w-64 h-auto rounded-xl" />
-              </a>
-            </div>
-          </header>
-          {/* Conference Title */}
-          <section className="flex-col flex-wrap w-full rounded-lg text-center mb-1 px-4"
-          >
-            {/* <Image
-              src="/images/ACGC_bg_2024.png"
-              // width={400} height={400}
-              alt="ACGC Logo"
-              fill
-              className="w-full h-[400px] object-cover z-0" /> */}
-            <div className="grid grid-cols-1 gap-0 space-y-0 w-fit md:px-9">
-              <h2 className="bg-primary-main col-span-2 px-2 w-fit leading-relaxed font-extrabold text-2xl md:text-5xl">
-                6th Annual
-              </h2> <br />
-              <h2 className="w-fit text-left px-2 leading-relaxed bg-primary-main font-extrabold text-2xl md:text-5xl">
-                ACGC Conference
-              </h2>
-            </div>
-            <div className="w-full flex flex-wrap md:flex-nowrap justify-between gap-8">
-              <div>
-                <Image src="/images/ACGC_text.png" width={400} height={400} alt="ACGC Logo" className="w-[500px] h-auto rounded-xl" />
-              </div>
-              <Separator orientation="vertical" className="bg-slate-900 h-72 mt-12 hidden md:flex" />
-              <Separator orientation="horizontal" className="bg-slate-900 w-full my-4 flex md:hidden" />
-              <div className="space-y-4 text-foreground">
-                <h2 className="text-xl md:text-3xl font-extrabold">9th - 11th October, 2024</h2>
-                <div className="py-2 gap-1.5 flex flex-col w-fit">
-                  {
-                    ["Labadi Beach Hotel,", "1 Labadi By-Pass,", "Accra, Ghana."].map((line, index) => (
-                      <p key={index} className="text-2xl md:text-3xl leading-loose text-left font-thin">{line}</p>
-                    ))
-                  }
-                </div>
-                <div className="pt-2 grid gap-1">
-                  <HashTags tags={hashTags} />
-                </div>
-              </div>
-            </div>
-            <div className="bg-primary-main flex rounded-bl-xl text-white top-0 right-0 h-64 w-6 md:w-16 absolute items-center justify-center">
-              <p className="transform -rotate-90 text-sm md:text-xl whitespace-nowrap font-bold">
-                Conference Programme
-              </p>
-            </div>
-          </section>
-          {/* about us description */}
-          <AboutDescription aboutSection={pageContent?.aboutSection || ''} />
-          {/* social media */}
-          <div className="mt-6 flex gap-10 flex-wrap justify-between px-4 py-4 md:px-8">
-            {
-              textIconData.map((social, index) => (
-                <TextIcon key={index} text={social?.text} icon={social?.icon} />
-              ))
-            }
-          </div>
-        </div>
+        <HeroSection />
       </section>
 
       {/* Program Section */}
@@ -191,16 +138,24 @@ export default function Home() {
       </section>
       {/* sponsors */}
       <section id="sponsors" className="py-16 bg-white">
-        <div className="mx-auto container max-w-5xl">
-          <Image src="/images/sponsors.png" width={1000} height={200} alt="Sponsors" className="w-full h-auto object-contain" />
+        <div className="mx-auto container max-w-5xl px-4 md:px-0">
+          <Image
+            src="/images/acgc_2025_sponsors_partners.png"
+            width={1000}
+            height={600}
+            fetchPriority="high"
+            quality={100}
+            priority={true}
+            alt="Sponsors"
+            className="w-full h-auto object-contain" />
         </div>
       </section>
       {/* partners */}
-      <section id="partners" className="py-16 bg-white mx-auto">
+      {/* <section id="partners" className="py-16 bg-white mx-auto">
         <div className="mx-auto container max-w-5xl">
           <Image src="/images/partners.png" width={1000} height={200} alt="partners" className="w-full h-auto object-contain" />
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="bg-black text-white py-6">

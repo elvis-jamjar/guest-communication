@@ -63,10 +63,10 @@ export function AboutDescription({ aboutSection, hasTitle }: { aboutSection: str
   //   // return <pre key={index} className="text-muted-foreground mx-0.5" >{text}</pre>
   // })
   return (
-    <section className="bg-transparent p-6 rounded-lg">
+    <section className="bg-transparent mt-8 text-white rounded-lg">
       {hasTitle && <h2 className="text-2xl font-semibold mb-4">About Us</h2>}
       {/* <p className="text-muted-foreground">{}</p> */}
-      <pre className="text-left text-lg whitespace-pre-wrap text-muted-foreground">
+      <pre className="text-left text-lg whitespace-pre-wrap text-inherit">
         {aboutSection}
       </pre>
     </section>

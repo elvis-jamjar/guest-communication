@@ -2,23 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @font-face {
-  font-family: 'satoshi-black';
-  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Black.woff') format('woff')
+  font-family: 'corporate-a-regular';
+  src: url('/fonts/Corporate A Light.ttf') format('ttf');
 }
 
 @font-face {
-  font-family: 'satoshi-light';
-  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Light.woff') format('woff');
+  font-family: 'corporate-a-bold';
+  src: url('/fonts/Corporate A Bold.otf') format('otf');
 }
 
 @font-face {
-  font-family: 'satoshi-medium';
-  src: url('https://prod-jamjar-rentals.fra1.cdn.digitaloceanspaces.com/cdn/fonts/Satoshi-Medium.woff') format('woff');
+  font-family: 'CabinetGrotesk-Regular';
+  src: url('/fonts/CabinetGrotesk-Regular.otf') format('otf');
 }
 
 body {
-  font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
+  font-family: 'corporate-a-regular', 'CabinetGrotesk-Regular';
 }
 
 @layer utilities {

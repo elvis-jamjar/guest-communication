@@ -19,6 +19,52 @@ import { ChatBotQuestionSuggestions } from './chat-bot-question-suggestions';
 
 
 
+const TypingIndicator = () => {
+    return (
+        <div className="flex items-center gap-1 px-2 py-1">
+            <motion.div
+                className="w-2 h-2 bg-muted-foreground rounded-full"
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0,
+                }}
+            />
+            <motion.div
+                className="w-2 h-2 bg-muted-foreground rounded-full"
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.2,
+                }}
+            />
+            <motion.div
+                className="w-2 h-2 bg-muted-foreground rounded-full"
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.4,
+                }}
+            />
+        </div>
+    );
+};
+
 const RenderMessage = ({ message }: { message: string }) => {
     return (
         <Markdown
@@ -171,24 +217,77 @@ export const PopOverChat = () => {
                     whileHover={{ y: -2 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                    {!isOpen && <div className="absolute -top-14 right-8 translate-x-1/2 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm border pointer-events-none whitespace-nowrap">
-                        Ask ACGC
-                    </div>}
-                    {!isOpen && <ChevronDown className="h-4 w-4 absolute -top-5 right-6 translate-x-1/2  opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none " />}
+                    {/* Enhanced tooltip with more content */}
+                    {!isOpen && (
+                        <div className="absolute -top-20 right-8 translate-x-1/2 bg-gradient-to-r from-primary/95 to-primary/90 backdrop-blur-sm px-4 py-2 rounded-xl text-sm font-semibold text-white opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-xl border border-primary/20 pointer-events-none whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                                <MessageSquare className="h-4 w-4" />
+                                <span>Ask ACGC AI</span>
+                            </div>
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary/95"></div>
+                        </div>
+                    )}
+
+                    {/* Animated background ring */}
+                    {!isOpen && (
+                        <motion.div
+                            className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-primary/10"
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.5, 0.8, 0.5],
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    )}
+
+                    {/* Pulse ring effect */}
+                    {!isOpen && (
+                        <motion.div
+                            className="absolute inset-0 rounded-full border-2 border-primary-main/30"
+                            animate={{
+                                scale: [1, 1.4, 1],
+                                opacity: [1, 0, 1],
+                            }}
+                            transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    )}
 
                     <Button
                         variant="default"
                         size="lg"
-                        className="size-12 px-4 rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-lg transition-all duration-200"
+                        className="relative size-14 px-4 rounded-full bg-gradient-to-r from-primary-main via-primary-main/95 to-primary-main/90 hover:from-primary-main/90 hover:via-primary-main hover:to-primary-main shadow-2xl hover:shadow-primary-main/25 transition-all duration-300 border-2 border-white/20"
                         onClick={toggleIsOpen}
                     >
                         {isOpen ? (
-                            <X className="h-5 w-5 transition-all duration-300 ease-in-out rotate-0" />
+                            <X className="h-6 w-6 transition-all duration-300 ease-in-out rotate-0" />
                         ) : (
-                            <MessageSquare className="h-5 w-5 transition-all duration-300 ease-in-out" />
+                            <MessageSquare className="h-6 w-6 transition-all duration-300 ease-in-out" />
                         )}
                         <span className="sr-only"> {isOpen ? "Close" : "Open"} Chat</span>
                     </Button>
+
+                    {/* Floating notification dot */}
+                    {!isOpen && (
+                        <motion.div
+                            className="absolute -top-1 -right-1 w-4 h-4 bg-primary-purple rounded-full border-2 border-white"
+                            animate={{
+                                scale: [1, 1.2, 1],
+                            }}
+                            transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    )}
                 </motion.div>
             </motion.div>
             <AnimatePresence>
@@ -238,21 +337,21 @@ export const PopOverChat = () => {
                                             {message.role === 'assistant' && (
                                                 <div className="flex flex-col items-center mr-1.5">
                                                     <div className="relative">
-                                                        <Image src="/images/logo.png" alt="ACGC Logo" width={30} height={30} className="rounded-sm bg-white border" />
-                                                        {isStreaming && index === messages.length - 1 && (
+                                                        <Image src="/images/logo.png" alt="ACGC Logo" width={40} height={40} className="rounded-sm bg-white border" />
+                                                        {/* {(isStreaming || isLoading) && index === messages.length - 1 && (
                                                             <div className="absolute -right-1 -bottom-1 bg-background rounded-full p-0.5">
                                                                 <Loader2 className="h-3 w-3 animate-spin text-primary" />
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
                                             )}
-                                            <div className="flex flex-col w-full">
+                                            {(message.content || schedule) && <div className="flex flex-col w-full">
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 10 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ duration: 0.3 }}
-                                                    className={`rounded-2xl px-4 py-2 max-w-[80%] shadow-none ${message.role === 'assistant' ? 'bg-muted/80 border border-border/50 text-foreground rounded-tl-none' : 'bg-primary/70 text-white ml-auto rounded-br-none'} flex flex-col`}>
+                                                    className={cn(`rounded-2xl px-4 py-2 shadow-none max-w-[80%] ${message.role === 'assistant' ? 'bg-muted/80 border border-border/50 text-foreground rounded-tl-none' : 'bg-primary/70 text-white ml-auto rounded-br-none'} flex flex-col`)}>
                                                     {message.role === 'assistant' ? (
                                                         <div className="w-full prose max-w-none">
                                                             <RenderMessage message={message.content as string} />
@@ -263,10 +362,34 @@ export const PopOverChat = () => {
                                                     )}
                                                 </motion.div>
                                                 <span className={cn("text-xs mx-2 font-medium text-muted-foreground mt-1", message.role === 'assistant' ? 'text-left' : 'text-right')}>{formatTime(message.createdAt)}</span>
-                                            </div>
+                                            </div>}
                                         </div>
                                     )
                                 })}
+
+                                {/* Typing indicator when AI is responding */}
+                                {(isStreaming || isLoading) && (
+                                    <div className="flex w-full justify-start">
+                                        <div className="flex flex-col items-center mr-1.5">
+                                            <div className="relative">
+                                                <Image src="/images/logo.png" alt="ACGC Logo" width={40} height={40} className="rounded-sm bg-white border" />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col w-full">
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="rounded-2xl px-4 py-3 max-w-[80%] bg-muted/80 border border-border/50 text-foreground rounded-tl-none shadow-none flex flex-col"
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm text-muted-foreground">ACGC AI is typing</span>
+                                                    <TypingIndicator />
+                                                </div>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </ScrollArea>
                         {/* Input */}
