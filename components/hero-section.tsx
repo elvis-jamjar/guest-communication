@@ -142,11 +142,11 @@ export default function HeroSection() {
                                     Programme
                                 </a>
                                 <a href="#sponsors" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
-                                    Sponsors
+                                    Sponsors & Partners
                                 </a>
-                                <a href="#partners" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
+                                {/* <a href="#partners" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
                                     Partners
-                                </a>
+                                </a> */}
                             </div>
                         </div>
                     </nav>
