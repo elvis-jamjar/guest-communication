@@ -79,10 +79,10 @@ export default function HeroSection() {
 
     return (
         <div
-            className="h-auto w-full">
+            className="h-full w-full">
             {/* Overlay for better text contrast */}
             {/* Content container */}
-            <div className="relative w-full z-10 flex flex-col h-full">
+            <div className="relative w-full z-10 flex flex-col h-full min-h-screen">
                 {/* Header with logo, conference info, and navigation */}
                 <div className={`fixed top-0 left-0 right-0 z-50 flex items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white opacity-95 shadow-sm' : 'px-2 py-8 md:px-16 md:pb-0 pb-0 bg-white/90 md:bg-transparent'}`}>
                     {/* Logo and conference badge */}
@@ -153,20 +153,20 @@ export default function HeroSection() {
                 </div>
 
                 {/* Main content */}
-                <div className={cn("flex-1 flex flex-col justify-center pt-32 md:pt-40")}>
+                <div className={cn("flex-1 flex font-sans flex-col justify-center pt-32 md:pt-40")}>
                     {/* Gradient overlay for text content */}
-                    <div className="absolute hidden md:block z-0 inset-0 bg-gradient-to-tr from-black/70 from-30% via-black/80 via-30% to-black/0 pointer-events-none"></div>
+                    <div className="absolute hidden md:block z-0 inset-0 bg-gradient-to-tr from-black/80 from-30% via-black/80 via-30% to-black/0 pointer-events-none"></div>
                     <div className="px-8 md:px-16 relative z-10 py-10">
                         {/* Main heading */}
-                        <h1 className="text-white text-center md:text-left text-5xl md:text-6xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                        <h1 className="text-white font-cabinetGrotesk text-center md:text-left text-5xl md:text-6xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
                             From Bridges
                             <br />
                             to Breakthroughs
                         </h1>
 
                         {/* Subtitle with gradient background */}
-                        <div className="inline-block w-full md:w-auto p-0.5 bg-gradient-to-r from-[#ffffff] to-[#e0b85a] rounded-full mb-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-                            <div className="inline-block w-full bg-gradient-to-r from-[#6d5b7b] to-[#e0b85a]  px-8 py-3 rounded-full">
+                        <div className="inline-block w-full md:w-auto p-0.5 bg-gradient-to-r from-white to-primary-main rounded-full mb-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                            <div className="inline-block w-full bg-gradient-to-r from-primary-purple to-primary-main  px-8 py-3 rounded-full">
                                 <span className="text-xl md:text-2xl text-white font-bold">
                                     In-house counsel as catalysts
                                 </span>
@@ -175,21 +175,21 @@ export default function HeroSection() {
 
                         {/* Date and location */}
                         <div className="text-white space-y-4 mb-12">
-                            <div className="text-2xl font-cabinetGrotesk font-bold text-[#d2993a]">
+                            <div className="text-3xl font-cabinetGrotesk font-bold text-primary-main">
                                 Wed 1st - Fri 3rd October, 2025
                             </div>
-                            <div className="text-lg md:text-xl font-normal">
+                            <div className="text-lg md:text-xl font-normal font-sans">
                                 @ The David Livingstone Safari Lodge & Spa,
                                 <br />
                                 Riverside Dr, Off Sichango Rd, Livingstone, Zambia
                             </div>
                             {/* Social and contact info */}
-                            <div className="flex flex-wrap items-center gap-4 text-white text-sm">
+                            <div className="flex flex-wrap font-sans items-center gap-4 text-white text-sm">
                                 {/* social media */}
                                 {
                                     textIconData.map((item, index) => (
-                                        <div key={index} className="flex items-center gap-2">
-                                            <div className="size-6 bg-[#d2993a] rounded-full flex items-center justify-center text-black">
+                                        <div key={index} className="flex items-center gap-2 text-base">
+                                            <div className="size-6 bg-primary-main rounded-full flex items-center justify-center text-black">
                                                 {item.icon}
                                             </div>
                                             <span>{item.text}</span>
