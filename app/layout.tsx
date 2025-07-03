@@ -59,9 +59,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth no-scrollbar">
       <body
-        className={cn(`text-foreground bg-background antialiased scroll-smooth`)}>
+        className={cn(`text-foreground no-scrollbar bg-background antialiased scroll-smooth`)}>
         <Providers>
           {children}
           <PopOverChat />

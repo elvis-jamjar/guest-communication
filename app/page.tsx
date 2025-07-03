@@ -12,6 +12,7 @@ import React from "react";
 import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
 import Link from "next/link";
 import HeroSection from "@/components/hero-section";
+import { useMobile } from "@/hooks/use-mobile";
 
 // const textIconData = [
 //   {
@@ -35,9 +36,10 @@ import HeroSection from "@/components/hero-section";
 
 const sections = ["about", "programme", "sponsors", "partners"];
 // #ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica
-const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
+// const hashTags = ["ACGC4B", "Africaninhouse", "Generalcounselafrica", "Govtcounselafrica", "Corporatecounselafrica"];
 // const INTERVAL = 60000; // 1 minute
 export default function Home() {
+  const isMobile = useMobile();
   const { data, isLoading } = useQuery({
     queryKey: ['conference-schedules'],
     queryFn: async () => await getConferenceSchedule(),
@@ -108,9 +110,9 @@ export default function Home() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
+          backgroundAttachment: isMobile ? "scroll" : "fixed",
           backgroundBlendMode: "overlay",
-          // backgroundColor: "rgba(0, 0, 0, 0.8)",
+          backgroundColor: isMobile ? "rgba(0, 0, 0, 0.5)" : "transparent",
           minHeight: "100dvh",
         }}
       >

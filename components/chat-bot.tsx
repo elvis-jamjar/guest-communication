@@ -290,7 +290,7 @@ export const PopOverChat = () => {
                     )}
                 </motion.div>
             </motion.div>
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
                 {isOpen && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
@@ -299,7 +299,7 @@ export const PopOverChat = () => {
                         transition={{ type: "spring", damping: 20, stiffness: 300 }}
                         className={cn(
                             "fixed z-50 bg-background border-t border-l border-r rounded-t-xl rounded-b-lg shadow-lg overflow-hidden flex flex-col",
-                            "w-full h-[100dvh] bottom-0 right-0 md:bottom-20  md:h-[80dvh] md:min-w-[20rem] md:max-w-3xl md:left-auto md:right-5 md:rounded-b-lg",
+                            "w-full h-[100dvh] bottom-0 right-0 md:bottom-20 md:h-[80dvh] md:min-w-[20rem] md:max-w-3xl md:left-auto md:right-5 md:rounded-b-lg",
                             // isKeyboardOpen && "bottom-[50vh]"
                         )}
                     >
@@ -410,15 +410,16 @@ export const PopOverChat = () => {
                                         onChange={handleInputChange}
                                         onKeyDown={handleKeyDown}
                                         rows={1}
-                                        className="w-full max-h-16 md:max-h-20 no-scrollbar rounded-sm border resize-none border-primary-main bg-gray-200/50 p-2 text-sm shadow-none outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full max-h-16 md:max-h-20 no-scrollbar rounded-sm text-base md:text-base border resize-none border-primary-main bg-gray-200/50 p-2 shadow-none outline-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
                                         disabled={isStreaming}
                                         maxLength={200}
+                                        enterKeyHint="send"
                                     />
                                     <Button
                                         type={isStreaming ? "button" : "submit"}
-                                        variant={"ghost"}
+                                        variant={isDisabled ? "ghost" : "default"}
                                         disabled={isDisabled}
-                                        className="size-8 p-0 text-primary-main rounded-full flex self-end items-center justify-center shadow-none disabled:opacity-50"
+                                        className="size-12 p-2 bg-primary-purple ml-1 text-primary-main rounded-sm flex self-end items-center justify-center shadow-none disabled:opacity-50"
                                         onClick={isStreaming ? handleStop : undefined}
                                     >
                                         {isStreaming ? (

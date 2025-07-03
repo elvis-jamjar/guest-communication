@@ -95,8 +95,8 @@ export default function HeroSection() {
                             className="object-contain transition-all duration-300 ease-in-out"
                         />
                         <div className="flex flex-col">
-                            <div className={`text-gray-600 font-medium transition-all duration-300 ease-in-out ${isScrolled ? 'text-xs md:text-sm' : 'text-xs md:text-xl'}`}>7th Annual</div>
-                            <div className={`text-gray-800 font-bold transition-all duration-300 ease-in-out ${isScrolled ? 'text-sm md:text-xl' : 'text-sm md:text-3xl'}`}>ACGC Conference</div>
+                            <div className={`text-gray-600 font-medium transition-all duration-300 ease-in-out ${isScrolled ? 'text-base' : 'text-lg md:text-xl'}`}>7th Annual</div>
+                            <div className={`text-gray-800 font-bold transition-all duration-300 ease-in-out ${isScrolled ? 'text-xl' : 'text-lg md:text-3xl'}`}>ACGC Conference</div>
                             <div className={`bg-[#d2993a] mt-2 transition-all duration-300 ease-in-out ${isScrolled ? 'w-10 h-1' : 'w-16 h-1.5'}`}></div>
                         </div>
                     </div>
@@ -155,10 +155,10 @@ export default function HeroSection() {
                 {/* Main content */}
                 <div className={cn("flex-1 flex flex-col justify-center pt-32 md:pt-40")}>
                     {/* Gradient overlay for text content */}
-                    <div className="absolute z-0 inset-0 bg-gradient-to-tr from-black/70 from-30% via-black/80 via-30% to-black/0 pointer-events-none"></div>
+                    <div className="absolute hidden md:block z-0 inset-0 bg-gradient-to-tr from-black/70 from-30% via-black/80 via-30% to-black/0 pointer-events-none"></div>
                     <div className="px-8 md:px-16 relative z-10 py-10">
                         {/* Main heading */}
-                        <h1 className="text-white text-center md:text-left text-4xl md:text-6xl md:text-7xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                        <h1 className="text-white text-center md:text-left text-5xl md:text-6xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
                             From Bridges
                             <br />
                             to Breakthroughs
