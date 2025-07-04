@@ -112,11 +112,11 @@ export default function HeroSection() {
                                 Programme
                             </a>
                             <a href="#sponsors" className="text-white hover:text-white/80 transition-colors font-medium text-lg">
-                                Sponsors & Partners
+                                Sponsors
                             </a>
-                            {/* <a href="#partners" className="text-white hover:text-white/80 transition-colors font-medium text-lg">
+                            <a href="#partners" className="text-white hover:text-white/80 transition-colors font-medium text-lg">
                                 Partners
-                            </a> */}
+                            </a>
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -142,11 +142,11 @@ export default function HeroSection() {
                                     Programme
                                 </a>
                                 <a href="#sponsors" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
-                                    Sponsors & Partners
+                                    Sponsors
                                 </a>
-                                {/* <a href="#partners" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
+                                <a href="#partners" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
                                     Partners
-                                </a> */}
+                                </a>
                             </div>
                         </div>
                     </nav>

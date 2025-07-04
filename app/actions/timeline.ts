@@ -7,6 +7,7 @@ import {
   TimelineItemProps,
 } from "@/app/types";
 import { DATABASE_KEYS } from "@/lib/db";
+import { formatDateTime } from "@/utils/date";
 
 /**
  * create new timeline item
@@ -33,11 +34,30 @@ import { DATABASE_KEYS } from "@/lib/db";
 //   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, JSON.stringify(items));
 // }
 
+// update history
+export async function updateHistory(content: any) {
+  const dateKey = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
+  const history = await redis.get(DATABASE_KEYS.HISTORY);
+  if (!history) {
+    await redis.set(
+      DATABASE_KEYS.HISTORY,
+      JSON.stringify({
+        [dateKey]: content,
+      })
+    );
+  } else {
+    const historyData = JSON.parse(history);
+    historyData[dateKey] = content;
+    await redis.set(DATABASE_KEYS.HISTORY, JSON.stringify(historyData));
+  }
+}
+
 // create update or create shedules
 export async function createConferenceSchedules(
   schedules: ConferenceScheduleProps[]
 ) {
   try {
+    await updateHistory(schedules);
     await redis.set(
       DATABASE_KEYS.CONFERENCE_SCHEDULES,
       JSON.stringify(schedules)
@@ -70,6 +90,7 @@ export async function getConferenceSchedule(): Promise<
 
 // create setting for the conference
 export async function createConferenceSettings(settings: Settings) {
+  await updateHistory(settings);
   await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, JSON.stringify(settings));
 }
 
@@ -85,6 +106,7 @@ export async function getConferenceSettings(): Promise<Settings> {
 
 // page content PageContent
 export async function createPageContent(content: PageContent) {
+  await updateHistory(content);
   await redis.set(DATABASE_KEYS.PAGE_CONTENT, JSON.stringify(content));
 }
 
@@ -96,26 +118,26 @@ export async function getPageContent(): Promise<PageContent> {
 }
 
 // migrate data from old database to new database using old keys to new keys
-export async function migrateData() {
-  // const oldTimelineItems = await redis.get(DATABASE_KEYS.OLD_TIMELINE_ITEMS);
-  const oldConferenceSchedules = await redis.get(
-    DATABASE_KEYS.OLD_CONFERENCE_SCHEDULES
-  );
-  const oldConferenceSettings = await redis.get(
-    DATABASE_KEYS.OLD_CONFERENCE_SETTINGS
-  );
-  const oldPageContent = await redis.get(DATABASE_KEYS.OLD_PAGE_CONTENT);
+// export async function migrateData() {
+//   // const oldTimelineItems = await redis.get(DATABASE_KEYS.OLD_TIMELINE_ITEMS);
+//   const oldConferenceSchedules = await redis.get(
+//     DATABASE_KEYS.OLD_CONFERENCE_SCHEDULES
+//   );
+//   const oldConferenceSettings = await redis.get(
+//     DATABASE_KEYS.OLD_CONFERENCE_SETTINGS
+//   );
+//   const oldPageContent = await redis.get(DATABASE_KEYS.OLD_PAGE_CONTENT);
 
-  // if (oldTimelineItems) {
-  //   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, oldTimelineItems);
-  // }
-  if (oldConferenceSchedules) {
-    await redis.set(DATABASE_KEYS.CONFERENCE_SCHEDULES, oldConferenceSchedules);
-  }
-  if (oldConferenceSettings) {
-    await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, oldConferenceSettings);
-  }
-  if (oldPageContent) {
-    await redis.set(DATABASE_KEYS.PAGE_CONTENT, oldPageContent);
-  }
-}
+//   // if (oldTimelineItems) {
+//   //   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, oldTimelineItems);
+//   // }
+//   if (oldConferenceSchedules) {
+//     await redis.set(DATABASE_KEYS.CONFERENCE_SCHEDULES, oldConferenceSchedules);
+//   }
+//   if (oldConferenceSettings) {
+//     await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, oldConferenceSettings);
+//   }
+//   if (oldPageContent) {
+//     await redis.set(DATABASE_KEYS.PAGE_CONTENT, oldPageContent);
+//   }
+// }

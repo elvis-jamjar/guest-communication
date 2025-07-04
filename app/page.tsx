@@ -142,9 +142,9 @@ export default function Home() {
       <section id="sponsors" className="py-16 bg-white">
         <div className="mx-auto container max-w-5xl px-4 md:px-0">
           <Image
-            src="/images/acgc_2025_sponsors_partners.png"
+            src="/images/sponsors_25.png"
             width={1000}
-            height={600}
+            height={500}
             fetchPriority="high"
             quality={100}
             priority={true}
@@ -153,11 +153,20 @@ export default function Home() {
         </div>
       </section>
       {/* partners */}
-      {/* <section id="partners" className="py-16 bg-white mx-auto">
+      <section id="partners" className="py-16 bg-white mx-auto">
         <div className="mx-auto container max-w-5xl">
-          <Image src="/images/partners.png" width={1000} height={200} alt="partners" className="w-full h-auto object-contain" />
+          <Image
+            src="/images/partners_25.png"
+            width={1000}
+            height={500}
+            alt="partners"
+            className="w-full h-auto object-contain"
+            fetchPriority="high"
+            quality={100}
+            priority={true}
+          />
         </div>
-      </section> */}
+      </section>
 
       {/* Footer */}
       <footer className="bg-black text-white py-6">
@@ -170,16 +179,16 @@ export default function Home() {
 }
 
 
-function TextIcon({ text, icon }: { text: string, icon: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div className="bg-amber-500 p-2 rounded-full">
-        {icon}
-      </div>
-      <p className="text-foreground">{text}</p>
-    </div>
-  )
-}
+// function TextIcon({ text, icon }: { text: string, icon: React.ReactNode }) {
+//   return (
+//     <div className="flex items-center gap-2">
+//       <div className="bg-amber-500 p-2 rounded-full">
+//         {icon}
+//       </div>
+//       <p className="text-foreground">{text}</p>
+//     </div>
+//   )
+// }
 
 
 

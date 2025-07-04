@@ -12,4 +12,7 @@ export const DATABASE_KEYS = {
   OLD_CONFERENCE_SCHEDULES: "conference-schedules",
   OLD_CONFERENCE_SETTINGS: "conference-settings",
   OLD_PAGE_CONTENT: "page-content",
+
+  // history
+  HISTORY: `${PROJECT_NAME}-history`,
 };
