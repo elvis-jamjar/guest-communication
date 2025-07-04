@@ -137,8 +137,8 @@ export default function Home() {
         />
       </section>
       {/* sponsors */}
-      <section id="sponsors" className="py-16 bg-white">
-        <div className="mx-auto container max-w-5xl px-4 md:px-0">
+      <section id="sponsors" className="py-16 px-4 bg-white">
+        <div className="mx-auto container max-w-5xl px-2 md:px-0 rounded-sm">
           <Image
             src="/images/sponsors_25.png"
             width={1000}
@@ -148,19 +148,19 @@ export default function Home() {
             quality={100}
             priority={true}
             alt="Sponsors"
-            className="w-full h-auto pointer-events-none object-contain select-none" />
+            className="w-full h-auto rounded-sm pointer-events-none object-contain select-none" />
         </div>
       </section>
       {/* partners */}
-      <section id="partners" className="py-16 bg-white mx-auto">
-        <div className="mx-auto container max-w-5xl">
+      <section id="partners" className="py-16 px-2 bg-white mx-auto">
+        <div className="mx-auto container max-w-5xl rounded-sm">
           <Image
             src="/images/partners_25.png"
             width={1000}
             height={500}
             draggable={false}
             alt="partners"
-            className="w-full h-auto pointer-events-none object-contain select-none"
+            className="w-full h-auto rounded-sm pointer-events-none object-contain select-none"
             fetchPriority="high"
             quality={100}
             priority={true}
