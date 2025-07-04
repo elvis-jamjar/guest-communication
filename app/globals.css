@@ -19,7 +19,7 @@
 }
 
 body {
-  font-family: 'corporate-a-regular', 'CabinetGrotesk-Regular';
+  font-family: 'corporate-a-regular', 'corporate-a-bold', 'sans';
 }
 
 @layer utilities {
@@ -92,7 +92,7 @@ body {
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'satoshi-medium', 'satoshi-light', 'satoshi-black';
+    font-family: 'corporate-a-regular', 'corporate-a-bold', 'CabinetGrotesk-Regular';
   }
 }
 

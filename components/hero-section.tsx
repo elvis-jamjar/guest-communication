@@ -97,14 +97,14 @@ export default function HeroSection() {
                         <div className="flex flex-col">
                             <div className={`text-gray-600 font-medium transition-all duration-300 ease-in-out ${isScrolled ? 'text-base' : 'text-lg md:text-xl'}`}>7th Annual</div>
                             <div className={`text-gray-800 font-bold transition-all duration-300 ease-in-out ${isScrolled ? 'text-xl' : 'text-lg md:text-3xl'}`}>ACGC Conference</div>
-                            <div className={`bg-[#d2993a] mt-2 transition-all duration-300 ease-in-out ${isScrolled ? 'w-10 h-1' : 'w-16 h-1.5'}`}></div>
+                            <div className={`bg-primary-main mt-2 transition-all duration-300 ease-in-out ${isScrolled ? 'w-10 h-1' : 'w-16 h-1.5'}`}></div>
                         </div>
                     </div>
 
                     {/* Navigation */}
                     <nav className="relative mobile-menu-container">
                         {/* Desktop Menu */}
-                        <div className="hidden md:flex items-center gap-8 bg-[#d2993a]/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-[#d2993a]">
+                        <div className="hidden md:flex items-center gap-8 bg-primary-main/90 backdrop-blur-sm rounded-lg px-6 py-3 border border-primary-main">
                             <a href="#about" className="text-white hover:text-white/80 transition-colors font-medium text-lg">
                                 About
                             </a>
@@ -135,16 +135,16 @@ export default function HeroSection() {
                         {/* Mobile Menu Dropdown */}
                         <div className={`md:hidden absolute top-full right-0 mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-lg transition-all duration-300 ease-out ${isMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
                             <div className="py-2">
-                                <a href="#about" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
+                                <a href="#about" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-primary-main hover:text-white transition-colors font-medium">
                                     About
                                 </a>
-                                <a href="#programme" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
+                                <a href="#programme" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-primary-main hover:text-white transition-colors font-medium">
                                     Programme
                                 </a>
-                                <a href="#sponsors" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
+                                <a href="#sponsors" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-primary-main hover:text-white transition-colors font-medium">
                                     Sponsors
                                 </a>
-                                <a href="#partners" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-[#d2993a] hover:text-white transition-colors font-medium">
+                                <a href="#partners" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-primary-main hover:text-white transition-colors font-medium">
                                     Partners
                                 </a>
                             </div>
@@ -153,12 +153,12 @@ export default function HeroSection() {
                 </div>
 
                 {/* Main content */}
-                <div className={cn("flex-1 flex font-sans flex-col justify-center pt-32 md:pt-40")}>
+                <div className={cn("flex-1 flex flex-col justify-center pt-32 md:pt-40")}>
                     {/* Gradient overlay for text content */}
                     <div className="absolute hidden md:block z-0 inset-0 bg-gradient-to-tr from-black/80 from-30% via-black/80 via-30% to-black/0 pointer-events-none"></div>
                     <div className="px-8 md:px-16 relative z-10 py-10">
                         {/* Main heading */}
-                        <h1 className="text-white font-cabinetGrotesk text-center md:text-left text-5xl md:text-6xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                        <h1 className="text-white text-center md:text-left text-5xl md:text-6xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
                             From Bridges
                             <br />
                             to Breakthroughs
@@ -175,16 +175,16 @@ export default function HeroSection() {
 
                         {/* Date and location */}
                         <div className="text-white space-y-4 mb-12">
-                            <div className="text-3xl font-cabinetGrotesk font-bold text-primary-main">
+                            <div className="text-3xl font-bold text-primary-main">
                                 Wed 1st - Fri 3rd October, 2025
                             </div>
-                            <div className="text-lg md:text-xl font-normal font-sans">
+                            <div className="text-lg md:text-xl font-normal">
                                 @ The David Livingstone Safari Lodge & Spa,
                                 <br />
                                 Riverside Dr, Off Sichango Rd, Livingstone, Zambia
                             </div>
                             {/* Social and contact info */}
-                            <div className="flex flex-wrap font-sans items-center gap-4 text-white text-sm">
+                            <div className="flex flex-wrap items-center gap-4 text-white text-sm">
                                 {/* social media */}
                                 {
                                     textIconData.map((item, index) => (

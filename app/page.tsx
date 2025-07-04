@@ -1,9 +1,7 @@
 "use client"
 
-import { HashTags } from "@/components/hashtasg";
-import { AboutDescription, PageQuickLinks } from "@/components/page-content-display";
+import { PageQuickLinks } from "@/components/page-content-display";
 import { ScheduleList } from "@/components/schedule-list";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 // import { Globe, Linkedin, Mail, Twitter, MessageCircle } from "lucide-react";
