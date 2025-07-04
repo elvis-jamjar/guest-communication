@@ -84,7 +84,7 @@ export default function HeroSection() {
             {/* Content container */}
             <div className="relative w-full z-10 flex flex-col h-full min-h-screen">
                 {/* Header with logo, conference info, and navigation */}
-                <div className={`fixed top-0 left-0 right-0 z-50 flex items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white opacity-95 shadow-sm' : 'px-2 py-8 md:px-16 md:pb-0 pb-0 bg-white/90 md:bg-transparent'}`}>
+                <div className={`fixed top-0 left-0 right-0 z-50 flex items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white/90 shadow-sm' : 'px-2 py-8 md:px-16 md:pb-0 pb-0 bg-white/90 md:bg-transparent'}`}>
                     {/* Logo and conference badge */}
                     <div className={`flex flex-1 justify-around items-center transition-all duration-300 ease-in-out ${isScrolled ? 'gap-4 p-1 max-w-xs md:max-w-sm' : 'gap-5 p-5 max-w-xs md:max-w-xl md:bg-[#f5f1e8]'} md:rounded-br-[3rem]`}>
                         <Image
