@@ -4,6 +4,8 @@ import "./globals.css";
 import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
 import { PopOverChat } from "@/components/chat-bot";
+import { Toaster } from "@/components/ui/sonner"
+
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -65,6 +67,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <PopOverChat />
+          <Toaster position="top-center" richColors />
         </Providers>
       </body>
     </html>

@@ -36,12 +36,13 @@ export function PageQuickLinks({ pageContent, className }: { pageContent: PageCo
               <p className="text-muted-foreground">{link.description || 'No description available.'}</p>
             </CardContent>
             <CardFooter>
-              <Button asChild className="w-full bg-primary-main hover:bg-primary-main/80">
-                <a href={link?.link || '#'} target="_blank" rel="noopener noreferrer">
+              <a href={link?.link || '#'} target="_blank" rel="noopener noreferrer">
+                <Button className="w-full group bg-primary-main hover:bg-primary-main/80">
                   {link?.buttonLabel || 'Learn More'}
-                  <ArrowUpRight className="w-4 h-4 ml-2" />
-                </a>
-              </Button>
+                  <ArrowUpRight className="size-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </a>
+
             </CardFooter>
           </Card>
         ))}

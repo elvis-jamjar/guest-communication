@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import React from "react";
 import { PageContentDisplayComponent } from "@/components/page-content-display";
+import { toast } from "sonner";
 // import { backupData } from "@/app/actions/timeline";
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
@@ -82,13 +83,15 @@ export default function Home() {
         try {
             await mutate.mutateAsync(schedules)
                 .then(() => {
-                    alert("Schedules saved successfully")
+                    // alert("Schedules saved successfully")
+                    toast.success("Schedules saved successfully")
                 })
                 .catch((error) => {
                     console.log(error);
-                    alert("Failed to save schedules")
+                    toast.error("Failed to save schedules")
                 })
         } catch (error) {
+            toast.error("Failed to save schedules")
             console.log(error);
         }
     }
@@ -98,14 +101,15 @@ export default function Home() {
             if (!pageContent) return;
             await mutatePageContent.mutateAsync(pageContent)
                 .then(() => {
-                    alert("Page content saved successfully")
+                    toast.success("Page content saved successfully")
                 })
                 .catch((error) => {
                     console.log(error);
-                    alert("Failed to save page content")
+                    toast.error("Failed to save page content")
                 })
         } catch (error) {
             console.log(error);
+            toast.error("Failed to save page content")
         }
     }
 
@@ -114,10 +118,12 @@ export default function Home() {
         mutateSettings.mutateAsync({ columns: columns === 2 ? 1 : 2 })
             .then(() => {
                 // alert("Settings saved successfully")
+                toast.success("Settings saved successfully")
             })
             .catch((error) => {
                 console.log(error);
                 // alert("Failed to save settings")
+                toast.error("Failed to save settings")
             });
     }
 

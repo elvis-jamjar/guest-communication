@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { PageContent } from '@/app/types'
+import { Dialog, DialogDescription, DialogHeader, DialogContent, DialogTrigger, DialogTitle, DialogFooter } from "./ui/dialog"
+import { useState } from "react"
 
 interface PageContentFormProps {
   pageContent: PageContent
@@ -17,6 +19,7 @@ interface PageContentFormProps {
 export function PageContentFormComponent(
   { pageContent, onPageContentChange }: Readonly<PageContentFormProps>
 ) {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <form className="space-y-8 max-w-2xl mx-auto w-full">
       <Card>
@@ -92,7 +95,33 @@ export function PageContentFormComponent(
                       placeholder="Enter quick link button label"
                     />
                   </div>
-                  <Button
+                  <Dialog open={isOpen}>
+                    <DialogTrigger asChild>
+                      <Button onClick={() => setIsOpen(true)} variant="destructive">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Remove Quick Link
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Remove Quick Link <strong>{link.title}</strong> </DialogTitle>
+                        <DialogDescription>
+                          <p>Are you sure you want to remove this quick link?</p>
+                          <p>This action cannot be undone.</p>
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button variant="destructive" onClick={() => {
+                          onPageContentChange({ ...pageContent, quickLinks: pageContent.quickLinks?.filter((_, i) => i !== index) })
+                          setIsOpen(false)
+                        }}>Remove</Button>
+                        <Button variant="secondary" onClick={() => {
+                          setIsOpen(false)
+                        }}>Cancel</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  {/* <Button
                     type="button"
                     variant="destructive"
                     size="sm"
@@ -101,7 +130,7 @@ export function PageContentFormComponent(
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
                     Remove Link
-                  </Button>
+                  </Button> */}
                 </CardContent>
               </Card>
             ))}
