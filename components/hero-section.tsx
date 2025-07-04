@@ -155,10 +155,10 @@ export default function HeroSection() {
                 {/* Main content */}
                 <div className={cn("flex-1 flex flex-col justify-center pt-32 md:pt-40")}>
                     {/* Gradient overlay for text content */}
-                    <div className="absolute hidden md:block z-0 inset-0 bg-gradient-to-tr from-black/80 from-30% via-black/80 via-30% to-black/0 pointer-events-none"></div>
+                    <div className="absolute backdrop-blur-[1px] hidden md:block z-0 inset-0 bg-gradient-to-tr from-black/60 from-30% via-black/60 via-30% to-black/0 pointer-events-none"></div>
                     <div className="px-8 md:px-16 relative z-10 py-10">
                         {/* Main heading */}
-                        <h1 className="text-white text-center md:text-left text-5xl md:text-6xl xl:text-8xl font-light leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+                        <h1 className="text-white font-semibold text-center md:text-left text-5xl md:text-6xl xl:text-8xl leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
                             From Bridges
                             <br />
                             to Breakthroughs

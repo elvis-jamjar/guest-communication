@@ -21,7 +21,7 @@ export function ScheduleList(
                     <AccordionTrigger className="decoration-transparent rounded-md py-1 flex justify-start">
                         <div className={cn("flex gap-3 md:gap-5 w-full items-center flex-wrap p-2 justify-start bg-primary-purple/10 rounded-3xl md:rounded-full")}>
                             <h2 className="font-bold text-lg text-white w-full md:w-fit py-2 px-6 rounded-2xl md:rounded-full bg-primary-main">{schedule?.day}</h2>
-                            <span className="text-primary-purple w-fit px-1.5 md:px-0 text-left text-xl font-bold">{schedule?.title}</span>
+                            <span className="text-primary-purple w-fit px-1.5 md:px-0 text-left text-sm md:text-xl font-bold">{schedule?.title}</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="flex-col min-h-44">

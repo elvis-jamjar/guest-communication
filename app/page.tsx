@@ -143,11 +143,12 @@ export default function Home() {
             src="/images/sponsors_25.png"
             width={1000}
             height={500}
+            draggable={false}
             fetchPriority="high"
             quality={100}
             priority={true}
             alt="Sponsors"
-            className="w-full h-auto object-contain" />
+            className="w-full h-auto pointer-events-none object-contain select-none" />
         </div>
       </section>
       {/* partners */}
@@ -157,8 +158,9 @@ export default function Home() {
             src="/images/partners_25.png"
             width={1000}
             height={500}
+            draggable={false}
             alt="partners"
-            className="w-full h-auto object-contain"
+            className="w-full h-auto pointer-events-none object-contain select-none"
             fetchPriority="high"
             quality={100}
             priority={true}
