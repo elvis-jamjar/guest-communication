@@ -16,6 +16,7 @@ import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
 import { PageContentFormComponent } from './page-content-form'
+import { Dialog, DialogTitle, DialogHeader, DialogContent, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog'
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -44,6 +45,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
   const [showHost, setShowHost] = useState(!!item.host)
   const [showFacilitators, setShowFacilitators] = useState(Number(item.facilitators?.length) > 0)
   const [showModerators, setShowModerators] = useState(Number(item.moderators?.length) > 0);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="space-y-4 p-4 border rounded-md">
@@ -360,7 +362,6 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
               } else {
                 onChange({ ...item, moderators: item?.removedData?.moderators || [], removedData: { ...(item?.removedData || {}), moderators: [] } })
               }
-
             }}
           />
           <Label htmlFor="show-moderators">Add Moderators</Label>
@@ -387,7 +388,31 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           </div>
         )}
       </div>
-      <Button variant="destructive" onClick={onRemove}>Remove Timeline Item</Button>
+      {/* remove */}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger>
+          <Button variant="destructive">Remove Timeline Item</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove Timeline Item</DialogTitle>
+            <DialogDescription>
+              <p>Are you sure you want to remove this timeline item?</p>
+              <p>This action cannot be undone.</p>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="destructive" onClick={() => {
+              onRemove()
+              setIsOpen(false)
+            }}>Remove</Button>
+            <Button variant="secondary" onClick={() => {
+              setIsOpen(false)
+            }}>Cancel</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* <Button variant="destructive" onClick={onRemove}>Remove Timeline Item now</Button> */}
     </div>
   )
 }
@@ -495,6 +520,7 @@ export function ConferenceScheduleForm(
 
 // list of conference schedule forms
 export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPageContentChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void }) {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <div className="px-4 max-w-4xl mx-auto">
       <div className="px-8 py-4 flex justify-between items-center sticky z-20 top-0 bg-white w-full">
@@ -522,14 +548,31 @@ export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPa
                   }}
                 />
                 {/* remove */}
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    const newSchedules = [...schedules]
-                    newSchedules.splice(index, 1)
-                    onChange(newSchedules)
-                  }}
-                > Remove Schedule</Button>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger>
+                    <Button variant="destructive">Remove Schedule</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Remove Schedule {schedule?.day} </DialogTitle>
+                      <DialogDescription>
+                        <p>Are you sure you want to remove this schedule?</p>
+                        <p>This action cannot be undone.</p>
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button variant="destructive" onClick={() => {
+                        const newSchedules = [...schedules]
+                        newSchedules.splice(index, 1)
+                        onChange(newSchedules)
+                        setIsOpen(false)
+                      }}>Remove</Button>
+                      <Button variant="secondary" onClick={() => {
+                        setIsOpen(false)
+                      }}>Cancel</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </AccordionContent>
             </AccordionItem>
           ))}

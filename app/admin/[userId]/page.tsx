@@ -4,7 +4,7 @@ import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
 import { useEffect, useState } from "react";
 import { ConferenceScheduleProps, PageContent } from "../../types";
 import { Button } from "@/components/ui/button";
-import { Grid2X2, Rows3, Save } from "lucide-react";
+import { Archive, Grid2X2, Rows3, Save } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
 import { ScheduleList } from "@/components/schedule-list";
@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import React from "react";
 import { PageContentDisplayComponent } from "@/components/page-content-display";
+// import { backupData } from "@/app/actions/timeline";
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
 
@@ -36,6 +37,7 @@ export default function Home() {
 
     const [schedules, setSchedules] = useState<ConferenceScheduleProps[]>([]);
     const [pageContent, setPageContent] = useState<PageContent | undefined>(remotePageContent);
+    const [isBackingUp, setIsBackingUp] = useState(false);
     const mutate = useMutation({
         mutationFn: createConferenceSchedules,
         onSuccess: () => {
@@ -119,6 +121,24 @@ export default function Home() {
             });
     }
 
+    // async function handleBackupData() {
+    //     try {
+    //         setIsBackingUp(true);
+    //         await backupData().then(() => {
+    //             setIsBackingUp(false);
+    //             alert("Backup data successfully");
+    //         }).catch((error) => {
+    //             // console.log(error);
+    //             setIsBackingUp(false);
+    //             alert("Failed to backup data");
+    //         });
+    //     } catch (error) {
+    //         // console.log(error);
+    //         setIsBackingUp(false);
+    //         alert("Failed to backup data");
+    //     }
+    // }
+
     return (
         <ResizablePanelGroup
             direction="horizontal"
@@ -137,8 +157,8 @@ export default function Home() {
                 minSize={60}
             >
                 <ScrollArea className="h-[99dvh] bg-gray-100 relative">
-                    <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
-                        <div className="flex items-center gap-4">
+                    <div className="px-8 flex gap-2 justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
+                        <div className="flex flex-1 items-center gap-4">
                             <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
                             {/* toggle 2 column and 1 */}
                             <div className="flex gap-0 ring-1 ring-primary-main rounded-md p-0.5">
@@ -161,6 +181,15 @@ export default function Home() {
                             <Save className="w-4 h-4 mr-2 " />
                             {mutate.isPending ? "Saving..." : "Save changes"}
                         </Button>
+                        {/* <Button
+                            onClick={handleBackupData}
+                            size={"sm"}
+                            variant={isBackingUp ? "secondary" : "default"}
+                            disabled={isBackingUp}
+                            className="bg-primary-main text-white rounded-lg">
+                            <Archive className="w-4 h-4 mr-2 " />
+                            {isBackingUp ? "Backing up..." : "Backup data"}
+                        </Button> */}
                     </div>
                     <ScheduleList schedules={schedules} columns={columns} />
                     <hr className="border-t border-gray-300" />

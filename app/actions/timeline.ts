@@ -4,7 +4,7 @@ import {
   ConferenceScheduleProps,
   PageContent,
   Settings,
-  TimelineItemProps,
+  // TimelineItemProps,
 } from "@/app/types";
 import { DATABASE_KEYS } from "@/lib/db";
 import { formatDateTime } from "@/utils/date";
@@ -35,29 +35,30 @@ import { formatDateTime } from "@/utils/date";
 // }
 
 // update history
-export async function updateHistory(content: any) {
-  const dateKey = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
-  const history = await redis.get(DATABASE_KEYS.HISTORY);
-  if (!history) {
-    await redis.set(
-      DATABASE_KEYS.HISTORY,
-      JSON.stringify({
-        [dateKey]: content,
-      })
-    );
-  } else {
-    const historyData = JSON.parse(history);
-    historyData[dateKey] = content;
-    await redis.set(DATABASE_KEYS.HISTORY, JSON.stringify(historyData));
-  }
-}
+// export async function updateHistory(content: any) {
+//   const dateKey = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
+//   const history = await redis.get(DATABASE_KEYS.HISTORY);
+//   if (!history) {
+//     await redis.set(
+//       DATABASE_KEYS.HISTORY,
+//       JSON.stringify({
+//         [dateKey]: content,
+//       })
+//     );
+//   } else {
+//     const historyData = JSON.parse(history);
+//     historyData[dateKey] = content;
+//     await redis.set(DATABASE_KEYS.HISTORY, JSON.stringify(historyData));
+//   }
+// }
 
 // create update or create shedules
 export async function createConferenceSchedules(
   schedules: ConferenceScheduleProps[]
 ) {
   try {
-    await updateHistory(schedules);
+    // await updateHistory(schedules);
+    await backupData();
     await redis.set(
       DATABASE_KEYS.CONFERENCE_SCHEDULES,
       JSON.stringify(schedules)
@@ -90,7 +91,8 @@ export async function getConferenceSchedule(): Promise<
 
 // create setting for the conference
 export async function createConferenceSettings(settings: Settings) {
-  await updateHistory(settings);
+  // await updateHistory(settings);
+  await backupData();
   await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, JSON.stringify(settings));
 }
 
@@ -106,7 +108,8 @@ export async function getConferenceSettings(): Promise<Settings> {
 
 // page content PageContent
 export async function createPageContent(content: PageContent) {
-  await updateHistory(content);
+  // await updateHistory(content);
+  await backupData();
   await redis.set(DATABASE_KEYS.PAGE_CONTENT, JSON.stringify(content));
 }
 
@@ -115,6 +118,35 @@ export async function getPageContent(): Promise<PageContent> {
   const content = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
   if (!content) return {};
   return JSON.parse(content);
+}
+
+// backup data
+export async function backupData() {
+  const conferenceSchedules = await redis.get(
+    DATABASE_KEYS.CONFERENCE_SCHEDULES
+  );
+  const conferenceSettings = await redis.get(DATABASE_KEYS.CONFERENCE_SETTINGS);
+  const pageContent = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
+
+  // GET PREVIOUS BACKUP
+  const previousBackup = await redis.get(DATABASE_KEYS.BACKUP);
+  const previousBackupData = JSON.parse(previousBackup || "{}");
+
+  // use current time as key
+  const currentTime = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
+  const newBackupData = {
+    [currentTime]: {
+      conferenceSchedules: JSON.parse(conferenceSchedules || "{}"),
+      conferenceSettings: JSON.parse(conferenceSettings || "{}"),
+      pageContent: JSON.parse(pageContent || "{}"),
+    },
+  };
+
+  // merge new backup data with previous backup data
+  const mergedBackupData = { ...newBackupData, ...previousBackupData };
+
+  // save backup data
+  await redis.set(DATABASE_KEYS.BACKUP, JSON.stringify(mergedBackupData));
 }
 
 // migrate data from old database to new database using old keys to new keys

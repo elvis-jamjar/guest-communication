@@ -15,4 +15,5 @@ export const DATABASE_KEYS = {
 
   // history
   HISTORY: `${PROJECT_NAME}-history`,
+  BACKUP: `${PROJECT_NAME}-backup`,
 };
