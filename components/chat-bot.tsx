@@ -207,7 +207,7 @@ export const PopOverChat = () => {
     return (
         <>
             <motion.div
-                className="fixed bottom-4 right-4 w-auto z-10"
+                className="fixed hidden bottom-4 right-4 w-auto z-10"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

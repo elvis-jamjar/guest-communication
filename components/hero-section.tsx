@@ -199,7 +199,7 @@ export default function HeroSection() {
                             </div>
                         </div>
                         {/* about us description */}
-                        <AboutDescription aboutSection={pageContent?.aboutSection || ''} />
+                        <AboutDescription className="text-white" aboutSection={pageContent?.aboutSection || ''} />
 
                     </div>
 
