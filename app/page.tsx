@@ -6,11 +6,11 @@ import { ScheduleList } from "@/components/schedule-list";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Globe, Linkedin, Mail, Twitter } from "lucide-react";
+// import { Globe, Linkedin, Mail, Twitter, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { getConferenceSchedule, getConferenceSettings, getPageContent } from "./actions/timeline";
-import Link from "next/link";
+// import Link from "next/link";
 import HeroSection from "@/components/hero-section";
 import { useMobile } from "@/hooks/use-mobile";
 
