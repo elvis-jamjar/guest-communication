@@ -84,19 +84,19 @@ export default function HeroSection() {
             {/* Content container */}
             <div className="relative w-full z-10 flex flex-col h-full min-h-screen">
                 {/* Header with logo, conference info, and navigation */}
-                <div className={`fixed top-0 left-0 right-0 z-50 flex items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white/90 shadow-sm' : 'px-2 py-8 md:px-16 md:pb-0 pb-0 bg-white/90 md:bg-transparent'}`}>
+                <div className={`fixed top-0 left-0 right-0 z-50 flex items-center md:items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white/90 shadow-sm' : 'px-2 md:py-8 md:px-16 md:pb-0 bg-white/90 md:bg-transparent'}`}>
                     {/* Logo and conference badge */}
-                    <div className={`flex flex-1 justify-around items-center transition-all duration-300 ease-in-out ${isScrolled ? 'gap-4 p-1 max-w-xs md:max-w-sm' : 'gap-5 p-5 max-w-xs md:max-w-xl md:bg-[#f5f1e8]'} md:rounded-br-[3rem]`}>
+                    <div className={`flex flex-1 md:justify-around items-center transition-all duration-300 ease-in-out ${isScrolled ? 'gap-4 p-1 max-w-xs md:max-w-sm' : 'gap-5 p-5 max-w-xs md:max-w-xl md:bg-[#f5f1e8]'} md:rounded-br-[3rem]`}>
                         <Image
                             src="/images/logo.png"
                             alt="ACGC Logo"
-                            width={isScrolled ? 80 : isMobile ? 100 : 140}
-                            height={isScrolled ? 80 : isMobile ? 100 : 140}
+                            width={isScrolled ? 80 : isMobile ? 90 : 140}
+                            height={isScrolled ? 80 : isMobile ? 90 : 140}
                             className="object-contain transition-all duration-300 ease-in-out"
                         />
                         <div className="flex flex-col">
                             <div className={`text-gray-600 font-medium transition-all duration-300 ease-in-out ${isScrolled ? 'text-base' : 'text-lg md:text-xl'}`}>7th Annual</div>
-                            <div className={`text-gray-800 font-bold transition-all duration-300 ease-in-out ${isScrolled ? 'text-xl' : 'text-lg md:text-3xl'}`}>ACGC Conference</div>
+                            <div className={`text-gray-800 font-bold transition-all duration-300 ease-in-out ${isScrolled ? 'text-base md:text-xl' : 'text-sm md:text-3xl'}`}>ACGC Conference</div>
                             <div className={`bg-primary-main mt-2 transition-all duration-300 ease-in-out ${isScrolled ? 'w-10 h-1' : 'w-16 h-1.5'}`}></div>
                         </div>
                     </div>
@@ -122,18 +122,18 @@ export default function HeroSection() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={toggleMenu}
-                            className="md:hidden bg-[#f5f1e8]/90 backdrop-blur-sm rounded-lg p-3 border border-[#e8dcc6]"
+                            className="md:hidden backdrop-blur-sm rounded-lg p-2 border"
                             aria-label="Toggle menu"
                         >
                             <div className="w-6 h-6 flex flex-col justify-center items-center">
-                                <span className={`bg-gray-800 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-0.5'}`}></span>
-                                <span className={`bg-gray-800 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-                                <span className={`bg-gray-800 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-0.5'}`}></span>
+                                <span className={`bg-primary-main block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-0.5'}`}></span>
+                                <span className={`bg-primary-main block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+                                <span className={`bg-primary-main block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-0.5'}`}></span>
                             </div>
                         </button>
 
                         {/* Mobile Menu Dropdown */}
-                        <div className={`md:hidden absolute top-full right-0 mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-lg transition-all duration-300 ease-out ${isMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
+                        <div className={`md:hidden absolute top-full right-0 mt-2 w-48 bg-white shadow-2xl border border-gray-200 rounded-lg transition-all duration-300 ease-out ${isMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
                             <div className="py-2">
                                 <a href="#about" onClick={toggleMenu} className="block px-4 py-3 text-gray-800 hover:bg-primary-main hover:text-white transition-colors font-medium">
                                     About
@@ -167,7 +167,7 @@ export default function HeroSection() {
                         {/* Subtitle with gradient background */}
                         <div className="inline-block w-full md:w-auto p-0.5 bg-gradient-to-r from-white to-primary-main rounded-full mb-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
                             <div className="inline-block w-full bg-gradient-to-r from-primary-purple to-primary-main  px-8 py-3 rounded-full">
-                                <span className="text-xl md:text-2xl text-white font-bold">
+                                <span className="text-lg md:text-2xl text-white font-bold">
                                     In-house counsel as catalysts
                                 </span>
                             </div>
@@ -178,7 +178,7 @@ export default function HeroSection() {
                             <div className="text-3xl font-bold text-primary-main">
                                 Wed 1st - Fri 3rd October, 2025
                             </div>
-                            <div className="text-lg md:text-xl font-normal">
+                            <div className="text-base md:text-xl font-normal">
                                 @ The David Livingstone Safari Lodge & Spa,
                                 <br />
                                 Riverside Dr, Off Sichango Rd, Livingstone, Zambia
