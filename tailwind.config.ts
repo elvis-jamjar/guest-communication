@@ -13,27 +13,10 @@ const config: Config = withUt({
     extend: {
       fontFamily(utils) {
         return {
-          cabinetGrotesk: ["CabinetGrotesk-Regular"],
-          sans: [
-            "corporate-a-regular",
-            "corporate-a-bold",
-            "CabinetGrotesk-Regular",
-          ],
-          mono: [
-            "corporate-a-regular",
-            "corporate-a-bold",
-            "CabinetGrotesk-Regular",
-          ],
-          display: [
-            "corporate-a-regular",
-            "corporate-a-bold",
-            "CabinetGrotesk-Regular",
-          ],
-          body: [
-            "corporate-a-regular",
-            "corporate-a-bold",
-            "CabinetGrotesk-Regular",
-          ],
+          sans: ["satoshi-medium", "satoshi-light", "satoshi-black"],
+          mono: ["satoshi-medium", "satoshi-black"],
+          display: ["satoshi-medium", "satoshi-black"],
+          body: ["satoshi-light", "satoshi-black"],
         };
       },
       colors: {
