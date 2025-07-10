@@ -66,8 +66,7 @@ export function AboutDescription({ aboutSection, hasTitle, className }: { aboutS
   return (
     <section className={cn("bg-transparent mt-8 text-black rounded-lg", className)}>
       {hasTitle && <h2 className="text-2xl font-semibold mb-4">About Us</h2>}
-      {/* <p className="text-muted-foreground">{}</p> */}
-      <p className="text-left prose max-w-5xl text-xl whitespace-pre-wrap text-inherit">
+      <p className="text-left prose max-w-5xl text-xl whitespace-pre-wrap text-inherit drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
         {aboutSection}
       </p>
     </section>
