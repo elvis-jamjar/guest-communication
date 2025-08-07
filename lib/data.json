@@ -1,0 +1,341 @@
+{
+  "schedules": [
+    {
+      "day": "Day 1: 1st October 2025",
+      "title": "Catalysts & Crossroads: Leading Legal Change in Complex Times",
+      "timeLineItems": [
+        {
+          "time": "8:30am - 9:30am",
+          "title": "Registration & Breakfast Networking",
+          "icon": "coffee",
+          "iconColor": "bg-primary-main"
+        },
+        {
+          "time": "9:30am - 9:45am",
+          "title": "Opening Remarks ",
+          "description": "Brief remarks to kick off the Conference. ",
+          "icon": "mic"
+        },
+        {
+          "time": "9:45am- 11:00am",
+          "sectionTitle": " Plenary Session:",
+          "title": "Headwinds & Whirlwinds: Legal Leadership in an Age of Uncertainty",
+          "description": "Across Africa, in-house legal teams are facing increasing pressure to navigate fast-changing regulatory and political landscapes. From shifting government policies to fragmented compliance regimes, the headwinds are real and the whirlwinds, frequent. According to the 2025 GC Survey, regulatory uncertainty is now the top concern for General Counsel across the continent. In this powerful, survey-led plenary, senior legal leaders from across Africa will share how they are:\n – Responding to legal and regulatory volatility across jurisdictions\n – Engaging policymakers to influence outcomes\n – Supporting their organisations through change, complexity and risk\n – Building resilient, future-ready legal teams",
+          "icon": "mic",
+          "iconColor": "bg-primary-purple",
+          "speakers": [
+            {
+              "name": "Zainab Bachoo",
+              "bio": "",
+              "title": "Chief Legal Officer, Bulksteam"
+            }
+          ],
+          "removedData": { "speakers": [] }
+        },
+        {
+          "time": "11:00am - 11.45am ",
+          "sectionTitle": "Keynote Address:",
+          "title": " The Catalyst Effect – Legal Leadership in a World of Breakthroughs. ",
+          "description": "The ACGC Keynote is always a defining moment of the conference and this year is no exception. In this bold and inspiring address, renowned entrepreneur and former in-house legal leader Monica Musonda will explore what it means to be a catalyst in today’s complex business and legal landscape. Drawing on her remarkable journey from General Counsel of a pan-African conglomerate to the founder of one of Zambia’s most recognised food companies, Monica will speak candidly about the evolving role of legal leadership  and how in house counsel across Africa can be drivers of transformation, innovation, and ethical strategy",
+          "icon": "mic",
+          "iconColor": "bg-primary-purple",
+          "speakers": [
+            {
+              "name": "Monica Musonda",
+              "bio": "",
+              "title": " CEO & Founder, Java Foods, Former General Counsel, Dangote Group, Archbishop Tutu Fellow & World Economic Forum Young Global Leader (Zambia)"
+            }
+          ],
+          "removedData": { "speakers": [] }
+        },
+        {
+          "time": "11.45am - 12.30pm",
+          "sectionTitle": " Strategic Conversation:",
+          "title": "Unpacking the Catalyst: From Reflection to Real Change",
+          "description": "Monica Musonda’s keynote sets a bold vision for legal leadership but what happens next is just as important. In this follow-on session, a panel of senior in-house counsel join Monica to reflect on the themes raised in The Catalyst Effect and explore Monica’s ideas in the context of their own leadership journey. They will share what resonates, what challenges them, and how they are translating bold vision into meaningful action inside their organisations.\nThis session is  about what hap\npens when you return to your desk with a renewed sense of purpose but face the same complexity and competing demands? ",
+          "icon": "users",
+          "iconColor": "bg-primary-main"
+        },
+        {
+          "time": "12.30pm - 1.45pm",
+          "title": " Networking Lunch",
+          "icon": "coffee",
+          "iconColor": "bg-primary-purple"
+        },
+        {
+          "title": "",
+          "time": "2:00pm - 4:00pm",
+          "sectionTitle": "Breakout Sessions",
+          "icon": "flag"
+        },
+        {
+          "time": "2:00pm - 4:00pm",
+          "title": "Future-Proofing Legal: Managing Budgets & Proving Value",
+          "sectionTitle": "Breakout Session 1: ",
+          "description": "Explore strategies for managing lean budgets while delivering strategic value. Topics include unlocking new funding models, measuring legal impact (KPI frameworks), and building cases for investment in legal tech. ",
+          "isTrack": true,
+          "iconColor": "bg-primary-purple"
+        },
+        {
+          "time": "2:00pm - 4:00pm",
+          "sectionTitle": "Breakout Session 2: ",
+          "title": "The Culture Exchange: Public vs Private Approaches to Legal Team Performance",
+          "description": "This session brings together public and corporate legal professionals to share what each sector does best and where they can learn from each other. From talent development to morale, values, and accountability, explore practical ways to shape resilient legal teams that perform with purpose.\n",
+          "isTrack": true,
+          "iconColor": "bg-primary-main",
+          "trackLabel": "Track 2"
+        },
+        {
+          "time": "2:00pm - 4:00pm",
+          "sectionTitle": "Breakout Session 3: ",
+          "title": " Managing Emerging Risks for African Businesses: How In-House Counsel can Lead Through Uncertainty",
+          "description": "Unpack how legal leaders are managing cross-border risks, shifting compliance demands, and emerging challenges like ESG and cyber. This session shares practical risk leadership strategies for navigating uncertainty with confidence, clarity, and cross-functional impact.",
+          "isTrack": true,
+          "trackLabel": "Track 3",
+          "iconColor": "bg-primary-purple",
+          "hideLine": false,
+          "isFirst": false
+        },
+        {
+          "time": "2:00pm - 4:00pm",
+          "sectionTitle": "Breakout Session 4: ",
+          "isTrack": true,
+          "trackLabel": "Track 4 ",
+          "iconColor": "bg-primary-main",
+          "title": "Beyond the Billable Hour: Building Strategic Relationships with External Counsel",
+          "description": " Redefine your relationship with external firms moving from outsourcing to co-creation. Learn how to co-develop playbooks, drive consistent performance, and build agile partnerships that scale."
+        },
+        {
+          "time": "4.15pm - 5:15pm",
+          "sectionTitle": "Debrief Session:",
+          "title": " From the Room to the Floor – Lessons, Shifts & Surprises",
+          "description": "Rapid-fire debrief that captures the energy, insights, and “aha” moments from each breakout room followed by fresh takes and reactions from the audience. What did we learn that’s worth carrying forward?",
+          "icon": "mic",
+          "iconColor": "bg-primary-purple"
+        },
+        { "time": "5:15pm", "title": "Closing Remarks", "icon": "flag" },
+        {
+          "title": "ACGC Conference Welcome Drinks  ",
+          "time": "7:00pm - 9:00pm",
+          "icon": "party",
+          "iconColor": "bg-primary-purple"
+        }
+      ]
+    },
+    {
+      "day": "Day 2: 2nd October 2025",
+      "title": "Shaping Systems, Shifting Power",
+      "timeLineItems": [
+        {
+          "time": "7:45am - 8:30am ",
+          "title": "The ACGC Morning Mindfulness with FitnessXpress Zambia",
+          "description": "",
+          "icon": "person",
+          "sponsors": []
+        },
+        {
+          "time": "9:00am - 10:00am",
+          "title": "Embedding ESG Beyond Compliance – From Reporting to Reputation",
+          "sectionTitle": "ESG Masterclass Breakfast ",
+          "description": " A practical discussion on how ESG is evolving in real time. Led by in-house leaders and ESG specialists who are moving the agenda from box-ticking to boardroom impact.",
+          "sponsors": [],
+          "facilitators": [],
+          "icon": "mic",
+          "removedData": { "facilitators": [] }
+        },
+        {
+          "time": "10:00am- 10:45am",
+          "sectionTitle": "ACGC GeoBrief: ",
+          "title": "Zambia Edition: Why the World Wants Zambia’s Copper",
+          "description": "This year marks the launch of a new ACGC conference feature: the GeoBrief. A country-focused spotlight offering strategic insight into a key issue shaping each host nation.\nFrom now on, every ACGC conference will include one of these sessions giving delegates a quick but valuable window into the legal, commercial, and political forces defining that jurisdiction.We begin in Zambia  and there's no better place to start than with copper. Zambia sits at the heart of the global copper story but why is the world so hungry for it now? What’s driving demand, who’s controlling supply, and why should lawyers care? This fast-paced, informative session is part economics, part geopolitics, and part insider’s guide to a resource shaping the future of energy, tech, and African industrial policy. ",
+          "icon": "users",
+          "sponsors": [],
+          "moderators": [],
+          "speakers": [],
+          "removedData": { "speakers": [], "moderators": [] }
+        },
+        {
+          "time": "10:45am - 12:30pm",
+          "sectionTitle": "Plenary Session:",
+          "icon": "mic",
+          "iconColor": "bg-primary-purple",
+          "title": " Trade Wars, Uncertainty & Shifting Global Order: Can the AfCFTA Accelerate Resilience in pan-African Trade & Regional Integration?",
+          "description": "Deep dive into AfCFTA regulations & implications for in-house counsel.\n1. The reality of cross-border legal frameworks & trade.\n2. Lessons from companies leveraging AfCFTA to expand across Africa.\n3. Live audience engagement through scenario-based polling.\n4. Connects trade agreements to the daily work of in-house counsel.\n"
+        },
+        {
+          "time": "12:30pm - 1:45 pm",
+          "sectionTitle": "",
+          "description": "",
+          "icon": "coffee",
+          "title": "Networking Lunch "
+        },
+        {
+          "sectionTitle": "Breakout Sessions ",
+          "time": "2:00pm - 4:00pm",
+          "icon": "users",
+          "title": "Professional Development Breakouts "
+        },
+        {
+          "title": " Towards a Unified Competition Landscape for Cross-Border Businesses: Navigating National, Regional, and AfCFTA Regimes:",
+          "sectionTitle": "Breakout Session 1: ",
+          "time": "2:00pm - 4:00pm",
+          "isTrack": true,
+          "trackLabel": "Track 1 ",
+          "description": "This session examines the legal and strategic implications of Africa’s shifting competition law environment. From domestic enforcement to regional blocs and AfCFTA-level developments, speakers will explore how regulators, businesses, and in-house counsel are working towards greater coherence. Learn what legal teams should anticipate as the continent moves slowly but decisively toward a more integrated competition framework.",
+          "iconColor": "bg-primary-purple",
+          "facilitators": [],
+          "removedData": { "facilitators": [] },
+          "sponsors": []
+        },
+        {
+          "time": "2:00pm - 4:00pm",
+          "sectionTitle": "Breakout Session 2: ",
+          "title": "Resilient Counsel: Protecting Your Mental Health & Sustaining Legal Careers: ",
+          "isTrack": true,
+          "trackLabel": "Track 2",
+          "iconColor": "bg-primary-main",
+          "facilitators": [],
+          "removedData": { "facilitators": [] },
+          "sponsors": [],
+          "description": "The ACGC GC Survey revealed a troubling undercurrent across Africa’s in-house legal community: nearly half of respondents reported feeling emotionally depleted or professionally isolated at least once a month. Many cited relentless workloads, blurred boundaries, and the pressure of being the sole ethical voice in the room , all without access to formal mental health or wellbeing support. This session opens up an honest conversation about what it takes to build and sustain a legal career under pressure. We’ll explore the realities of burnout, the myth of the always-available lawyer, and how legal professionals can carve out space for resilience, reflection, and longevity without compromising ambition or integrity. This is about protecting the people who protect the business. Because resilience isn’t a buzzword it’s a survival skill."
+        },
+        {
+          "title": "Speaking Up, Standing Firm: What Courage Looks Like in the Legal Profession Today",
+          "sectionTitle": "Breakout Session 3:",
+          "time": "2:00pm - 4:00pm",
+          "description": "The UK Post Office scandal reminded the world and especially in-house lawyers of what happens when silence is easier than standing up. At ACGC 2024, we examined that case as a cautionary tale. One year later, we ask: has anything changed? Are we braver, better equipped or still afraid of being “the difficult voice in the room”? According to the ACGC GC Survey, 41% of legal departments now formally oversee ethics, and nearly 1 in 3 in-house counsel say they’ve felt pressure to stay quiet in the face of misconduct or risk. As the boundaries between law, ethics, and reputation continue to blur, the emotional and professional cost of silence is rising.\n",
+          "isTrack": true,
+          "trackLabel": "Track 3 ",
+          "iconColor": "bg-primary-purple",
+          "facilitators": [],
+          "removedData": { "facilitators": [] }
+        },
+        {
+          "time": "2:00pm - 4:00pm",
+          "sectionTitle": "Breakout Session 4:",
+          "title": "The Live Lab: Solving Real Compliance Challenges Together:",
+          "isTrack": true,
+          "trackLabel": "Track 4 ",
+          "description": "A hands-on, scenario-driven session for in-house counsel.Open to all ACGC 2025 delegates.Certification applies only to participants enrolled in the ACGC Compliance Essentials programme.This interactive session puts you in the legal hot seat. Designed as a practical extension of the ACGC Compliance Essentials programme, the Live Lab invites participants to step into a high-stakes scenario drawn from real-world regulatory challenges faced by African businesses. Working through a case study attendees will analyse risks, make strategic calls, and explore how in-house legal teams can respond under pressure while balancing law, ethics, business realities, and limited information. Whether you’re an experienced GC or growing compliance lead, this session offers a rare chance to sharpen your instincts in a collaborative, scenario-based setting.\n",
+          "facilitators": [],
+          "removedData": { "facilitators": [] }
+        },
+        {
+          "time": "4:00pm",
+          "sectionTitle": "",
+          "title": "Closing Remarks ",
+          "description": "",
+          "removedData": {},
+          "icon": "flag"
+        },
+        {
+          "time": "6:00pm",
+          "title": "Social Time",
+          "hideLine": true,
+          "icon": "party",
+          "iconColor": "bg-primary-purple",
+          "sectionTitle": "",
+          "description": ""
+        },
+        {
+          "title": "ACGC Advisory Board Meeting & Private Dinner (Invite-Only)",
+          "time": "7:00pm - 9:00pm",
+          "icon": "flag"
+        }
+      ]
+    },
+    {
+      "day": "Day 3: 3rd October 2025",
+      "title": "The Breakthrough: In-House Skills & Strategic Leadership",
+      "timeLineItems": [
+        {
+          "time": "7:45am - 8:30am ",
+          "sectionTitle": "",
+          "title": "ACGC Morning Wellness ",
+          "icon": "users"
+        },
+        {
+          "time": "9:00am - 12:00pm",
+          "title": "Navigating the Next Evolution of AI in LegalOps: A Strategic Workshop for Modern Legal Counsel ",
+          "sectionTitle": " In-House Legal Skills Institute:",
+          "description": "The AI era has arrived but most legal teams are still figuring out how to move from curiosity to capability. This hands-on strategic workshop will cut through the hype and deliver a clear, practical understanding of how legal departments can leverage AI to drive efficiency, manage risk, and unlock real value across legal operations.Whether you’re just starting to explore AI or already experimenting with tools, this session will help you:\nUnderstand the shift to Legal Ops 3.0 — from process optimisation to strategic legal intelligence\n\n\nDemystify today’s AI tools and use cases — including their benefits, risks, and limitations\n\n\nLearn practical implementation strategies — from procurement and governance to real-world prompt engineering\nThrough live demos, case studies, and expert insights, this workshop is designed to equip in-house counsel with the confidence and clarity to lead their teams into the next evolution of legal work.\n",
+          "speakers": [],
+          "removedData": { "speakers": [] },
+          "icon": "mic",
+          "iconColor": "bg-primary-purple"
+        },
+        {
+          "time": "12:00pm - 1:00pm ",
+          "title": "Networking Lunch",
+          "description": "",
+          "icon": "coffee"
+        },
+        {
+          "sectionTitle": "In-House Legal Skills Institute 2:",
+          "time": "1:00pm - 3:00pm",
+          "title": "Guardians of Trust: Operationalising Data Protection, Privacy & Governance",
+          "description": "Many legal teams understand the laws but still struggle to embed data protection and privacy into day-to-day operations. This practical, classroom-based session is designed to bridge that gap. Building on previous sessions that unpacked the data protection legal frameworks, this year’s skills workshop focuses on how in-house counsel can turn those frameworks into real accountability: aligning people, processes, and policies to reduce risk and uphold trust. Participants will work through realistic scenarios and learn how to:\n1. Identify and close implementation gaps across teams\n2. Manage sensitive information in fast-moving business environments\n3. Strengthen governance around internal data handling, third-party risk, and emerging technologies\n4. Offer credible legal guidance as AI and automation create new compliance blind spots\n",
+          "speakers": [],
+          "removedData": { "speakers": [] },
+          "icon": "mic",
+          "iconColor": "bg-primary-purple"
+        },
+        {
+          "time": "3:00pm",
+          "title": "Closing Remarks",
+          "description": "Instructions about tourist experiences ",
+          "icon": "mic"
+        },
+        {
+          "time": "7:00pm - 10:00pm ",
+          "sectionTitle": "",
+          "title": "ACGC Community Awards Night – Celebrating Excellence ",
+          "icon": "users",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "day": "Day 4: 4th October 2025",
+      "title": "ACGC in Livingstone: Let’s Discover Zambia Together - by Maxmas Travel & Tours",
+      "timeLineItems": [
+        {
+          "sectionTitle": "Guided visit ",
+          "title": " Victoria Falls",
+          "description": "A guided visit to Victoria Falls,One of the Seven Natural Wonders of the World. All transport from the hotel is included.",
+          "icon": "users"
+        },
+        {
+          "title": "Mukuni Village",
+          "sectionTitle": " Cultural Stop",
+          "description": "A cultural stop at Mukuni Village, home to one of Zambia’s oldest villages, still guided by traditional leadership. All transport from the hotel is included.",
+          "icon": "users",
+          "iconColor": "bg-primary-purple"
+        },
+        {
+          "sectionTitle": "Sunset Cruise ",
+          "description": "A scenic sunset cruise on the Zambezi River, with onboard snacks and a full bar included. All transport from the hotel is included.",
+          "title": " Zambezi River",
+          "icon": "users"
+        },
+        {
+          "description": "\nIndicative Pricing: $195 per person (includes all tours, entry fees, transfers, snacks, and drinks on the sunset cruise) \n \nOptional lunch add-on: $30 (includes set menu, mineral water, and soft drink. Must be pre-booked by 20th September).\n\nThe full excursion, including the cruise, will proceed with a minimum of 20 confirmed participants. Places are limited and will be allocated on a first-come, first-served basis.\n \nWhether you’re coming solo or with colleagues, this is a chance to see a different side of Zambia and make memories with fellow ACGC conference delegates in one of Africa’s most breathtaking settings.",
+          "title": "Pricing & Information ",
+          "icon": "flag",
+          "iconColor": "bg-primary-purple"
+        }
+      ]
+    }
+  ],
+
+  "aboutSection": "ACGC creates the connections for members within and across jurisdictions, industries, and sectors both in Africa and beyond to share good practice and promote a culture of innovation amongst its members. ACGC recognizes the evolution that has occurred in relation to in-house roles across the continent and aims to ensure that lawyers working in African corporates and government departments have meaningful opportunities to learn, discuss and debate what the future holds and how they can contribute meaningfully to the growth of their companies and governments, their own personal development and that of the legal profession as a whole.\n\n#ACGC4B, #Africaninhouse, #Generalcounselafrica, #Govtcounselafrica, #Corporatecounselafrica\n",
+  "quickLinksTitle": "More",
+  "quickLinks": [
+    {
+      "title": "We'd love to hear your feedback",
+      "link": "https://www.surveymonkey.com/r/2025-African-GC-Perspective",
+      "description": "ACGC 6th Annual Conference and Training Institute Feedback Form",
+      "buttonLabel": "Leave Feedback AFRIWISE SURVEY "
+    }
+  ]
+}

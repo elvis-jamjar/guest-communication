@@ -127,23 +127,6 @@ export default function Home() {
             });
     }
 
-    // async function handleBackupData() {
-    //     try {
-    //         setIsBackingUp(true);
-    //         await backupData().then(() => {
-    //             setIsBackingUp(false);
-    //             alert("Backup data successfully");
-    //         }).catch((error) => {
-    //             // console.log(error);
-    //             setIsBackingUp(false);
-    //             alert("Failed to backup data");
-    //         });
-    //     } catch (error) {
-    //         // console.log(error);
-    //         setIsBackingUp(false);
-    //         alert("Failed to backup data");
-    //     }
-    // }
 
     return (
         <ResizablePanelGroup

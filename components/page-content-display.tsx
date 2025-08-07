@@ -54,15 +54,6 @@ export function PageQuickLinks({ pageContent, className }: { pageContent: PageCo
 
 export function AboutDescription({ aboutSection, hasTitle, className }: { aboutSection: string, hasTitle?: boolean, className?: string }) {
 
-  // make all # in text have different color
-  // const coloredText = aboutSection.split(' ').map((text, index) => {
-  //   // if (text?.trim()?.startsWith('#')) {
-  //   //   return <pre key={index} className="font-semibold text-muted-foreground mx-0.5 flex gap-0">
-  //   //     {text}
-  //   //   </pre>
-  //   // }
-  //   // return <pre key={index} className="text-muted-foreground mx-0.5" >{text}</pre>
-  // })
   return (
     <section className={cn("bg-transparent mt-8 text-black rounded-lg", className)}>
       {hasTitle && <h2 className="text-2xl font-semibold mb-4">About Us</h2>}
