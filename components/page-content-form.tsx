@@ -9,6 +9,7 @@ import { PlusCircle, Trash2 } from 'lucide-react'
 import { PageContent } from '@/app/types'
 import { Dialog, DialogDescription, DialogHeader, DialogContent, DialogTrigger, DialogTitle, DialogFooter } from "./ui/dialog"
 import { useState } from "react"
+import RichTextEditor from "./RichTextEditor"
 
 interface PageContentFormProps {
   pageContent: PageContent
@@ -22,23 +23,21 @@ export function PageContentFormComponent(
   const [isOpen, setIsOpen] = useState(false)
   return (
     <form className="space-y-8 max-w-2xl mx-auto w-full">
-      <Card>
-        <CardHeader>
+      <Card className="border-2 shadow-sm">
+        {/* <CardHeader>
           <CardTitle className="text-sm">Page Content Form</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </CardHeader> */}
+        <CardContent className="space-y-4 p-2">
           <div className="space-y-2">
-            <Label htmlFor="aboutSection">About Section</Label>
-            <Textarea
-              id="aboutSection"
-              value={pageContent.aboutSection}
-              onChange={
-                (e) => onPageContentChange({ ...pageContent, aboutSection: e.target.value })
-              }
-              wrap="soft"
-              placeholder="Enter about section content"
-              className="min-h-[120px]"
+            {/* <Label htmlFor="aboutSection">About Section</Label> */}
+            <RichTextEditor
+              content={pageContent.aboutSection}
+              editable={true}
+              onChange={(content) => {
+                onPageContentChange({ ...pageContent, aboutSection: content })
+              }}
             />
+            <hr className="border-t border-gray-200" />
           </div>
 
           <div className="space-y-4">
@@ -121,16 +120,6 @@ export function PageContentFormComponent(
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
-                  {/* <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => onPageContentChange({ ...pageContent, quickLinks: pageContent.quickLinks?.filter((_, i) => i !== index) })}
-                    className="mt-2"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Remove Link
-                  </Button> */}
                 </CardContent>
               </Card>
             ))}
@@ -141,7 +130,6 @@ export function PageContentFormComponent(
               Add Quick Link
             </Button>
           </div>
-          {/* <Button type="submit" className="w-full">Submit</Button> */}
         </CardContent>
       </Card>
     </form>

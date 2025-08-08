@@ -1,7 +1,10 @@
+import { JSONContent } from "@tiptap/react";
+
 export interface Speaker {
   name: string;
   title?: string;
   bio: string;
+  image?: string;
 }
 
 export interface TimelineItemProps {
@@ -54,7 +57,19 @@ export interface QuickLinks {
 }
 
 export interface PageContent {
-  aboutSection?: string;
+  aboutSection?: JSONContent | string;
   quickLinksTitle?: string;
   quickLinks?: QuickLinks[];
+}
+
+export interface LargeBanner {
+  image: string;
+}
+
+export interface DataType {
+  schedules: ConferenceScheduleProps[];
+  pageContent: PageContent;
+  settings: Settings;
+  allSponsorsBanner: LargeBanner;
+  allPartnersBanner: LargeBanner;
 }

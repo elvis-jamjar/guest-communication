@@ -1,56 +1,14 @@
 "use server";
+
 import { redis } from "@/lib/db";
 import {
   ConferenceScheduleProps,
+  DataType,
   PageContent,
   Settings,
-  // TimelineItemProps,
 } from "@/app/types";
 import { DATABASE_KEYS } from "@/lib/db";
 import { formatDateTime } from "@/utils/date";
-
-/**
- * create new timeline item
- * @param item
- * @returns
- */
-// export async function createTimelineItem(item: TimelineItemProps) {
-//   const items = await getTimelineItems();
-//   items.push(item);
-//   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, JSON.stringify(items));
-// }
-
-/**
- * update timeline item
- * @param item
- * @returns
- */
-// export async function updateTimelineItem(item: TimelineItemProps) {
-//   const items = await getTimelineItems();
-//   if (!items) return;
-//   const index = items.findIndex((i) => i.id === item.id);
-//   if (index === -1) return;
-//   items[index] = item;
-//   await redis.set(DATABASE_KEYS.TIMELINE_ITEMS, JSON.stringify(items));
-// }
-
-// update history
-// export async function updateHistory(content: any) {
-//   const dateKey = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
-//   const history = await redis.get(DATABASE_KEYS.HISTORY);
-//   if (!history) {
-//     await redis.set(
-//       DATABASE_KEYS.HISTORY,
-//       JSON.stringify({
-//         [dateKey]: content,
-//       })
-//     );
-//   } else {
-//     const historyData = JSON.parse(history);
-//     historyData[dateKey] = content;
-//     await redis.set(DATABASE_KEYS.HISTORY, JSON.stringify(historyData));
-//   }
-// }
 
 // create update or create shedules
 export async function createConferenceSchedules(
@@ -58,95 +16,125 @@ export async function createConferenceSchedules(
 ) {
   try {
     // await updateHistory(schedules);
-    await backupData();
-    await redis.set(
-      DATABASE_KEYS.CONFERENCE_SCHEDULES,
-      JSON.stringify(schedules)
-    );
+    // await backupData();
+    // await redis.set(
+    //   DATABASE_KEYS.CONFERENCE_SCHEDULES,
+    //   JSON.stringify(schedules)
+    // );
+    await updateData("schedules", schedules);
   } catch (error) {
     console.log(error);
     throw Error("Failed to save schedules");
   }
 }
 
-export async function getConferenceSchedule(): Promise<
-  ConferenceScheduleProps[]
-> {
-  try {
-    const schedules = await redis.get(DATABASE_KEYS.CONFERENCE_SCHEDULES);
-    if (!schedules) return [];
-    console.log("schedules type", typeof schedules);
-    return JSON.parse(schedules) as ConferenceScheduleProps[];
-  } catch (error) {
-    console.log("Error fetchign schedules", error);
-    throw Error("Failed to fetch schedules");
-  }
-}
-
-// export async function getTimelineItems(): Promise<TimelineItemProps[]> {
-//   const items = await redis.get(DATABASE_KEYS.TIMELINE_ITEMS);
-//   if (!items) return [];
-//   return JSON.parse(items);
-// }
-
 // create setting for the conference
 export async function createConferenceSettings(settings: Settings) {
   // await updateHistory(settings);
-  await backupData();
-  await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, JSON.stringify(settings));
-}
-
-// get settings for the conference
-export async function getConferenceSettings(): Promise<Settings> {
-  const settings = await redis.get(DATABASE_KEYS.CONFERENCE_SETTINGS);
-  if (!settings)
-    return {
-      columns: 1,
-    };
-  return JSON.parse(settings);
+  // await backupData();
+  // await redis.set(DATABASE_KEYS.CONFERENCE_SETTINGS, JSON.stringify(settings));
+  await updateData("settings", settings);
 }
 
 // page content PageContent
 export async function createPageContent(content: PageContent) {
-  // await updateHistory(content);
-  await backupData();
-  await redis.set(DATABASE_KEYS.PAGE_CONTENT, JSON.stringify(content));
+  await updateData("pageContent", content);
 }
 
-// get page content
-export async function getPageContent(): Promise<PageContent> {
-  const content = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
-  if (!content) return {};
-  return JSON.parse(content);
+// update all data
+export async function updateAllData(data: DataType) {
+  const currentData = await getData();
+  const backupData = await redis.get(DATABASE_KEYS.DATA_BACKUP);
+  const backupDataJson = JSON.parse(backupData || "{}");
+  backupDataJson[formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss")] =
+    currentData;
+  await redis.set(DATABASE_KEYS.DATA_BACKUP, JSON.stringify(backupDataJson));
+  await redis.set(DATABASE_KEYS.DATA, JSON.stringify(data));
 }
 
 // backup data
-export async function backupData() {
-  const conferenceSchedules = await redis.get(
-    DATABASE_KEYS.CONFERENCE_SCHEDULES
-  );
-  const conferenceSettings = await redis.get(DATABASE_KEYS.CONFERENCE_SETTINGS);
-  const pageContent = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
+// export async function backupData() {
+//   // const conferenceSchedules = await redis.get(
+//   //   DATABASE_KEYS.CONFERENCE_SCHEDULES
+//   // );
+//   // const conferenceSettings = await redis.get(DATABASE_KEYS.CONFERENCE_SETTINGS);
+//   // const pageContent = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
 
-  // GET PREVIOUS BACKUP
-  const previousBackup = await redis.get(DATABASE_KEYS.BACKUP);
-  const previousBackupData = JSON.parse(previousBackup || "{}");
+//   // // GET PREVIOUS BACKUP
+//   // const previousBackup = await redis.get(DATABASE_KEYS.BACKUP);
+//   // const previousBackupData = JSON.parse(previousBackup || "{}");
 
-  // use current time as key
-  const currentTime = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
-  const newBackupData = {
-    [currentTime]: {
-      conferenceSchedules: JSON.parse(conferenceSchedules || "{}"),
-      conferenceSettings: JSON.parse(conferenceSettings || "{}"),
-      pageContent: JSON.parse(pageContent || "{}"),
-    },
-  };
+//   // // use current time as key
+//   // const currentTime = formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss");
+//   // const newBackupData = {
+//   //   [currentTime]: {
+//   //     conferenceSchedules: JSON.parse(conferenceSchedules || "{}"),
+//   //     conferenceSettings: JSON.parse(conferenceSettings || "{}"),
+//   //     pageContent: JSON.parse(pageContent || "{}"),
+//   //   },
+//   // };
 
-  // merge new backup data with previous backup data
-  const mergedBackupData = { ...newBackupData, ...previousBackupData };
+//   // merge new backup data with previous backup data
+//   // const mergedBackupData = { ...newBackupData, ...previousBackupData };
+//   const data = await getData();
+//   const backupData = await redis.get(DATABASE_KEYS.DATA_BACKUP);
+//   const backupDataJson = JSON.parse(backupData || "{}");
+//   backupDataJson[formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss")] = data;
+//   await redis.set(DATABASE_KEYS.DATA_BACKUP, JSON.stringify(backupDataJson));
 
-  // save backup data
-  await redis.set(DATABASE_KEYS.BACKUP, JSON.stringify(mergedBackupData));
+//   // save backup data
+//   // await redis.set(DATABASE_KEYS.BACKUP, JSON.stringify(mergedBackupData));
+// }
+
+// update data
+export async function updateData<K extends keyof DataType>(
+  key: K,
+  data: DataType[K]
+) {
+  const currentData = await getData();
+  const backupData = await redis.get(DATABASE_KEYS.DATA_BACKUP);
+  const backupDataJson = JSON.parse(backupData || "{}");
+  backupDataJson[formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss")] =
+    currentData;
+  await redis.set(DATABASE_KEYS.DATA_BACKUP, JSON.stringify(backupDataJson));
+  currentData[key] = data as DataType[K];
+  await redis.set(DATABASE_KEYS.DATA, JSON.stringify(currentData));
+}
+
+// publish data
+export async function publishData() {
+  const data = await getData();
+  await redis.set(DATABASE_KEYS.DATA_PUBLISHED, JSON.stringify(data));
+}
+
+// get published data
+export async function getPublishedData(isPreview: boolean): Promise<DataType> {
+  const data = isPreview
+    ? await redis.get(DATABASE_KEYS.DATA)
+    : await redis.get(DATABASE_KEYS.DATA_PUBLISHED);
+  if (!data)
+    return {
+      schedules: [],
+      settings: { columns: 1 },
+      pageContent: {},
+      allSponsorsBanner: { image: "" },
+      allPartnersBanner: { image: "" },
+    };
+  return JSON.parse(data);
+}
+
+// get data from the new data type
+export async function getData(): Promise<DataType> {
+  const data = await redis.get(DATABASE_KEYS.DATA);
+  if (!data)
+    return {
+      schedules: [],
+      settings: { columns: 1 },
+      pageContent: {},
+      allSponsorsBanner: { image: "" },
+      allPartnersBanner: { image: "" },
+    };
+  return JSON.parse(data);
 }
 
 // migrate data from old database to new database using old keys to new keys
@@ -173,3 +161,41 @@ export async function backupData() {
 //     await redis.set(DATABASE_KEYS.PAGE_CONTENT, oldPageContent);
 //   }
 // }
+
+// move all the data to the new data type
+// export async function moveDataToNewDataType() {
+//   const schedules = await redis.get(DATABASE_KEYS.CONFERENCE_SCHEDULES);
+//   const settings = await redis.get(DATABASE_KEYS.CONFERENCE_SETTINGS);
+//   const pageContent = await redis.get(DATABASE_KEYS.PAGE_CONTENT);
+
+//   const data = {
+//     schedules: JSON.parse(schedules || "[]") as ConferenceScheduleProps[],
+//     settings: JSON.parse(settings || "{}") as Settings,
+//     pageContent: JSON.parse(pageContent || "{}") as PageContent,
+//   } as DataType;
+
+//   await redis.set(DATABASE_KEYS.DATA, JSON.stringify(data));
+// }
+
+// // get data from the new data type
+// export async function getData(): Promise<DataType> {
+//   const data = await redis.get(DATABASE_KEYS.DATA);
+//   if (!data) return { schedules: [], settings: {}, pageContent: {} };
+//   return JSON.parse(data);
+// }
+
+// upload file to the server
+export async function uploadFile(formData: FormData): Promise<string> {
+  // const formData = new FormData();
+  // formData.append("file", file);
+  formData.append("path", process.env.FOLDER_NAME!);
+  const response = await fetch(process.env.FILE_UPLOAD_URL!, {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error("Failed to upload file");
+  }
+  const data = await response.json();
+  return data.url as string;
+}

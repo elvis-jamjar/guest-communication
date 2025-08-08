@@ -3,9 +3,9 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { AboutDescription } from "./page-content-display";
 import { useQuery } from "@tanstack/react-query";
-import { getPageContent } from "@/app/actions/timeline";
 import { useMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { PageContent } from "@/app/types";
 
 const textIconData = [
     {
@@ -27,14 +27,14 @@ const textIconData = [
     }
 ]
 
-export default function HeroSection() {
+export default function HeroSection({ pageContent }: { pageContent: PageContent }) {
     const isMobile = useMobile()
     // get page content
-    const { data: pageContent } = useQuery({
-        queryKey: ['page-content'],
-        queryFn: async () => await getPageContent(),
-        refetchInterval: 90000, // 15 minutes
-    });
+    // const { data: pageContent } = useQuery({
+    //     queryKey: ['page-content'],
+    //     queryFn: async () => await getPageContent(),
+    //     refetchInterval: 90000, // 15 minutes
+    // });
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 

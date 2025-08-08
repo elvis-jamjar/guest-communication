@@ -9,14 +9,16 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Speaker, TimelineItemProps, ConferenceScheduleProps, PageContent } from '@/app/types'
+import { Speaker, TimelineItemProps, ConferenceScheduleProps, PageContent, LargeBanner } from '@/app/types'
 import { icons } from './conference-schedule'
-import { UploadDropzone } from '@/lib/utils'
+// import { UploadDropzone } from '@/lib/utils'
 import Image from 'next/image'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
 import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
 import { PageContentFormComponent } from './page-content-form'
 import { Dialog, DialogTitle, DialogHeader, DialogContent, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog'
+import { ImageUploadWithCropper } from './ImageUploadWithCropper'
+import { Confirmation } from './Confirmation'
 
 
 const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void }) => (
@@ -36,7 +38,43 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
       value={speaker.bio}
       onChange={(e) => onChange({ ...speaker, bio: e.target.value })}
     />
-    <Button variant="destructive" onClick={onRemove}>Remove Speaker</Button>
+    {speaker.image ? (
+      <div className="space-y-2">
+        <Label>Speaker Image</Label>
+        <div className="flex flex-col gap-2 w-full justify-center items-center">
+          <Image
+            src={speaker.image}
+            alt={speaker.name || "Speaker"}
+            width={200}
+            height={200}
+            className="w-32 h-32 object-cover rounded-lg border"
+          />
+          <Confirmation
+            title="Remove Speaker Image"
+            description="Are you sure you want to remove this speaker's image? This action cannot be undone."
+            trigger={<Button
+              variant="destructive"
+              size="sm"
+              className="w-32 h-8 text-xs">
+              Remove Image
+            </Button>}
+            onConfirm={() => onChange({ ...speaker, image: '' })}
+          />
+        </div>
+      </div>
+    ) : (
+      <ImageUploadWithCropper
+        className='shadow-none border-none'
+        aspectRatio={1}
+        onUploadComplete={(url) => {
+          onChange({ ...speaker, image: url })
+        }}
+      />
+    )}
+
+    <div className='flex justify-center items-start w-full pt-12'>
+      <Button className='w-full' variant="destructive" onClick={onRemove}>Remove Speaker</Button>
+    </div>
   </div>
 )
 
@@ -136,7 +174,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
       </div>
       <div className="space-y-2">
         <Label>Images</Label>
-        <UploadDropzone
+        {/* <UploadDropzone
           endpoint="imageUploader"
           config={{
             mode: "auto",
@@ -150,6 +188,12 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           onUploadError={(error: Error) => {
             // Do something with the error.
             alert(`ERROR! ${error?.message}`);
+          }}
+        /> */}
+        <ImageUploadWithCropper
+          aspectRatio={16 / 9}
+          onUploadComplete={(url) => {
+            onChange({ ...item, banners: [...(item?.banners || []), url] })
           }}
         />
         <div className="flex items-center flex-wrap gap-2">
@@ -184,7 +228,13 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
       </div>
       <div className="space-y-2">
         <Label>Sponsors</Label>
-        <UploadDropzone
+        <ImageUploadWithCropper
+          aspectRatio={16 / 9}
+          onUploadComplete={(url) => {
+            onChange({ ...item, sponsors: [...(item?.sponsors || []), url] })
+          }}
+        />
+        {/* <UploadDropzone
           endpoint="imageUploader"
           config={{
             mode: "auto",
@@ -199,7 +249,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
             // Do something with the error.
             alert(`ERROR! ${error?.message}`);
           }}
-        />
+        /> */}
         <div className="flex items-center flex-wrap gap-2">
           {item?.sponsors?.map((sponsor, index) => (
             sponsor.startsWith('http') ?
@@ -242,7 +292,6 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           onChange({ ...item, sponsors: [...(item.sponsors || []), 'Sponsor name'] })
         }}>Add Named Sponsor</Button>
       </div>
-
 
       <div className="space-y-2">
         <div className="flex items-center space-x-2">
@@ -472,7 +521,6 @@ export function ConferenceScheduleForm(
         <Accordion
           type="single"
           collapsible
-
         >
           <SortableList
             onSortEnd={onSortEnd}
@@ -519,7 +567,7 @@ export function ConferenceScheduleForm(
 }
 
 // list of conference schedule forms
-export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPageContentChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void }) {
+export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPageContentChange, onAllSponsorsBannerChange, onAllPartnersBannerChange }: { schedules: ConferenceScheduleProps[], onChange: (schedules: ConferenceScheduleProps[]) => void, pageContent: PageContent, onPageContentChange: (pageContent: PageContent) => void, onAllSponsorsBannerChange: (allSponsorsBanner: LargeBanner) => void, onAllPartnersBannerChange: (allPartnersBanner: LargeBanner) => void }) {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <div className="px-4 max-w-4xl mx-auto">
@@ -582,6 +630,23 @@ export function ConferenceScheduleForms({ schedules, onChange, pageContent, onPa
         pageContent={pageContent}
         onChange={onPageContentChange}
       />
+
+
+      {/* use image upload with cropper */}
+      <div className='grid grid-cols-1 gap-6 px-5 py-4'>
+        <h1 className="text-xl px-4 font-bold py-2">Banners</h1>
+        <ImageUploadWithCropper
+          title="All Sponsors Banner"
+          className="shadow-md border-none"
+          // aspectRatio={16 / 9}
+          onUploadComplete={(url) => onAllSponsorsBannerChange({ image: url || "" })}
+        />
+        <ImageUploadWithCropper
+          title="All Partners Banner"
+          className="shadow-md border-none"
+          onUploadComplete={(url) => onAllPartnersBannerChange({ image: url || "" })}
+        />
+      </div>
     </div>
   )
 }

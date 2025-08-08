@@ -2,5 +2,5 @@
 import LandingPage from "@/components/LandingPage";
 
 export default function Home() {
-  return <LandingPage isPreview={false} />;
+    return <LandingPage isPreview={true} />;
 }

@@ -1,131 +1,131 @@
 "use client";
 
 import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
-import { useEffect, useState } from "react";
-import { ConferenceScheduleProps, PageContent } from "../../types";
+import { useEffect, useMemo, useState } from "react";
+import { ConferenceScheduleProps, LargeBanner, PageContent } from "../../types";
 import { Button } from "@/components/ui/button";
-import { Archive, Grid2X2, Rows3, Save } from "lucide-react";
+import { ArrowUpRight, Eye, Grid2X2, Rows3, Save, Send } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createConferenceSchedules, createConferenceSettings, createPageContent, getConferenceSchedule, getConferenceSettings, getPageContent } from "../../actions/timeline";
+import { updateAllData, getData, publishData } from "../../actions/timeline";
 import { ScheduleList } from "@/components/schedule-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import React from "react";
 import { PageContentDisplayComponent } from "@/components/page-content-display";
 import { toast } from "sonner";
+import { hasChanges } from "@/lib/utils";
+import Link from "next/link";
+import { AllPartnerAndSponsors } from "@/components/AllPartnerAndSponsors";
+import Confirmation from "@/components/Confirmation";
 // import { backupData } from "@/app/actions/timeline";
 // import { getConferenceSchedule } from "@/app/actions/timeline";
 // import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-    const [columns, setColumns] = useState<number>(2);
-
     const { data, refetch } = useQuery({
-        queryKey: ['conference-schedules'],
-        queryFn: async () => await getConferenceSchedule(),
+        queryKey: ['data'],
+        queryFn: async () => await getData(),
         staleTime: 1000 * 60 * 10 // 
     });
-    const { data: settings, refetch: refetchSettings } = useQuery({
-        queryKey: ['conference-settings'],
-        queryFn: async () => await getConferenceSettings(),
-        staleTime: 1000 * 60 * 10 // 
-    });
-    const { data: remotePageContent, refetch: refetchPageContent } = useQuery({
-        queryKey: ['page-content'],
-        queryFn: async () => await getPageContent(),
-        staleTime: 1000 * 60 * 10 // 
-    });
+    const [columns, setColumns] = useState<number>(Number(data?.settings.columns || 1));
 
     const [schedules, setSchedules] = useState<ConferenceScheduleProps[]>([]);
-    const [pageContent, setPageContent] = useState<PageContent | undefined>(remotePageContent);
-    const [isBackingUp, setIsBackingUp] = useState(false);
+    const [pageContent, setPageContent] = useState<PageContent | undefined>(data?.pageContent || {});
+    const [allSponsorsBanner, setAllSponsorsBanner] = useState<LargeBanner | undefined>(data?.allSponsorsBanner);
+    const [allPartnersBanner, setAllPartnersBanner] = useState<LargeBanner | undefined>(data?.allPartnersBanner);
+
     const mutate = useMutation({
-        mutationFn: createConferenceSchedules,
+        mutationFn: updateAllData,
         onSuccess: () => {
             refetch();
+            toast.success("Data saved successfully");
+        },
+        onError: (error) => {
+            toast.error("Failed to save data");
+            console.log(error);
         }
     });
-    const mutateSettings = useMutation({
-        mutationFn: createConferenceSettings,
+
+    const handlePublishData = async () => {
+        // save if data is changed
+        if (isDataChanged) {
+            await handleUpdateAllData();
+        }
+        await publishData()
+    }
+
+    // preview button
+    const handlePreview = async () => {
+        if (isDataChanged) {
+            await handleUpdateAllData();
+        }
+        window.open("/preview", "_blank");
+    }
+
+    const publishMutation = useMutation({
+        mutationFn: handlePublishData,
         onSuccess: () => {
-            refetchSettings();
+            toast.success("Data published successfully");
+        },
+        onError: (error) => {
+            toast.error("Failed to publish data");
+            console.log(error);
         }
     });
-    const mutatePageContent = useMutation({
-        mutationFn: createPageContent,
+
+    const previewMutation = useMutation({
+        mutationFn: handlePreview,
         onSuccess: () => {
-            refetchPageContent();
+            toast.success("Preview opened successfully");
+        },
+        onError: (error) => {
+            toast.error("Failed to open preview");
+            console.log(error);
         }
     });
+
     useEffect(() => {
         if (data) {
             // alert("Data fetched")
-            setSchedules(data);
+            setSchedules(data.schedules);
+            setColumns(Number(data.settings.columns || 1));
+            setPageContent(data.pageContent);
+            setAllSponsorsBanner(data.allSponsorsBanner);
+            setAllPartnersBanner(data.allPartnersBanner);
         }
     }, [data]);
 
-    useEffect(() => {
-        if (settings) {
-            // alert(`Settings fetched ${settings?.columns}`)
-            setColumns(settings?.columns || 2);
-        }
-    }, [settings]);
+    const isDataChanged = useMemo(() => {
+        return hasChanges(data, {
+            ...data,
+            schedules,
+            pageContent: pageContent || {},
+            settings: {
+                ...data?.settings,
+                columns
+            },
+            allSponsorsBanner: allSponsorsBanner || { image: "" },
+            allPartnersBanner: allPartnersBanner || { image: "" }
+        })
+    }, [schedules, pageContent, columns, allSponsorsBanner, allPartnersBanner])
 
-    // set page content
-    useEffect(() => {
-        if (remotePageContent) {
-            setPageContent(remotePageContent);
-        }
-    }, [remotePageContent]);
 
-
-    async function mutateSchedules() {
-        try {
-            await mutate.mutateAsync(schedules)
-                .then(() => {
-                    // alert("Schedules saved successfully")
-                    toast.success("Schedules saved successfully")
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toast.error("Failed to save schedules")
-                })
-        } catch (error) {
-            toast.error("Failed to save schedules")
-            console.log(error);
+    const handleUpdateAllData = async () => {
+        const dataToSave = {
+            ...data,
+            schedules,
+            pageContent: pageContent || {},
+            settings: {
+                ...data?.settings,
+                columns
+            },
+            allSponsorsBanner: allSponsorsBanner || data?.allSponsorsBanner,
+            allPartnersBanner: allPartnersBanner || data?.allPartnersBanner
         }
+        await mutate.mutateAsync(JSON.parse(JSON.stringify(dataToSave)));
     }
 
-    async function mutatePageContentData() {
-        try {
-            if (!pageContent) return;
-            await mutatePageContent.mutateAsync(pageContent)
-                .then(() => {
-                    toast.success("Page content saved successfully")
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toast.error("Failed to save page content")
-                })
-        } catch (error) {
-            console.log(error);
-            toast.error("Failed to save page content")
-        }
-    }
 
-    function toggleColumns() {
-        setColumns(columns === 2 ? 1 : 2);
-        mutateSettings.mutateAsync({ columns: columns === 2 ? 1 : 2 })
-            .then(() => {
-                // alert("Settings saved successfully")
-                toast.success("Settings saved successfully")
-            })
-            .catch((error) => {
-                console.log(error);
-                // alert("Failed to save settings")
-                toast.error("Failed to save settings")
-            });
-    }
 
 
     return (
@@ -134,9 +134,14 @@ export default function Home() {
             className="min-h-[200px] h-screen max-w-full rounded-lg border md:min-w-[450px]"
         >
             <ResizablePanel defaultSize={40} minSize={20}>
-                <ScrollArea className="h-[99dvh]">
-                    <ConferenceScheduleForms schedules={schedules || []} onChange={setSchedules}
-                        pageContent={pageContent || {}} onPageContentChange={setPageContent}
+                <ScrollArea className="h-[98dvh]">
+                    <ConferenceScheduleForms
+                        schedules={schedules || []}
+                        onChange={setSchedules}
+                        pageContent={pageContent || {}}
+                        onPageContentChange={setPageContent}
+                        onAllSponsorsBannerChange={setAllSponsorsBanner}
+                        onAllPartnersBannerChange={setAllPartnersBanner}
                     />
                 </ScrollArea>
             </ResizablePanel>
@@ -145,59 +150,73 @@ export default function Home() {
                 defaultSize={60}
                 minSize={60}
             >
-                <ScrollArea className="h-[99dvh] bg-gray-100 relative">
+                <ScrollArea className="h-[99dvh] bg-gray-100 pb-2 relative">
                     <div className="px-8 flex gap-2 justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
                         <div className="flex flex-1 items-center gap-4">
                             <h1 className="text-primary-purple text-xl font-bold p-4">Preview</h1>
                             {/* toggle 2 column and 1 */}
                             <div className="flex gap-0 ring-1 ring-primary-main rounded-md p-0.5">
                                 <Button size="sm" variant={columns === 2 ? "default" : "secondary"}
-                                    onClick={toggleColumns} className="">
+                                    onClick={() => setColumns(2)} className="">
                                     <Grid2X2 className="w-4 h-4 " />
                                 </Button>
                                 <Button size="sm" variant={columns === 1 ? "default" : "secondary"}
-                                    onClick={toggleColumns} className="">
+                                    onClick={() => setColumns(1)} className="">
                                     <Rows3 className="w-4 h-4 " />
                                 </Button>
                             </div>
                         </div>
-                        <Button
-                            onClick={mutateSchedules}
-                            size={"sm"}
-                            variant={"default"}
-                            disabled={!schedules?.length || mutate?.isPending}
-                            className="bg-primary-main text-white rounded-lg">
-                            <Save className="w-4 h-4 mr-2 " />
-                            {mutate.isPending ? "Saving..." : "Save changes"}
-                        </Button>
-                        {/* <Button
-                            onClick={handleBackupData}
-                            size={"sm"}
-                            variant={isBackingUp ? "secondary" : "default"}
-                            disabled={isBackingUp}
-                            className="bg-primary-main text-white rounded-lg">
-                            <Archive className="w-4 h-4 mr-2 " />
-                            {isBackingUp ? "Backing up..." : "Backup data"}
-                        </Button> */}
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={handleUpdateAllData}
+                                size={"sm"}
+                                variant={"default"}
+                                disabled={!schedules?.length || mutate?.isPending || !isDataChanged}
+                                className="bg-primary-main text-white rounded-lg">
+                                <Save className="w-4 h-4 mr-2 " />
+                                {mutate.isPending ? "Saving..." : "Save changes"}
+                            </Button>
+                            <Button
+                                onClick={() => previewMutation.mutateAsync()}
+                                disabled={previewMutation.isPending}
+                                size={"sm"}
+                                variant={"default"}
+                                className="bg-primary-main text-white rounded-lg">
+                                <Eye className="w-4 h-4 mr-2 " />
+                                Preview
+                                <ArrowUpRight className="w-4 h-4 mr-2 " />
+                            </Button>
+                            <Confirmation
+                                title="Publish Data"
+                                description="Are you sure you want to publish the data?"
+                                onConfirm={() => publishMutation.mutateAsync()}
+                                trigger={<Button
+                                    size={"sm"}
+                                    variant={"default"}
+                                    disabled={publishMutation.isPending}
+                                    className="bg-primary-main text-white rounded-lg">
+                                    <Send className="w-4 h-4 mr-2 " />
+                                    {publishMutation.isPending ? "Publishing..." : "Publish"}
+                                </Button>}
+                            />
+
+                        </div>
                     </div>
                     <ScheduleList schedules={schedules} columns={columns} />
                     <hr className="border-t border-gray-300" />
-                    <div className="px-8 flex justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
-                        <div className="flex items-center gap-4">
-                            <h1 className="text-primary-purple text-xl font-bold p-4">Page content Preview</h1>
-                        </div>
-                        <Button
-                            onClick={mutatePageContentData}
-                            size={"sm"}
-                            variant={"default"}
-                            disabled={!schedules?.length || mutate?.isPending}
-                            className="bg-primary-main text-white rounded-lg">
-                            <Save className="w-4 h-4 mr-2 " />
-                            {mutatePageContent.isPending ? "Saving..." : "Save changes"}
-                        </Button>
+                    <div className="px-6 py-0">
+                        <h2 className="text-primary-purple text-xl font-bold p-4">Page content Preview</h2>
+                        <PageContentDisplayComponent {...pageContent} className="py-0" />
                     </div>
-                    <div className="p-4">
-                        <PageContentDisplayComponent {...pageContent} />
+                    <hr className="border-t border-gray-300" />
+                    <div className="px-6 py-0">
+                        <h2 className="text-primary-purple text-xl font-bold p-4">Sponsors Preview</h2>
+                        <AllPartnerAndSponsors image={allSponsorsBanner?.image || ""} alt="Sponsors" className="mx-auto container max-w-5xl px-2 md:px-0 rounded-sm" />
+                    </div>
+                    {/* <hr className="border-t border-gray-300" /> */}
+                    <div className="px-6 py-0 pb-5">
+                        <h2 className="text-primary-purple text-xl font-bold p-4">Partners Preview</h2>
+                        <AllPartnerAndSponsors image={allPartnersBanner?.image || ""} alt="Partners" className="mx-auto container max-w-5xl px-2 md:px-0 rounded-sm" />
                     </div>
                 </ScrollArea>
             </ResizablePanel>

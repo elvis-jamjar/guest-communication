@@ -1,9 +1,13 @@
+// import { moveDataToNewDataType } from "@/app/actions/timeline";
+import { publishData } from "@/app/actions/timeline";
 import { NextResponse } from "next/server";
 // import { migrateData } from "@/app/actions/timeline";
 
 export async function GET() {
   try {
     // await migrateData();
+    // await moveDataToNewDataType();
+    await publishData();
 
     return NextResponse.json(
       {

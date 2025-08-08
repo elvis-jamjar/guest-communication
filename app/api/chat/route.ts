@@ -1,7 +1,7 @@
 import { streamText, generateText, CoreMessage, tool, UIMessage } from "ai";
 import { google } from "@ai-sdk/google";
 import { NextResponse } from "next/server";
-import { getConferenceSchedule } from "@/app/actions/timeline";
+import { getPublishedData } from "@/app/actions/timeline";
 import { z } from "zod";
 
 // Constants
@@ -209,13 +209,18 @@ const createConferenceScheduleTool = () => {
     execute: async ({ prompt }) => {
       try {
         const generatedPrompt = await generateSchedulePrompt(prompt);
-        const schedules = await getConferenceSchedule();
+        const schedules = await getPublishedData(
+          process.env.isLocal === "true"
+        );
 
-        if (!schedules || schedules.length === 0) {
-          return "I apologize, but I couldn't retrieve the conference schedule information at this time. Please try again later or contact ACGC directly at mail@acgc.africa for schedule details.";
-        }
+        // if (!schedules || schedules.length === 0) {
+        //   return "I apologize, but I couldn't retrieve the conference schedule information at this time. Please try again later or contact ACGC directly at mail@acgc.africa for schedule details.";
+        // }
 
-        return await generateScheduleResponse(generatedPrompt, schedules);
+        return await generateScheduleResponse(
+          generatedPrompt,
+          schedules.schedules
+        );
       } catch (error) {
         console.error("Error in getConferenceSchedule tool:", error);
         return "I apologize, but there was an error retrieving the conference schedule information. Please try again later or contact ACGC directly at mail@acgc.africa for assistance.";
