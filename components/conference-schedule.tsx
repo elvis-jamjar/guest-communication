@@ -136,13 +136,16 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
       {(Number(speakers?.length || 0) > 0) && <h2 className="text-sm mt-5 font-semibold uppercase">
         {speakers?.length > 1 ? `${title?.toLowerCase()}s` : `${title?.toLowerCase()}`}
       </h2>}
-      {speakers.map((speaker, index) => (
-        <p key={index} className="text-xs">
-          <span className="font-semibold">{speaker?.name}</span>{speaker?.name && ','}
-          {speaker?.title} <br />
-          {speaker?.bio}
-        </p>
-      ))}
+      <div className="flex-wrap gap-2 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+        {speakers.map((speaker, index) => (
+          <div key={index} className="text-xs">
+            {speaker?.image && <Image draggable={false} src={speaker?.image} alt={speaker?.name} priority fetchPriority='high' width={200} height={200} quality={100} className='size-36 rounded-md pointer-events-none' />}
+            <span className="font-semibold">{speaker?.name}</span>{speaker?.name && ','}
+            {speaker?.title} <br />
+            {speaker?.bio}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

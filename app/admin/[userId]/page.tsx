@@ -145,8 +145,7 @@ export default function Home() {
             <ResizableHandle withHandle />
             <ResizablePanel
                 defaultSize={60}
-                minSize={60}
-            >
+                minSize={60}>
                 <ScrollArea className="h-[99dvh] bg-gray-100 pb-2 relative">
                     <div className="px-8 flex gap-2 justify-between bg-gray-100 items-center sticky top-0 z-20 w-full">
                         <div className="flex flex-1 items-center gap-4">

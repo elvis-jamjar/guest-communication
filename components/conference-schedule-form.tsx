@@ -40,7 +40,7 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
     />
     {speaker.image ? (
       <div className="space-y-2">
-        <Label>Speaker Image</Label>
+        <Label>{speaker.name || 'Speaker'} Image</Label>
         <div className="flex flex-col gap-2 w-full justify-center items-center">
           <Image
             src={speaker.image}
@@ -64,6 +64,7 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
       </div>
     ) : (
       <ImageUploadWithCropper
+        title={`${speaker.name || 'Speaker'} Image`}
         className='shadow-none border-none'
         aspectRatio={1}
         onUploadComplete={(url) => {
@@ -191,6 +192,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           }}
         /> */}
         <ImageUploadWithCropper
+          title="Banner Images"
           aspectRatio={16 / 9}
           onUploadComplete={(url) => {
             onChange({ ...item, banners: [...(item?.banners || []), url] })
@@ -229,6 +231,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
       <div className="space-y-2">
         <Label>Sponsors</Label>
         <ImageUploadWithCropper
+          title="SessionSponsor Images"
           aspectRatio={16 / 9}
           onUploadComplete={(url) => {
             onChange({ ...item, sponsors: [...(item?.sponsors || []), url] })
