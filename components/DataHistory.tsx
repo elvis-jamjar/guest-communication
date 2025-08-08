@@ -12,6 +12,11 @@ import {
     SheetDescription,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { History, RotateCcw } from "lucide-react";
 import type { DataType } from "@/app/types";
@@ -21,6 +26,7 @@ import { toast } from "sonner";
 
 export function DataHistory({ onRestored }: { onRestored?: () => void }) {
     const [open, setOpen] = useState(false);
+    const [confirmingRestore, setConfirmingRestore] = useState<string | null>(null);
     const { data, isLoading, isError } = useQuery({
         queryKey: ["admin-data-history", open],
         queryFn: async () => await getHistoryData(),
@@ -97,15 +103,53 @@ export function DataHistory({ onRestored }: { onRestored?: () => void }) {
                                         </div>
                                     </div>
                                     <div className="shrink-0">
-                                        <Button
-                                            size="sm"
-                                            onClick={() => restoreMutation.mutate(snapshot)}
-                                            disabled={restoreMutation.isPending}
-                                            className="gap-2"
-                                        >
-                                            <RotateCcw className="h-4 w-4" />
-                                            {restoreMutation.isPending ? "Restoring…" : "Restore"}
-                                        </Button>
+                                        <Popover open={confirmingRestore === timestamp} onOpenChange={(open) => {
+                                            if (!open) setConfirmingRestore(null);
+                                        }}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    size="sm"
+                                                    disabled={restoreMutation.isPending}
+                                                    className="gap-2"
+                                                    onClick={() => setConfirmingRestore(timestamp)}
+                                                >
+                                                    <RotateCcw className="h-4 w-4" />
+                                                    {restoreMutation.isPending ? "Restoring…" : "Restore"}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-80" align="end">
+                                                <div className="space-y-4">
+                                                    <div className="space-y-2">
+                                                        <h4 className="font-medium leading-none">Confirm Restore</h4>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            This will replace all current data with the snapshot from {timestamp}.
+                                                            This action cannot be undone.
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <Button
+                                                            size="sm"
+                                                            onClick={() => {
+                                                                restoreMutation.mutate(snapshot);
+                                                                setConfirmingRestore(null);
+                                                            }}
+                                                            disabled={restoreMutation.isPending}
+                                                            className="gap-2"
+                                                        >
+                                                            <RotateCcw className="h-4 w-4" />
+                                                            {restoreMutation.isPending ? "Restoring…" : "Confirm Restore"}
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => setConfirmingRestore(null)}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                 </li>
                             );
