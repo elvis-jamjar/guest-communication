@@ -37,3 +37,9 @@ yarn-error.log*
 next-env.d.ts
 
 .env
+
+# utils
+utils/backup-new.json
+utils/backup-1.json
+utils/ACGC-DATABK.json
+utils/backup.json

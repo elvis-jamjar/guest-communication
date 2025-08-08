@@ -92,11 +92,14 @@ export async function updateData<K extends keyof DataType>(
   data: DataType[K]
 ) {
   const currentData = await getData();
-  const backupData = await redis.get(DATABASE_KEYS.DATA_BACKUP);
-  const backupDataJson = JSON.parse(backupData || "{}");
-  backupDataJson[formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss")] =
-    currentData;
-  await redis.set(DATABASE_KEYS.DATA_BACKUP, JSON.stringify(backupDataJson));
+
+  if (currentData) {
+    const backupData = await redis.get(DATABASE_KEYS.DATA_BACKUP);
+    const backupDataJson = JSON.parse(backupData || "{}");
+    backupDataJson[formatDateTime(new Date(), "YYYY-MM-DD HH:mm:ss")] =
+      currentData;
+    await redis.set(DATABASE_KEYS.DATA_BACKUP, JSON.stringify(backupDataJson));
+  }
   currentData[key] = data as DataType[K];
   await redis.set(DATABASE_KEYS.DATA, JSON.stringify(currentData));
 }
@@ -134,6 +137,13 @@ export async function getData(): Promise<DataType> {
       allSponsorsBanner: { image: "" },
       allPartnersBanner: { image: "" },
     };
+  return JSON.parse(data);
+}
+
+// get history data
+export async function getHistoryData(): Promise<{ [key: string]: DataType }> {
+  const data = await redis.get(DATABASE_KEYS.DATA_BACKUP);
+  if (!data) return {};
   return JSON.parse(data);
 }
 

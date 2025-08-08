@@ -14,16 +14,13 @@ import React from "react";
 import { PageContentDisplayComponent } from "@/components/page-content-display";
 import { toast } from "sonner";
 import { hasChanges } from "@/lib/utils";
-import Link from "next/link";
 import { AllPartnerAndSponsors } from "@/components/AllPartnerAndSponsors";
 import Confirmation from "@/components/Confirmation";
-// import { backupData } from "@/app/actions/timeline";
-// import { getConferenceSchedule } from "@/app/actions/timeline";
-// import { useQuery } from "@tanstack/react-query";
+import { DataHistory } from "@/components/DataHistory";
 
 export default function Home() {
     const { data, refetch } = useQuery({
-        queryKey: ['data'],
+        queryKey: ['admin-data'],
         queryFn: async () => await getData(),
         staleTime: 1000 * 60 * 10 // 
     });
@@ -167,6 +164,7 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="flex gap-2">
+                            <DataHistory onRestored={() => refetch()} />
                             <Button
                                 onClick={handleUpdateAllData}
                                 size={"sm"}

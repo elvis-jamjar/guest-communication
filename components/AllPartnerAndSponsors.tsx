@@ -4,10 +4,12 @@ import { cn } from "@/lib/utils";
 
 export function AllPartnerAndSponsors({ image, alt, className }: { image: string, alt: string, className?: string }) {
 
+    if (!image) return null;
+
     return (
         <div className={cn("mx-auto container max-w-5xl px-2 md:px-0 rounded-sm", className)}>
             <Image
-                src={image}
+                src={image || ""}
                 width={1000}
                 height={500}
                 draggable={false}

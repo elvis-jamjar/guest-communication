@@ -151,7 +151,7 @@ const normalizeContentStructure = (content: unknown): JSONContent => {
         // Fix node type if needed
         if (processedNode.type && typeof processedNode.type === 'string') {
             if (typeMapping[processedNode.type]) {
-                console.log(`Converting node type from '${processedNode.type}' to '${typeMapping[processedNode.type]}'`);
+                // console.log(`Converting node type from '${processedNode.type}' to '${typeMapping[processedNode.type]}'`);
                 processedNode.type = typeMapping[processedNode.type];
             }
         }
