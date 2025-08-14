@@ -137,10 +137,10 @@ function SpeakerList({ speakers, title, hideSpeakersTitle, hideSpeakersImage }: 
         {speakers?.length > 1 ? `${title?.toLowerCase()}s` : `${title?.toLowerCase()}`}
       </h2>}
       {/* grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] */}
-      <div className={cn("flex flex-col gap-2 justify-start", hideSpeakersTitle && 'mt-4')}>
+      <div className={cn("flex flex-col gap-6 justify-start", hideSpeakersTitle && 'mt-4')}>
         {speakers.map((speaker, index) => (
-          <div key={index} className="text-xs flex items-center flex-row gap-4">
-            {!hideSpeakersImage && <div className='w-24 min-w-24 h-24 flex items-center justify-center bg-gray-200 rounded-full pointer-events-none'>
+          <div key={index} className="text-xs md:text-sm flex items-center flex-col md:flex-row gap-4">
+            {!hideSpeakersImage && <div className='self-start w-16 min-w-16 h-16 flex items-center justify-center bg-gray-200 rounded-full pointer-events-none'>
               <Image draggable={false}
                 src={speaker?.image || ''}
                 alt={"img"}
@@ -151,7 +151,7 @@ function SpeakerList({ speakers, title, hideSpeakersTitle, hideSpeakersImage }: 
                 quality={100}
                 placeholder='blur'
                 blurDataURL={`https://avatar.iran.liara.run/username?username=${speaker?.name.replace(" ", "+").trim()}`}
-                className='size-24 object-contain rounded-full pointer-events-none'
+                className='size-full object-contain rounded-full pointer-events-none'
                 onError={(e) => {
                   e.currentTarget.src = `https://avatar.iran.liara.run/username?username=${speaker?.name.replace(" ", "+")}`
                 }}
