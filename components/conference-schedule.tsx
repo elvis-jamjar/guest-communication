@@ -11,7 +11,8 @@ import {
   PersonStanding,
   Tv,
   PartyPopper,
-  Flag
+  Flag,
+  User
 } from 'lucide-react'
 import Image from 'next/image'
 import { DynamicImage } from './ui/dynamic-image';
@@ -94,8 +95,7 @@ function Banner({ banners }: { banners: string[] }) {
 function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems }: TimelineItemProps) {
   return (
     // (trackLabel || icon || title) && 
-    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white',
-      className)}>
+    <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white', className)}>
       <div className={cn("flex flex-col items-center absolute h-[calc(100%+2rem)] -top-[2rem]")}>
         <div className={cn("text-white w-8 h-8 z-10 rounded-full flex p-2 mt-[3.8rem]", icon && 'w-fit h-fit', isTrack && '-ms-1  mt-[5rem] w-fit h-fit', 'bg-primary-main', iconColor)}>
           {
@@ -112,7 +112,7 @@ function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine,
         {sectionTitle && <h4 className={cn("text-sm tracking-widest uppercase font-mono py-1", isTrack && "mt-12")}>{sectionTitle}</h4>}
         <h3 className={cn("font-bold text-sm text-primary-purple py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
         {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
-        {description && <p className="text-sm text-gray-600">{description}</p>}
+        {description && <pre className="text-sm text-gray-600 whitespace-break-spaces">{description}</pre>}
         {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' />}
         {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' />}
         {host && <SpeakerList speakers={[host]} title='Host' />}
@@ -136,13 +136,32 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
       {(Number(speakers?.length || 0) > 0) && <h2 className="text-sm mt-5 font-semibold uppercase">
         {speakers?.length > 1 ? `${title?.toLowerCase()}s` : `${title?.toLowerCase()}`}
       </h2>}
-      <div className="flex-wrap gap-2 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+      {/* grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] */}
+      <div className="flex flex-col gap-2 justify-start">
         {speakers.map((speaker, index) => (
-          <div key={index} className="text-xs">
-            {speaker?.image && <Image draggable={false} src={speaker?.image} alt={speaker?.name} priority fetchPriority='high' width={200} height={200} quality={100} className='size-36 rounded-md pointer-events-none' />}
-            <span className="font-semibold">{speaker?.name}</span>{speaker?.name && ','}
-            {speaker?.title} <br />
-            {speaker?.bio}
+          <div key={index} className="text-xs flex items-center flex-row gap-2">
+            {speaker?.image && <div className='w-24 min-w-24 h-24 flex items-center justify-center bg-gray-200 rounded-full pointer-events-none'>
+              <Image draggable={false}
+                src={speaker?.image}
+                alt={"img"}
+                priority
+                fetchPriority='auto'
+                width={200}
+                height={200}
+                quality={100}
+                placeholder='blur'
+                blurDataURL={`https://avatar.iran.liara.run/username?username=${speaker?.name.replace(" ", "+").trim()}`}
+                className='size-24 object-contain rounded-full pointer-events-none'
+                onError={(e) => {
+                  e.currentTarget.src = `https://avatar.iran.liara.run/username?username=${speaker?.name.replace(" ", "+")}`
+                }}
+              />
+            </div>}
+            <div className='flex flex-col gap-x-0 gap-y-0'>
+              <span className="font-semibold">{speaker?.name} {speaker?.title && ','}</span>
+              {speaker?.title} <br className='hidden' />
+              {speaker?.bio}
+            </div>
           </div>
         ))}
       </div>

@@ -147,6 +147,14 @@ export async function getHistoryData(): Promise<{ [key: string]: DataType }> {
   return JSON.parse(data);
 }
 
+// update history name
+export async function updateHistoryName(key: string, name: string) {
+  const data = await redis.get(DATABASE_KEYS.DATA_BACKUP);
+  const dataJson = JSON.parse(data || "{}");
+  dataJson[key].name = name;
+  await redis.set(DATABASE_KEYS.DATA_BACKUP, JSON.stringify(dataJson));
+}
+
 // migrate data from old database to new database using old keys to new keys
 // export async function migrateData() {
 //   // const oldTimelineItems = await redis.get(DATABASE_KEYS.OLD_TIMELINE_ITEMS);

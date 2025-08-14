@@ -130,7 +130,7 @@ export default function Home() {
             direction="horizontal"
             className="min-h-[200px] h-screen max-w-full rounded-lg border md:min-w-[450px]"
         >
-            <ResizablePanel defaultSize={40} minSize={20}>
+            <ResizablePanel defaultSize={30} minSize={28}>
                 <ScrollArea className="h-[98dvh]">
                     <ConferenceScheduleForms
                         schedules={schedules || []}
@@ -200,19 +200,19 @@ export default function Home() {
                         </div>
                     </div>
                     <ScheduleList schedules={schedules} columns={columns} />
-                    <hr className="border-t border-gray-300" />
+                    <hr className="border-t my-4 border-gray-300" />
                     <div className="px-6 py-0">
-                        <h2 className="text-primary-purple text-xl font-bold p-4">Page content Preview</h2>
-                        <PageContentDisplayComponent {...pageContent} className="py-0" />
+                        <h2 className="text-primary-purple text-center text-xl font-bold p-4">Page content Preview</h2>
+                        <PageContentDisplayComponent {...pageContent} className="py-0 max-w-5xl mx-auto" />
                     </div>
-                    <hr className="border-t border-gray-300" />
+                    <hr className="border-t my-4 hidden border-gray-300" />
                     <div className="px-6 py-0">
-                        <h2 className="text-primary-purple text-xl font-bold p-4">Sponsors Preview</h2>
+                        <h2 className="text-primary-purple text-xl text-center font-bold p-6">Sponsors Preview</h2>
                         <AllPartnerAndSponsors image={allSponsorsBanner?.image || ""} alt="Sponsors" className="mx-auto container max-w-5xl px-2 md:px-0 rounded-sm" />
                     </div>
                     {/* <hr className="border-t border-gray-300" /> */}
                     <div className="px-6 py-0 pb-5">
-                        <h2 className="text-primary-purple text-xl font-bold p-4">Partners Preview</h2>
+                        <h2 className="text-primary-purple text-xl text-center font-bold p-6">Partners Preview</h2>
                         <AllPartnerAndSponsors image={allPartnersBanner?.image || ""} alt="Partners" className="mx-auto container max-w-5xl px-2 md:px-0 rounded-sm" />
                     </div>
                 </ScrollArea>

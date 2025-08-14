@@ -5,13 +5,13 @@ import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-im
 import 'react-image-crop/dist/ReactCrop.css';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Upload, X, RotateCcw, Check } from 'lucide-react';
+import { Upload, X, RotateCcw, Check, ZoomIn, ZoomOut } from 'lucide-react';
 import { uploadFile } from '@/app/actions/timeline';
 import { toast } from 'sonner';
 
 interface ImageUploadWithCropperProps {
     onUploadComplete?: (url: string) => void;
-    aspectRatio?: number;
+    aspectRatio?: number | 'face';
     maxFileSize?: number; // in MB
     acceptedFileTypes?: string[];
     className?: string;
@@ -38,9 +38,27 @@ function centerAspectCrop(
     );
 }
 
+// Face-specific crop function for 1:1 aspect ratio with smaller initial size
+function centerFaceCrop(
+    mediaWidth: number,
+    mediaHeight: number,
+): Crop {
+    const size = Math.min(mediaWidth, mediaHeight) * 0.6; // 60% of the smaller dimension
+    const x = (mediaWidth - size) / 2;
+    const y = (mediaHeight - size) / 2;
+
+    return {
+        unit: 'px',
+        width: size,
+        height: size,
+        x,
+        y,
+    };
+}
+
 export function ImageUploadWithCropper({
     onUploadComplete,
-    aspectRatio, // free aspect when undefined
+    aspectRatio, // free aspect when undefined, 'face' for face cropping
     maxFileSize = 10, // 10MB default
     acceptedFileTypes = ['image/jpeg', 'image/png', 'image/webp'],
     className = '',
@@ -52,6 +70,7 @@ export function ImageUploadWithCropper({
     const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
     const [isUploading, setIsUploading] = useState(false);
     const [_, setIsCropping] = useState(false);
+    const [zoom, setZoom] = useState(1);
     const imgRef = useRef<HTMLImageElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -76,11 +95,17 @@ export function ImageUploadWithCropper({
         setImageUrl(url);
         setCrop(undefined);
         setCompletedCrop(undefined);
+        setZoom(1); // Reset zoom when new image is selected
     }, [acceptedFileTypes, maxFileSize]);
 
     const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
         const { width, height } = e.currentTarget;
-        if (aspectRatio && aspectRatio > 0) {
+
+        if (aspectRatio === 'face') {
+            // Special handling for face cropping - 1:1 aspect ratio
+            const faceCrop = centerFaceCrop(width, height);
+            setCrop(faceCrop);
+        } else if (aspectRatio && aspectRatio > 0) {
             const fixedAspectCrop = centerAspectCrop(width, height, aspectRatio);
             setCrop(fixedAspectCrop);
         } else {
@@ -96,6 +121,14 @@ export function ImageUploadWithCropper({
             setCrop(freeCrop);
         }
     }, [aspectRatio]);
+
+    const handleZoomIn = useCallback(() => {
+        setZoom(prev => Math.min(prev + 0.1, 3)); // Max zoom 3x
+    }, []);
+
+    const handleZoomOut = useCallback(() => {
+        setZoom(prev => Math.max(prev - 0.1, 0.5)); // Min zoom 0.5x
+    }, []);
 
     const getCroppedImg = useCallback(
         (
@@ -198,6 +231,7 @@ export function ImageUploadWithCropper({
         setCrop(undefined);
         setCompletedCrop(undefined);
         setIsCropping(false);
+        setZoom(1);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -225,6 +259,7 @@ export function ImageUploadWithCropper({
             setImageUrl(url);
             setCrop(undefined);
             setCompletedCrop(undefined);
+            setZoom(1);
         } else {
             toast.error(`Please select a valid image file (${acceptedFileTypes.join(', ')})`);
         }
@@ -234,12 +269,25 @@ export function ImageUploadWithCropper({
         e.preventDefault();
     }, []);
 
+    // Get the actual aspect ratio for ReactCrop
+    const getCropAspectRatio = () => {
+        if (aspectRatio === 'face') {
+            return 1; // 1:1 aspect ratio for face cropping
+        }
+        return aspectRatio;
+    };
+
     return (
         <Card className={`w-full p-2 max-w-2xl mx-auto ${className}`}>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Upload className="w-5 h-5" />
                     {title}
+                    {aspectRatio === 'face' && (
+                        <span className="text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                            Face Crop Mode
+                        </span>
+                    )}
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 p-0">
@@ -251,10 +299,10 @@ export function ImageUploadWithCropper({
                         onClick={() => fileInputRef.current?.click()}
                     >
                         <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                        <p className="text-lg font-medium mb-2">Drop an image here or click to browse</p>
-                        <p className="text-sm text-gray-500 mb-4">
-                            Supported formats: {acceptedFileTypes.join(', ')} (max {maxFileSize}MB)
-                        </p>
+                        <p className="text-lg font-medium mb-2">Drop image here or click to browse</p>
+                        {aspectRatio === 'face' && (
+                            <p className="text-sm text-primary-main mb-2">Face crop mode</p>
+                        )}
                         <Button variant="outline" className='pointer-events-none'>
                             Choose File
                         </Button>
@@ -276,6 +324,27 @@ export function ImageUploadWithCropper({
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleZoomOut}
+                                        disabled={isUploading || zoom <= 0.5}
+                                    >
+                                        <ZoomOut className="w-4 h-4" />
+                                    </Button>
+                                    <span className="text-xs text-gray-500 min-w-[3rem] text-center">
+                                        {Math.round(zoom * 100)}%
+                                    </span>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleZoomIn}
+                                        disabled={isUploading || zoom >= 3}
+                                    >
+                                        <ZoomIn className="w-4 h-4" />
+                                    </Button>
+                                </div>
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -300,15 +369,21 @@ export function ImageUploadWithCropper({
                                 crop={crop}
                                 onChange={(_, percentCrop) => setCrop(percentCrop)}
                                 onComplete={(c) => setCompletedCrop(c)}
-                                aspect={aspectRatio}
+                                aspect={getCropAspectRatio()}
                                 minWidth={50}
-                                minHeight={50}>
+                                minHeight={50}
+                                circularCrop={aspectRatio === 'face'}
+                            >
                                 <img
                                     ref={imgRef}
                                     alt="Crop me"
                                     src={imageUrl!}
                                     onLoad={onImageLoad}
                                     className="max-h-96 object-contain w-auto mx-auto"
+                                    style={{
+                                        transform: `scale(${zoom})`,
+                                        transformOrigin: 'center',
+                                    }}
                                 />
                             </ReactCrop>
                         </div>
@@ -318,6 +393,7 @@ export function ImageUploadWithCropper({
                                 {completedCrop && (
                                     <span>
                                         Crop size: {Math.round(completedCrop.width)} × {Math.round(completedCrop.height)}px
+                                        {aspectRatio === 'face' && ' (Circular)'}
                                     </span>
                                 )}
                             </div>

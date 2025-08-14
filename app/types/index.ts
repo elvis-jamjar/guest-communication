@@ -72,4 +72,5 @@ export interface DataType {
   settings: Settings;
   allSponsorsBanner: LargeBanner;
   allPartnersBanner: LargeBanner;
+  name?: string;
 }

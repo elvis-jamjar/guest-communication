@@ -47,7 +47,7 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
             alt={speaker.name || "Speaker"}
             width={200}
             height={200}
-            className="w-32 h-32 object-cover rounded-lg border"
+            className="w-32 h-32 object-contain rounded-full border"
           />
           <Confirmation
             title="Remove Speaker Image"
@@ -66,7 +66,7 @@ const SpeakerForm = ({ speaker, onChange, onRemove }: { speaker: Speaker, onChan
       <ImageUploadWithCropper
         title={`${speaker.name || 'Speaker'} Image`}
         className='shadow-none border-none'
-        aspectRatio={1}
+        aspectRatio={"face"}
         onUploadComplete={(url) => {
           onChange({ ...speaker, image: url })
         }}

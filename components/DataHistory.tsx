@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { getHistoryData, updateAllData } from "@/app/actions/timeline";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getHistoryData, updateAllData, updateHistoryName } from "@/app/actions/timeline";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -22,11 +22,15 @@ import { History, RotateCcw } from "lucide-react";
 import type { DataType } from "@/app/types";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 
 export function DataHistory({ onRestored }: { onRestored?: () => void }) {
     const [open, setOpen] = useState(false);
     const [confirmingRestore, setConfirmingRestore] = useState<string | null>(null);
+    const [renamingKey, setRenamingKey] = useState<string | null>(null);
+    const [newName, setNewName] = useState<string>("");
+    const queryClient = useQueryClient();
     const { data, isLoading, isError } = useQuery({
         queryKey: ["admin-data-history", open],
         queryFn: async () => await getHistoryData(),
@@ -50,6 +54,18 @@ export function DataHistory({ onRestored }: { onRestored?: () => void }) {
             onRestored?.();
         },
         onError: () => toast.error("Failed to restore snapshot"),
+    });
+
+    const renameMutation = useMutation({
+        mutationFn: async ({ key, name }: { key: string; name: string }) =>
+            await updateHistoryName(key, name),
+        onSuccess: async () => {
+            toast.success("History name updated");
+            await queryClient.invalidateQueries({ queryKey: ["admin-data-history"] });
+            setRenamingKey(null);
+            setNewName("");
+        },
+        onError: () => toast.error("Failed to update history name"),
     });
 
     return (
@@ -94,7 +110,10 @@ export function DataHistory({ onRestored }: { onRestored?: () => void }) {
                                     )}
                                 >
                                     <div className="min-w-0">
-                                        <div className="font-medium truncate">{timestamp}</div>
+                                        <div className="font-medium truncate">{snapshot?.name ?? timestamp}</div>
+                                        {snapshot?.name ? (
+                                            <div className="text-xs text-muted-foreground mt-1">{timestamp}</div>
+                                        ) : null}
                                         <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-3">
                                             <span>Schedules: {schedulesCount}</span>
                                             <span>Columns: {columns}</span>
@@ -102,7 +121,64 @@ export function DataHistory({ onRestored }: { onRestored?: () => void }) {
                                             <span>About: {hasAbout ? "Yes" : "No"}</span>
                                         </div>
                                     </div>
-                                    <div className="shrink-0">
+                                    <div className="shrink-0 flex items-center gap-2">
+                                        <Popover open={renamingKey === timestamp} onOpenChange={(isOpen) => {
+                                            if (!isOpen) {
+                                                setRenamingKey(null);
+                                                setNewName("");
+                                            }
+                                        }}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        setNewName(snapshot?.name ?? "");
+                                                        setRenamingKey(timestamp);
+                                                    }}
+                                                >
+                                                    Rename
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-80" align="end">
+                                                <div className="space-y-3">
+                                                    <div className="space-y-1">
+                                                        <h4 className="font-medium leading-none">Rename Snapshot</h4>
+                                                        <p className="text-sm text-muted-foreground">Provide a short, descriptive name.</p>
+                                                    </div>
+                                                    <Input
+                                                        value={newName}
+                                                        placeholder="e.g., After keynote edits"
+                                                        onChange={(e) => setNewName(e.target.value)}
+                                                        disabled={renameMutation.isPending}
+                                                    />
+                                                    <div className="flex gap-2 justify-end">
+                                                        <Button
+                                                            size="sm"
+                                                            onClick={() => {
+                                                                const trimmed = newName.trim();
+                                                                if (trimmed.length > 0) {
+                                                                    renameMutation.mutate({ key: timestamp, name: trimmed });
+                                                                }
+                                                            }}
+                                                            disabled={renameMutation.isPending || newName.trim().length === 0}
+                                                        >
+                                                            {renameMutation.isPending ? "Saving…" : "Save"}
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => {
+                                                                setRenamingKey(null);
+                                                                setNewName("");
+                                                            }}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
                                         <Popover open={confirmingRestore === timestamp} onOpenChange={(open) => {
                                             if (!open) setConfirmingRestore(null);
                                         }}>
