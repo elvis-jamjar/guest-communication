@@ -29,6 +29,14 @@ export interface TimelineItemProps {
   host?: Speaker;
   facilitators?: Array<Speaker>;
   moderators?: Array<Speaker>;
+  hideSpeakersImage?: boolean;
+  hideSpeakersTitle?: boolean;
+  hideModeratorsTitle?: boolean;
+  hideHostTitle?: boolean;
+  hideFacilitatorsTitle?: boolean;
+  hideModeratorsImage?: boolean;
+  hideFacilitatorsImage?: boolean;
+  hideHostsImage?: boolean;
   removedData?: {
     sponsors?: Array<string>;
     speakers?: Array<Speaker>;

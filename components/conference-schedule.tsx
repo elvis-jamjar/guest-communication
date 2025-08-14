@@ -92,7 +92,7 @@ function Banner({ banners }: { banners: string[] }) {
   )
 }
 
-function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems }: TimelineItemProps) {
+function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine, title, description, icon, sponsors, speakers, banners, bannerPosition, sectionTitle, facilitators, host, moderators, children, className, subItems, hideSpeakersTitle, hideFacilitatorsTitle, hideHostTitle, hideModeratorsTitle, hideHostsImage, hideSpeakersImage, hideFacilitatorsImage, hideModeratorsImage }: TimelineItemProps) {
   return (
     // (trackLabel || icon || title) && 
     <div className={cn("flex flex-wrap w-full my-4 mt-0 rounded-2xl relative p-6", 'bg-white', className)}>
@@ -113,10 +113,10 @@ function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine,
         <h3 className={cn("font-bold text-sm text-primary-purple py-2", (isTrack && !sectionTitle) && "mt-1.5")}>{title}</h3>
         {(bannerPosition === 'top' || !bannerPosition) && <Banner banners={banners || []} />}
         {description && <pre className="text-sm text-gray-600 whitespace-break-spaces">{description}</pre>}
-        {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' />}
-        {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' />}
-        {host && <SpeakerList speakers={[host]} title='Host' />}
-        {(Number(moderators?.length || 0) > 0) && <SpeakerList speakers={moderators || []} title='moderator' />}
+        {(Number(speakers?.length || 0) > 0) && <SpeakerList speakers={speakers || []} title='Speaker' hideSpeakersTitle={hideSpeakersTitle} hideSpeakersImage={hideSpeakersImage} />}
+        {(Number(facilitators?.length || 0) > 0) && <SpeakerList speakers={facilitators || []} title='Facilitator' hideSpeakersTitle={hideFacilitatorsTitle} hideSpeakersImage={hideFacilitatorsImage} />}
+        {host && <SpeakerList speakers={[host]} title='Host' hideSpeakersTitle={hideHostTitle} hideSpeakersImage={hideHostsImage} />}
+        {(Number(moderators?.length || 0) > 0) && <SpeakerList speakers={moderators || []} title='moderator' hideSpeakersTitle={hideModeratorsTitle} hideSpeakersImage={hideModeratorsImage} />}
         {children}
         {(bannerPosition === 'bottom') && <Banner banners={banners || []} />}
         {(Number(sponsors?.length || 0) > 0) && <Sponsor sponsors={sponsors || []} />}
@@ -130,19 +130,19 @@ function TimelineItem({ time, isFirst, isTrack, trackLabel, iconColor, hideLine,
   )
 }
 
-function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: string }) {
+function SpeakerList({ speakers, title, hideSpeakersTitle, hideSpeakersImage }: { speakers: Array<Speaker>, title: string, hideSpeakersTitle?: boolean, hideSpeakersImage?: boolean }) {
   return (
     <div className="space-y-2">
-      {(Number(speakers?.length || 0) > 0) && <h2 className="text-sm mt-5 font-semibold uppercase">
+      {(Number(speakers?.length || 0) > 0) && !hideSpeakersTitle && <h2 className="text-sm mt-5 font-semibold uppercase">
         {speakers?.length > 1 ? `${title?.toLowerCase()}s` : `${title?.toLowerCase()}`}
       </h2>}
       {/* grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] */}
-      <div className="flex flex-col gap-2 justify-start">
+      <div className={cn("flex flex-col gap-2 justify-start", hideSpeakersTitle && 'mt-4')}>
         {speakers.map((speaker, index) => (
-          <div key={index} className="text-xs flex items-center flex-row gap-2">
-            {speaker?.image && <div className='w-24 min-w-24 h-24 flex items-center justify-center bg-gray-200 rounded-full pointer-events-none'>
+          <div key={index} className="text-xs flex items-center flex-row gap-4">
+            {!hideSpeakersImage && <div className='w-24 min-w-24 h-24 flex items-center justify-center bg-gray-200 rounded-full pointer-events-none'>
               <Image draggable={false}
-                src={speaker?.image}
+                src={speaker?.image || ''}
                 alt={"img"}
                 priority
                 fetchPriority='auto'
@@ -157,11 +157,11 @@ function SpeakerList({ speakers, title }: { speakers: Array<Speaker>, title: str
                 }}
               />
             </div>}
-            <div className='flex flex-col gap-x-0 gap-y-0'>
-              <span className="font-semibold">{speaker?.name} {speaker?.title && ','}</span>
+            <pre className=' whitespace-normal'>
+              <span className="font-semibold">{speaker?.name} {speaker?.name && ', '}</span>
               {speaker?.title} <br className='hidden' />
               {speaker?.bio}
-            </div>
+            </pre>
           </div>
         ))}
       </div>

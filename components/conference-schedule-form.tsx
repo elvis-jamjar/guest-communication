@@ -315,6 +315,24 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         </div>
         {showSpeakers && (
           <div className="space-y-4">
+            <div className="flex items-start flex-col ml-4 mt-4 gap-2">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="hide-speakers-title"
+                  checked={item.hideSpeakersTitle}
+                  onCheckedChange={(checked) => onChange({ ...item, hideSpeakersTitle: checked })}
+                />
+                <Label htmlFor="hide-speakers-title">Hide Speaker Titles</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="hide-speakers-image"
+                  checked={item.hideSpeakersImage}
+                  onCheckedChange={(checked) => onChange({ ...item, hideSpeakersImage: checked })}
+                />
+                <Label htmlFor="hide-speakers-image">Hide Speaker Images</Label>
+              </div>
+            </div>
             {item?.speakers?.map((speaker, index) => (
               <SpeakerForm
                 key={index}
@@ -353,11 +371,29 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
           <Label htmlFor="show-host">Add Host</Label>
         </div>
         {showHost && item.host && (
-          <SpeakerForm
-            speaker={item.host}
-            onChange={(updatedHost) => onChange({ ...item, host: updatedHost })}
-            onRemove={() => onChange({ ...item, host: undefined })}
-          />
+          <div className="flex items-start flex-col ml-4 mt-4 gap-2">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="hide-host-title"
+                checked={item.hideHostTitle}
+                onCheckedChange={(checked) => onChange({ ...item, hideHostTitle: checked })}
+              />
+              <Label htmlFor="hide-host-title">Hide Host Title</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="hide-host-image"
+                checked={item.hideHostsImage}
+                onCheckedChange={(checked) => onChange({ ...item, hideHostsImage: checked })}
+              />
+              <Label htmlFor="hide-host-image">Hide Host Image</Label>
+            </div>
+            <SpeakerForm
+              speaker={item.host}
+              onChange={(updatedHost) => onChange({ ...item, host: updatedHost })}
+              onRemove={() => onChange({ ...item, host: undefined })}
+            />
+          </div>
         )}
         {showHost && !item.host && (
           <Button onClick={() => onChange({ ...item, host: { name: '', bio: '' } })}>Add Host</Button>
@@ -381,6 +417,24 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         </div>
         {showFacilitators && (
           <div className="space-y-4">
+            <div className="flex items-start flex-col ml-4 mt-4 gap-2">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="hide-facilitators-title"
+                  checked={item.hideFacilitatorsTitle}
+                  onCheckedChange={(checked) => onChange({ ...item, hideFacilitatorsTitle: checked })}
+                />
+                <Label htmlFor="hide-facilitators-title">Hide Facilitator Titles</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="hide-facilitators-image"
+                  checked={item.hideFacilitatorsImage}
+                  onCheckedChange={(checked) => onChange({ ...item, hideFacilitatorsImage: checked })}
+                />
+                <Label htmlFor="hide-facilitators-image">Hide Facilitator Images</Label>
+              </div>
+            </div>
             {item.facilitators?.map((facilitator, index) => (
               <SpeakerForm
                 key={index}
@@ -420,6 +474,24 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         </div>
         {showModerators && (
           <div className="space-y-4">
+            <div className="flex items-start flex-col ml-4 mt-4 gap-2">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="hide-moderators-title"
+                  checked={item.hideModeratorsTitle}
+                  onCheckedChange={(checked) => onChange({ ...item, hideModeratorsTitle: checked })}
+                />
+                <Label htmlFor="hide-moderators-title">Hide Moderator Titles</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="hide-moderators-image"
+                  checked={item.hideModeratorsImage}
+                  onCheckedChange={(checked) => onChange({ ...item, hideModeratorsImage: checked })}
+                />
+                <Label htmlFor="hide-moderators-image">Hide Moderator Images</Label>
+              </div>
+            </div>
             {item.moderators?.map((moderator, index) => (
               <SpeakerForm
                 key={index}
