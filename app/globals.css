@@ -97,6 +97,38 @@ body {
   }
 }
 
+/* Global "zoom-out" via root font-size so more items fit on screen */
+html {
+  font-size: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 93.75%;
+  }
+}
+
+/* ~15px */
+@media (min-width: 1024px) {
+  html {
+    font-size: 87.5%;
+  }
+}
+
+/* ~14px */
+@media (min-width: 1536px) {
+  html {
+    font-size: 81.25%;
+  }
+}
+
+/* ~13px */
+@media (min-width: 1920px) {
+  html {
+    font-size: 75%;
+  }
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

@@ -5,7 +5,7 @@ import { ScheduleList } from "@/components/schedule-list";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 // import { Globe, Linkedin, Mail, Twitter, MessageCircle } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";
 import React from "react";
 import { getPublishedData } from "@/app/actions/timeline";
 // import Link from "next/link";
@@ -73,7 +73,7 @@ export default function LandingPage({ isPreview = false }: { isPreview?: boolean
                 <p>Preview Mode</p>
             </div>}
             {/* Hero Section */}
-            <section id={"about"} className=" w-full relative h-auto"
+            <section className=" w-full relative h-auto"
                 style={{
                     backgroundImage: "url('/images/ACGC_bg_2025_dark.png')",
                     backgroundSize: "cover",
@@ -88,8 +88,14 @@ export default function LandingPage({ isPreview = false }: { isPreview?: boolean
                 <HeroSection pageContent={data?.pageContent || {}} />
             </section>
 
+            {/* <section id="about" className="py-20 bg-gray-100">
+                <h2 className="text-2xl md:text-4xl font-semibold  text-primary-purple mb-4 text-center">About Us</h2>
+                <AboutDescription className="text-black mx-auto container max-w-5xl text-justify px-2 md:px-0" aboutSection={data?.pageContent?.aboutSection || ''} />
+            </section> */}
+
             {/* Program Section */}
-            <section id="programme" className="py-20 bg-gray-100 md:min-h-[10dvh]">
+            <section className="py-20 bg-gray-100 md:min-h-[60dvh]">
+                <h2 id="programme" className="text-2xl md:text-4xl font-semibold text-primary-purple mb-5 text-center">Programme</h2>
                 {
                     isLoading && <div className="text-center">
                         <p>Loading...</p>
