@@ -291,11 +291,11 @@ export default function HeroSection({ pageContent }: { pageContent: PageContent 
 
                         </div>
                         {/* Primary CTA */}
-                        <div className="relative md:hidden inline-block w-full md:w-auto mt-8 justify-center md:justify-start">
+                        <div className="relative inline-flex w-full mt-4 justify-center md:hidden">
                             <Button
                                 asChild
                                 size="lg"
-                                className="relative animate-pulse transition-all repeat-[2] delay-1000 duration-700 ease-in-out border-2 border-primary-main h-16 md:h-20 group w-full md:w-[24rem] bg-white text-primary-main hover:text-primary-purple text-xl md:text-2xl font-semibold rounded-full hover:bg-primary-main/90 shadow-xl shadow-black/30 focus-visible:ring-4 focus-visible:ring-primary-main/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                                className="relative animate-pulse transition-all repeat-[2] delay-1000 duration-700 ease-in-out border-2 border-primary-main h-12 group w-auto bg-white text-primary-main hover:text-primary-purple text-xl md:text-2xl font-semibold rounded-full hover:bg-primary-main/90 shadow-xl shadow-black/30 focus-visible:ring-4 focus-visible:ring-primary-main/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
                             >
                                 <a href="https://acgc2025conference.rsvpify.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
                                     Register now
