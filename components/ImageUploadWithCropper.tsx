@@ -150,10 +150,21 @@ export function ImageUploadWithCropper({
             const outputWidth = Math.round(crop.width * scaleX);
             const outputHeight = Math.round(crop.height * scaleY);
 
-            canvas.width = outputWidth;
-            canvas.height = outputHeight;
+            // Add padding around the cropped content to avoid later shrink
+            const paddingRatio = 0.08; // 8% padding on each side
+            const paddingX = Math.round(outputWidth * paddingRatio);
+            const paddingY = Math.round(outputHeight * paddingRatio);
+
+            canvas.width = outputWidth + paddingX * 2;
+            canvas.height = outputHeight + paddingY * 2;
 
             ctx.imageSmoothingQuality = 'high';
+
+            // For JPEG exports, fill background to avoid black transparency fallback
+            if (mimeType === 'image/jpeg') {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
 
             ctx.drawImage(
                 image,
@@ -161,8 +172,8 @@ export function ImageUploadWithCropper({
                 crop.y * scaleY,
                 crop.width * scaleX,
                 crop.height * scaleY,
-                0,
-                0,
+                paddingX,
+                paddingY,
                 outputWidth,
                 outputHeight,
             );
@@ -278,7 +289,7 @@ export function ImageUploadWithCropper({
     };
 
     return (
-        <Card className={`w-full p-2 max-w-2xl mx-auto ${className}`}>
+        <Card className={`w-full p-2 border-none shadow-none max-w-2xl mx-auto ${className}`}>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Upload className="w-5 h-5" />
