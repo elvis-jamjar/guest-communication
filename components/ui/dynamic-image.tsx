@@ -21,18 +21,22 @@ export const DynamicImage: React.FC<DynamicImageProps> = ({ src, alt }) => {
 
   return (
     <div className="image-container">
-      {imageSize.width && imageSize.height ? (
+      {(imageSize.width && imageSize.height) ? (
         <Image
           src={src}
           alt={alt}
           width={imageSize.width}
           height={imageSize.height}
-          objectFit="cover"
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          quality={100}
+          priority={true}
+          fetchPriority='high'
+          // objectFit="cover"
           layout="intrinsic"
-          className='rounded-md w-24'
+          className='rounded-sm w-32 h-24 object-contain object-center'
         />
       ) : (
-        <p>Loading image...</p>
+        <div className="rounded-md w-32 h-16 bg-gray-200 animate-pulse"></div>
       )}
     </div>
   );

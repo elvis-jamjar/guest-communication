@@ -97,6 +97,16 @@ body {
   }
 }
 
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Global "zoom-out" via root font-size so more items fit on screen */
 html {
   font-size: 100%;
@@ -127,13 +137,4 @@ html {
   html {
     font-size: 75%;
   }
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
