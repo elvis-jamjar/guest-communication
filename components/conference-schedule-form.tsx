@@ -232,7 +232,7 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
         <Label>Sponsors</Label>
         <ImageUploadWithCropper
           title="SessionSponsor Images"
-          aspectRatio={16 / 9}
+          aspectRatio={2}
           onUploadComplete={(url) => {
             onChange({ ...item, sponsors: [...(item?.sponsors || []), url] })
           }}

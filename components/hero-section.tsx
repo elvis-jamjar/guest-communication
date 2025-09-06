@@ -23,7 +23,7 @@ const textIconData = [
         icon: <Mail className="size-3" />
     },
     {
-        text: 'ACGC (African Corprate Government Counsel Forum)',
+        text: 'ACGC (African Corporate Government Counsel Forum)',
         icon: <Linkedin className="size-3" />
     }
 ]
