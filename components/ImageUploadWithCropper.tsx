@@ -6,7 +6,7 @@
 // import { Button } from './ui/button';
 // import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 // import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-// import { Upload, X, RotateCcw, Check, ZoomIn, ZoomOut } from 'lucide-react';
+// import { Upload, X, RotateCcw, Check, ZoomIn, ZoomOut, ImageIcon } from 'lucide-react';
 // import { uploadFile } from '@/app/actions/timeline';
 // import { toast } from 'sonner';
 
@@ -387,7 +387,7 @@ import Cropper, { ReactCropperElement } from 'react-cropper';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-import { Upload, X, RotateCcw, Check, ZoomIn, ZoomOut } from 'lucide-react';
+import { Upload, X, RotateCcw, Check, ZoomIn, ZoomOut, ImageIcon } from 'lucide-react';
 import { uploadFile } from '@/app/actions/timeline';
 import { toast } from 'sonner';
 
@@ -439,10 +439,10 @@ export function ImageUploadWithCropper({
     const [zoom, setZoom] = useState(1);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [cropMode, setCropMode] = useState<'face' | 'square' | 'rect'>(() => {
+    const [cropMode, setCropMode] = useState<'face' | 'square' | 'rect' | 'free'>(() => {
         if (aspectRatio === 'face') return 'face';
         if (typeof aspectRatio === 'number') return aspectRatio === 1 ? 'square' : 'rect';
-        return 'square';
+        return 'free';
     });
 
     const onSelectFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -580,6 +580,10 @@ export function ImageUploadWithCropper({
         }
     }, [acceptedFileTypes, maxFileSize]);
 
+    const handleChangeImage = useCallback(() => {
+        fileInputRef.current?.click();
+    }, []);
+
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
     }, []);
@@ -587,7 +591,8 @@ export function ImageUploadWithCropper({
     // Aspect ratio for Cropper
     const getCropAspectRatio = () => {
         if (cropMode === 'face' || cropMode === 'square') return 1;
-        return 16 / 9;
+        if (cropMode === 'rect') return 16 / 9;
+        return NaN; // Free mode - no aspect ratio constraint
     };
 
     // Re-center crop when switching modes
@@ -667,6 +672,23 @@ export function ImageUploadWithCropper({
                                             >
                                                 <ZoomIn className="w-4 h-4" />
                                             </Button>
+                                            <Button
+                                                onClick={handleCropAndUpload}
+                                                disabled={!completedCrop || isUploading}
+                                                className="min-w-24"
+                                            >
+                                                {isUploading ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                        Uploading...
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2">
+                                                        <Upload className="w-4 h-4" />
+                                                        Upload
+                                                    </div>
+                                                )}
+                                            </Button>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 mt-4">
@@ -695,6 +717,14 @@ export function ImageUploadWithCropper({
                                             >
                                                 Rectangle
                                             </Button>
+                                            <Button
+                                                type="button"
+                                                variant={cropMode === 'free' ? 'default' : 'ghost'}
+                                                size="sm"
+                                                onClick={() => setCropMode('free')}
+                                            >
+                                                Free
+                                            </Button>
                                         </div>
                                         <Button
                                             variant="outline"
@@ -704,6 +734,14 @@ export function ImageUploadWithCropper({
                                         >
                                             <RotateCcw className="w-4 h-4" />
                                         </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={handleChangeImage}
+                                            disabled={isUploading}
+                                        >
+                                            <ImageIcon className="w-4 h-4" />
+                                        </Button>
                                     </div>
                                 </DialogDescription>
                             )}
@@ -712,6 +750,13 @@ export function ImageUploadWithCropper({
                         <div className="flex-1 min-h-0 p-6 pt-2">
                             {selectedFile && imageUrl && (
                                 <div className="w-full h-full max-h-[500px] relative">
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept={acceptedFileTypes.join(',')}
+                                        onChange={onSelectFile}
+                                        className="hidden"
+                                    />
                                     <Cropper
                                         ref={cropperRef}
                                         src={imageUrl}
@@ -774,6 +819,7 @@ export function ImageUploadWithCropper({
                                         <span>
                                             Crop size: {Math.round(completedCrop.width)} × {Math.round(completedCrop.height)}px
                                             {cropMode === 'face' && ' (Circular)'}
+                                            {cropMode === 'free' && ' (Free form)'}
                                         </span>
                                     )}
                                 </div>
@@ -797,7 +843,7 @@ export function ImageUploadWithCropper({
                                             </div>
                                         ) : (
                                             <div className="flex items-center gap-2">
-                                                <Check className="w-4 h-4" />
+                                                <Upload className="w-4 h-4" />
                                                 Upload
                                             </div>
                                         )}
