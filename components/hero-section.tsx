@@ -8,6 +8,36 @@ import { PageContent } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import { useSectionRoute } from "@/hooks/useSectionRoute";
 
+// Loading skeleton component for AboutDescription
+function AboutDescriptionSkeleton({ className }: { className?: string }) {
+    return (
+        <section className={cn("bg-transparent mt-8 text-white rounded-lg", className)}>
+            <div className="max-w-5xl space-y-4">
+                {/* Title skeleton */}
+                <div className="h-8 bg-white/20 rounded-lg animate-pulse w-32"></div>
+
+                {/* Paragraph skeletons */}
+                <div className="space-y-3">
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-full"></div>
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-full"></div>
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-3/4"></div>
+                </div>
+
+                <div className="space-y-3">
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-full"></div>
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-5/6"></div>
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-2/3"></div>
+                </div>
+
+                <div className="space-y-3">
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-full"></div>
+                    <div className="h-4 bg-white/20 rounded animate-pulse w-4/5"></div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 const textIconData = [
     {
         text: 'www.acgc.africa',
@@ -28,14 +58,8 @@ const textIconData = [
     }
 ]
 
-export default function HeroSection({ pageContent }: { pageContent: PageContent }) {
+export default function HeroSection({ pageContent, isLoading }: { pageContent: PageContent, isLoading?: boolean }) {
     const isMobile = useMobile()
-    // get page content
-    // const { data: pageContent } = useQuery({
-    //     queryKey: ['page-content'],
-    //     queryFn: async () => await getPageContent(),
-    //     refetchInterval: 90000, // 15 minutes
-    // });
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const headerRef = useRef<HTMLDivElement | null>(null);
@@ -151,9 +175,9 @@ export default function HeroSection({ pageContent }: { pageContent: PageContent 
             {/* Content container */}
             <div className="relative w-full z-10 flex flex-col h-full min-h-screen">
                 {/* Header with logo, conference info, and navigation */}
-                <div ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 flex items-center md:items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white/90 shadow-sm' : 'px-2 md:py-8 md:px-16 md:pb-0 bg-white/90 md:bg-transparent'}`}>
+                <div ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 gap-2 flex items-center md:items-start justify-between transition-all duration-300 ease-in-out ${isScrolled ? 'px-4 py-2 backdrop-blur-sm pb-0 md:px-5 md:py-2 md:pb-0 bg-white/90 shadow-sm' : 'px-2 md:py-8 md:px-16 md:pb-0 bg-white/90 md:bg-transparent'}`}>
                     {/* Logo and conference badge */}
-                    <div className={`flex flex-1 md:justify-around items-center transition-all duration-300 ease-in-out ${isScrolled ? 'gap-4 p-1 max-w-xs md:max-w-sm' : 'gap-5 p-5 max-w-xs md:max-w-xl md:bg-[#f5f1e8]'} md:rounded-br-[3rem]`}>
+                    <div className={`flex flex-1 overflow-hidden md:justify-around items-center transition-all duration-300 ease-in-out ${isScrolled ? 'gap-4 p-1 max-w-xs md:max-w-sm' : 'gap-5 p-5 max-w-xs md:max-w-xl md:bg-[#f5f1e8]'} md:rounded-br-[3rem]`}>
                         <Image
                             src="/images/logo.png"
                             alt="ACGC Logo"
@@ -268,10 +292,9 @@ export default function HeroSection({ pageContent }: { pageContent: PageContent 
                             {" to Breakthroughs"}
                         </h1>
                         <h1 className="text-white md:hidden font-semibold text-center md:text-left text-5xl md:text-7xl 2xl:text-8xl leading-tight mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-                            From
+                            From  Bridges
                             <br className="block" />
-                            Bridges
-                            {" to Breakthroughs"}
+                            {"to Breakthroughs"}
                         </h1>
                         {/* Subtitle with gradient background */}
                         <div className="inline-block w-full md:w-fit p-0.5 bg-gradient-to-r from-white to-primary-main rounded-full overflow-hidden drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
@@ -304,23 +327,22 @@ export default function HeroSection({ pageContent }: { pageContent: PageContent 
                             </Button>
                         </div>
 
-
                         {/* Date and location */}
                         <div className="text-white space-y-6 mt-14">
                             <div className="text-2xl text-center md:text-left md:text-4xl font-bold text-primary-main">
                                 Wed 1st - Fri 3rd October, 2025
                             </div>
-                            <div className="text-xl font-medium text-center md:text-left">
+                            <div className="text-sm md:text-xl font-medium text-left">
                                 @ The David Livingstone Safari Lodge & Spa,
                                 <br className="hidden md:block" />
                                 {" Riverside Dr, Off Sichango Rd, Livingstone, Zambia"}
                             </div>
                             {/* Social and contact info */}
-                            <div className="flex flex-wrap items-center gap-4 text-white text-sm">
+                            <div className="grid md:flex flex-wrap items-center gap-4 text-white text-sm">
                                 {/* social media */}
                                 {
                                     textIconData.map((item, index) => (
-                                        <div key={index} className="flex items-center gap-2 text-base">
+                                        <div key={index} className="flex items-center gap-2 text-sm md:text-base whitespace-nowrap">
                                             <div className="min-w-6 min-h-6 bg-primary-main rounded-full flex items-center justify-center text-black">
                                                 {item.icon}
                                             </div>
@@ -331,10 +353,12 @@ export default function HeroSection({ pageContent }: { pageContent: PageContent 
                             </div>
                         </div>
                         {/* about us description */}
-                        <AboutDescription className="text-white" aboutSection={pageContent?.aboutSection || ''} />
-
+                        {isLoading ? (
+                            <AboutDescriptionSkeleton className="text-white" />
+                        ) : (
+                            <AboutDescription className="text-white" aboutSection={pageContent?.aboutSection || ''} />
+                        )}
                     </div>
-
                 </div>
             </div>
         </div>

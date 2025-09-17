@@ -2,6 +2,7 @@
 
 import { PageQuickLinks } from "@/components/page-content-display";
 import { ScheduleList } from "@/components/schedule-list";
+import { ScheduleListSkeleton } from "@/components/schedule-list-skeleton";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 // import { Globe, Linkedin, Mail, Twitter, MessageCircle } from "lucide-react";
@@ -85,7 +86,7 @@ export default function LandingPage({ isPreview = false }: { isPreview?: boolean
                     minHeight: "100dvh",
                 }}
             >
-                <HeroSection pageContent={data?.pageContent || {}} />
+                <HeroSection pageContent={data?.pageContent || {}} isLoading={isLoading} />
             </section>
 
             {/* <section id="about" className="py-20 bg-gray-100">
@@ -94,12 +95,10 @@ export default function LandingPage({ isPreview = false }: { isPreview?: boolean
             </section> */}
 
             {/* Program Section */}
-            <section className="py-20 bg-gray-100 md:min-h-[60dvh]">
+            <section className="py-20 bg-gray-100 md:min-h-0">
                 <h2 id="programme" className="text-2xl md:text-4xl font-semibold text-primary-purple mb-5 text-center">Programme</h2>
                 {
-                    isLoading && <div className="text-center">
-                        <p>Loading...</p>
-                    </div>
+                    isLoading && <ScheduleListSkeleton columns={1} />
                 }
                 {
                     data &&

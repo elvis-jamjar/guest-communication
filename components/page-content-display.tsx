@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { PageContent } from "@/app/types"
 import { ArrowUpRight } from "lucide-react"
@@ -32,18 +32,25 @@ export function PageQuickLinks({ pageContent, className }: { pageContent: PageCo
         {pageContent?.quickLinks?.map((link, index) => (
           <Card key={index} className="grid shadow-none p-2 space-y-4 border-2 bg-transparent border-primary-main">
             <CardHeader className="p-0">
-              <CardTitle className="font-bold p-0 text-sm text-primary-purple py-2 break-words">{link?.title || 'Quick Link'}</CardTitle>
+              <CardTitle className="font-bold text-base p-0 text-primary-purple py-2 break-words">
+                {link?.title || 'Quick Link'}
+                {/* On The Horizon: A 2025 African GC Perspective */}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="flex-grow p-0">
+            <CardDescription className="text-base">
+              {link?.description || 'No description available.'}
+              {/* ACGC and Afriwise have partnered on a groundbreaking research initiative, providing the most comprehensive study on the realities of GCs and in-house legal professionals across the continent. This research report uncovers the challenges, disruptions, and opportunities shaping the future of Africa's legal */}
+            </CardDescription>
+            {/* <CardContent className="flex-grow p-0">
               <p className="text-muted-foreground p-0">{link.description || 'No description available.'}</p>
-            </CardContent>
+            </CardContent> */}
             <CardFooter className="p-0">
-              <Button asChild className="w-full group bg-primary-main hover:bg-primary-main/80">
-                <a href={link?.link || '#'} target="_blank" rel="noopener noreferrer">
+              <a title={link?.buttonLabel || 'Learn More'} className="text-xl flex items-center text-white rounded-xl p-2 px-4 justify-center w-full group bg-primary-main hover:bg-primary-main/80" href={link?.link || '#'} target="_blank" rel="noopener noreferrer">
+                <span className="line-clamp-1 max-w-">
                   {link?.buttonLabel || 'Learn More'}
-                  <ArrowUpRight className="size-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </a>
-              </Button>
+                </span>
+                <ArrowUpRight className="size-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
             </CardFooter>
           </Card>
         ))}
@@ -64,9 +71,14 @@ export function AboutDescription({ aboutSection, hasTitle, className }: { aboutS
         </p>
       ) : (
         // "prose-invert [&_*]:!text-white [&_h1]:!text-white [&_h2]:!text-white [&_h3]:!text-white [&_h4]:!text-white [&_h5]:!text-white [&_h6]:!text-white [&_p]:!text-white [&_li]:!text-white [&_span]:!text-white [&_strong]:!text-white [&_em]:!text-white [&_a]:!text-white")}
-        <div className={cn("max-w-5xl prose prose-sm md:prose-xl",
-          hasTitle ? "prose-slate [&_*]:!text-black [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_p]:!text-black [&_li]:!text-black [&_span]:!text-black [&_strong]:!text-black [&_em]:!text-black [&_a]:!text-black text-black" :
-            "prose-slate [&_*]:!text-white [&_h1]:!text-white [&_h2]:!text-white [&_h3]:!text-white [&_h4]:!text-white [&_h5]:!text-white [&_h6]:!text-white [&_p]:!text-white [&_li]:!text-white [&_span]:!text-white [&_strong]:!text-white [&_em]:!text-white [&_a]:!text-white text-white")}>
+        <div
+          className={cn(
+            "max-w-7xl backdrop-blur-[2px] prose prose-sm md:prose-xl 2xl:prose-2xl",
+            hasTitle
+              ? "prose-slate [&_*]:!text-black [&_h1]:!text-black [&_h2]:!text-black [&_h3]:!text-black [&_h4]:!text-black [&_h5]:!text-black [&_h6]:!text-black [&_p]:!text-black [&_li]:!text-black [&_span]:!text-black [&_strong]:!text-black [&_em]:!text-black [&_a]:!text-black text-black [&_p]:leading-relaxed [&_li]:leading-relaxed"
+              : "prose-slate [&_*]:!text-white [&_h1]:!text-white [&_h2]:!text-white [&_h3]:!text-white [&_h4]:!text-white [&_h5]:!text-white [&_h6]:!text-white [&_p]:!text-white [&_li]:!text-white [&_span]:!text-white [&_strong]:!text-white [&_em]:!text-white [&_a]:!text-white text-white [&_p]:leading-relaxed [&_li]:leading-relaxed"
+          )}
+        >
           <RichTextEditor content={aboutSection} editable={false} />
         </div>
 
