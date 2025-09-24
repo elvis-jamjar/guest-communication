@@ -102,17 +102,30 @@ export function useNotifications() {
   //     });
   //   };
 
+  // Helper function to check if we're on the preview path
+  const isPreviewPath = (): boolean => {
+    if (typeof window === "undefined") return false;
+    return window.location.pathname === "/preview";
+  };
+
   // Helper function to filter valid notifications (not expired, not dismissed, not read, and not duplicate)
   const getValidNotifications = (
     notifications: Notification[]
   ): Notification[] => {
     // First filter out expired, dismissed, and read notifications
-    const filteredNotifications = notifications.filter(
+    let filteredNotifications = notifications.filter(
       (notification) =>
         !isNotificationExpired(notification) &&
         !isNotificationDismissed(notification) &&
         !isNotificationRead(notification)
     );
+
+    // Filter out preview notifications if not on preview path
+    if (!isPreviewPath()) {
+      filteredNotifications = filteredNotifications.filter(
+        (notification) => !notification.isPreview
+      );
+    }
 
     // Then remove duplicates, keeping only the first occurrence of each unique content
     const uniqueNotifications: Notification[] = [];
@@ -150,6 +163,11 @@ export function useNotifications() {
 
       // If it's a duplicate, don't add it
       if (isDuplicate) {
+        return prev;
+      }
+
+      // Filter out preview notifications if not on preview path
+      if (!isPreviewPath() && notification.isPreview) {
         return prev;
       }
 

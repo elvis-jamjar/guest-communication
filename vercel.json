@@ -4,5 +4,10 @@
       "path": "/api/cron/notifications",
       "schedule": "*/1 * * * *"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/cron/notifications/route.ts": {
+      "maxDuration": 30
+    }
+  }
 }

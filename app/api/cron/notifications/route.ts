@@ -14,6 +14,12 @@ export async function GET(req: NextRequest) {
     }
 
     console.log("Cron job triggered at:", new Date().toISOString());
+    console.log("Environment check:", {
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL: process.env.VERCEL,
+      VERCEL_URL: process.env.VERCEL_URL,
+      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    });
 
     // Call our schedule processing endpoint
     const baseUrl =
