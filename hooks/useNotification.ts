@@ -1,7 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Notification } from "@/app/types";
+import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 
 export function useNotifications() {
+  const pathname = usePathname();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [ttsEnabled, setTtsEnabled] = useState(true);
@@ -153,10 +156,9 @@ export function useNotifications() {
   };
 
   // Helper function to check if we're on the preview path
-  const isPreviewPath = (): boolean => {
-    if (typeof window === "undefined") return false;
-    return window.location.pathname === "/preview";
-  };
+  const isPreviewPath = useCallback((): boolean => {
+    return pathname === "/preview";
+  }, [pathname]);
 
   // Helper function to filter valid notifications (not expired, not dismissed, not read, and not duplicate)
   const getValidNotifications = useCallback(
@@ -205,7 +207,7 @@ export function useNotifications() {
 
       return uniqueNotifications;
     },
-    [isNotificationDismissed, isNotificationRead]
+    [isNotificationDismissed, isNotificationRead, isPreviewPath]
   );
 
   // Helper function to add notification
@@ -275,7 +277,7 @@ export function useNotifications() {
         return validNotifications;
       });
     },
-    [getValidNotifications]
+    [getValidNotifications, isPreviewPath]
   );
 
   // Helper function to dismiss notification (hide but keep unread)
@@ -297,7 +299,45 @@ export function useNotifications() {
   };
 
   // Helper function to delete/discard notification (mark as read and remove)
-  const deleteNotification = (notificationId: string) => {
+  const deleteNotification = async (notificationId: string) => {
+    try {
+      // Delete from server (both admin_notifications and recent_notifications)
+      const [adminResponse, recentResponse] = await Promise.allSettled([
+        fetch(`/api/notifications/admin?id=${notificationId}`, {
+          method: "DELETE",
+        }),
+        fetch(`/api/notifications/recent?id=${notificationId}`, {
+          method: "DELETE",
+        }),
+      ]);
+
+      // Check if admin deletion was successful
+      if (adminResponse.status === "fulfilled" && adminResponse.value.ok) {
+        console.log(
+          "Successfully deleted notification from admin_notifications"
+        );
+      } else {
+        console.error("Failed to delete notification from admin_notifications");
+      }
+
+      // Check if recent deletion was successful
+      if (recentResponse.status === "fulfilled" && recentResponse.value.ok) {
+        console.log(
+          "Successfully deleted notification from recent_notifications"
+        );
+      } else {
+        console.error(
+          "Failed to delete notification from recent_notifications"
+        );
+      }
+
+      // Show success toast
+      toast.success("Notification deleted successfully");
+    } catch (error) {
+      console.error("Error deleting notification from server:", error);
+      toast.error("Failed to delete notification from server");
+    }
+
     // Mark message ID as read
     setReadMessageIds((prev) => {
       const newSet = new Set(prev);

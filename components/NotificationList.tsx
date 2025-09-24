@@ -8,6 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
     Eye,
     Edit,
     Trash2,
@@ -20,7 +28,8 @@ import {
     Users,
     BarChart3,
     Clock,
-    Play
+    Play,
+    AlertTriangle
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -56,6 +65,12 @@ export default function NotificationList({
     const [targetAudienceFilter, setTargetAudienceFilter] = useState("all");
     const [sortBy, setSortBy] = useState("timestamp");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+    // Dialog state management
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showPublishDialog, setShowPublishDialog] = useState(false);
+    const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+    const [isActionLoading, setIsActionLoading] = useState(false);
 
     const filteredNotifications = notifications
         .filter(notification => {
@@ -137,29 +152,61 @@ export default function NotificationList({
     };
 
     const handleAction = async (action: string, notification: Notification) => {
-        try {
-            switch (action) {
-                case "edit":
-                    onEdit(notification);
-                    break;
-                case "delete":
-                    if (confirm("Are you sure you want to delete this notification?")) {
-                        await onDelete(notification.id);
-                        toast.success("Notification deleted successfully");
-                    }
-                    break;
-                case "publish":
-                    await onPublish(notification.id, notification.targetAudience || "all");
-                    toast.success("Notification published successfully");
-                    break;
-                case "archive":
+        switch (action) {
+            case "edit":
+                onEdit(notification);
+                break;
+            case "delete":
+                setSelectedNotification(notification);
+                setShowDeleteDialog(true);
+                break;
+            case "publish":
+                setSelectedNotification(notification);
+                setShowPublishDialog(true);
+                break;
+            case "archive":
+                try {
                     await onArchive(notification.id);
                     toast.success("Notification archived successfully");
-                    break;
-            }
+                } catch (error) {
+                    toast.error("Failed to archive notification");
+                    console.error(error);
+                }
+                break;
+        }
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!selectedNotification) return;
+
+        setIsActionLoading(true);
+        try {
+            await onDelete(selectedNotification.id);
+            toast.success("Notification deleted successfully");
+            setShowDeleteDialog(false);
+            setSelectedNotification(null);
         } catch (error) {
-            toast.error(`Failed to ${action} notification`);
+            toast.error("Failed to delete notification");
             console.error(error);
+        } finally {
+            setIsActionLoading(false);
+        }
+    };
+
+    const handleConfirmPublish = async () => {
+        if (!selectedNotification) return;
+
+        setIsActionLoading(true);
+        try {
+            await onPublish(selectedNotification.id, selectedNotification.targetAudience || "all");
+            toast.success("Notification published successfully");
+            setShowPublishDialog(false);
+            setSelectedNotification(null);
+        } catch (error) {
+            toast.error("Failed to publish notification");
+            console.error(error);
+        } finally {
+            setIsActionLoading(false);
         }
     };
 
@@ -390,24 +437,34 @@ export default function NotificationList({
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                {notification.status === "draft" && (
-                                                    <DropdownMenuItem onClick={() => handleAction("publish", notification)}>
-                                                        <Send className="w-4 h-4 mr-2" />
-                                                        Publish
-                                                    </DropdownMenuItem>
-                                                )}
-                                                {notification.status === "scheduled" && (
+                                                <DropdownMenuItem onClick={() => handleAction("publish", notification)}>
+                                                    <Send className="w-4 h-4 mr-2" />
+                                                    {notification.status === "active"
+                                                        ? (
+                                                            <span>
+                                                                Publish again
+                                                            </span>
+                                                        )
+                                                        : (
+                                                            <span>
+                                                                Publish
+                                                            </span>
+                                                        )
+                                                    }
+                                                </DropdownMenuItem>
+                                                {/* {notification.status === "scheduled" && (
                                                     <DropdownMenuItem onClick={() => handleAction("publish", notification)}>
                                                         <Play className="w-4 h-4 mr-2" />
                                                         Publish Now
                                                     </DropdownMenuItem>
-                                                )}
+                                                )} */}
                                                 {notification.status === "active" && (
                                                     <DropdownMenuItem onClick={() => handleAction("archive", notification)}>
                                                         <Archive className="w-4 h-4 mr-2" />
                                                         Archive
                                                     </DropdownMenuItem>
                                                 )}
+
                                                 <DropdownMenuItem
                                                     onClick={() => handleAction("delete", notification)}
                                                     className="text-red-600"
@@ -447,6 +504,67 @@ export default function NotificationList({
                     </CardContent>
                 </Card>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <AlertTriangle className="w-5 h-5 text-red-500" />
+                            Delete Notification
+                        </DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete "{selectedNotification?.title}"? This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowDeleteDialog(false)}
+                            disabled={isActionLoading}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={handleConfirmDelete}
+                            disabled={isActionLoading}
+                        >
+                            {isActionLoading ? "Deleting..." : "Delete"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Publish Confirmation Dialog */}
+            <Dialog open={showPublishDialog} onOpenChange={setShowPublishDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <Send className="w-5 h-5 text-blue-500" />
+                            Publish Notification
+                        </DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to publish "{selectedNotification?.title}"? This will send the notification to {selectedNotification?.targetAudience || "all"} users.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowPublishDialog(false)}
+                            disabled={isActionLoading}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleConfirmPublish}
+                            disabled={isActionLoading}
+                        >
+                            {isActionLoading ? "Publishing..." : "Publish"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -150,14 +150,8 @@ export default function NotificationManagementPage({ params }: { params: { userI
             });
 
             if (response.ok) {
-                // Update the notification status in the list
-                setNotifications(prev =>
-                    prev.map(n =>
-                        n.id === notificationId
-                            ? { ...n, status: 'active', publishedAt: new Date().toISOString() }
-                            : n
-                    )
-                );
+                // Refresh notifications from server to get the updated data
+                await fetchNotifications();
                 toast.success("Notification published successfully");
             } else {
                 const errorData = await response.json();

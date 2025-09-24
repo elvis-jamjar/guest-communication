@@ -38,3 +38,50 @@ export async function GET(_req: NextRequest) {
     );
   }
 }
+
+// DELETE - Delete a notification from recent notifications
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Notification ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Get all recent notifications
+    const recentNotificationsData = await redisClient.lrange(
+      "recent_notifications",
+      0,
+      -1
+    );
+    const recentNotifications = recentNotificationsData.map((n) =>
+      JSON.parse(n)
+    );
+
+    // Filter out the notification to delete
+    const filteredNotifications = recentNotifications.filter(
+      (n) => n.id !== id
+    );
+
+    // Update Redis
+    await redisClient.del("recent_notifications");
+    if (filteredNotifications.length > 0) {
+      await redisClient.lpush(
+        "recent_notifications",
+        ...filteredNotifications.map((n) => JSON.stringify(n))
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting notification from recent:", error);
+    return NextResponse.json(
+      { error: "Failed to delete notification from recent" },
+      { status: 500 }
+    );
+  }
+}
