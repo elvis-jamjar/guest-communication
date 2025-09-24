@@ -29,6 +29,86 @@ body {
   }
 }
 
+/* Custom smooth rotation animation for notification border */
+@keyframes smooth-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.smooth-rotate {
+  animation: smooth-rotate 4s linear infinite;
+}
+
+/* Notification expansion animations */
+@keyframes notification-expand {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes notification-collapse {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+.notification-expand {
+  animation: notification-expand 0.3s ease-out forwards;
+}
+
+.notification-collapse {
+  animation: notification-collapse 0.3s ease-in forwards;
+}
+
+@keyframes notification-cascade-down {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes notification-cascade-up {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+.notification-cascade-down {
+  animation: notification-cascade-down 0.5s ease-out forwards;
+}
+
+.notification-cascade-up {
+  animation: notification-cascade-up 0.5s ease-in forwards;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

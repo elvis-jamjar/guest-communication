@@ -82,3 +82,29 @@ export interface DataType {
   allPartnersBanner: LargeBanner;
   name?: string;
 }
+
+export interface NotificationLink {
+  label: string;
+  url: string;
+}
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  links?: NotificationLink[];
+  timestamp: string;
+  expiresAt?: string; // ISO string for expiration time
+  priority?: "low" | "medium" | "high";
+  isPreview?: boolean;
+  status?: "draft" | "active" | "expired" | "archived" | "scheduled";
+  targetAudience?: "all" | "preview" | "public";
+  createdBy?: string;
+  impressions?: number;
+  uniqueRecipients?: number;
+  recipientIPs?: string[];
+  publishedAt?: string;
+  archivedAt?: string;
+  scheduledFor?: string; // ISO string for scheduled publish time
+  isScheduled?: boolean;
+}

@@ -4,7 +4,7 @@ import { ConferenceScheduleForms } from "@/components/conference-schedule-form";
 import { useEffect, useMemo, useState } from "react";
 import { ConferenceScheduleProps, LargeBanner, PageContent } from "../../types";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Eye, Grid2X2, Rows3, Save, Send } from "lucide-react";
+import { ArrowUpRight, Eye, Grid2X2, Rows3, Save, Send, Bell } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { updateAllData, getData, publishData } from "../../actions/timeline";
 import { ScheduleList } from "@/components/schedule-list";
@@ -17,8 +17,9 @@ import { hasChanges } from "@/lib/utils";
 import { AllPartnerAndSponsors } from "@/components/AllPartnerAndSponsors";
 import Confirmation from "@/components/Confirmation";
 import { DataHistory } from "@/components/DataHistory";
+import Link from "next/link";
 
-export default function Home() {
+export default function Home({ params }: { params: { userId: string } }) {
     const { data, refetch } = useQuery({
         queryKey: ['admin-data'],
         queryFn: async () => await getData(),
@@ -164,6 +165,15 @@ export default function Home() {
                         </div>
                         <div className="flex gap-2">
                             <DataHistory onRestored={() => refetch()} />
+                            <Link href={`/admin/${params.userId}/notifications`}>
+                                <Button
+                                    size={"sm"}
+                                    variant={"outline"}
+                                    className="border-primary-purple text-primary-purple hover:bg-primary-purple hover:text-white">
+                                    <Bell className="w-4 h-4 mr-2" />
+                                    Notifications
+                                </Button>
+                            </Link>
                             <Button
                                 onClick={handleUpdateAllData}
                                 size={"sm"}

@@ -58,6 +58,7 @@
     "react-cropper": "^2.3.3",
     "react-dom": "^18",
     "react-easy-sort": "^1.6.0",
+    "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.4",
     "sonner": "^2.0.5",

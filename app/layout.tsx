@@ -5,6 +5,7 @@ import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
 import { PopOverChat } from "@/components/chat-bot";
 import { Toaster } from "@/components/ui/sonner"
+import NotificationUI from "@/components/Notification";
 
 export const metadata: Metadata = {
   title: "ACGC guest communication",
@@ -24,6 +25,7 @@ export default function RootLayout({
           {children}
           <PopOverChat />
           <Toaster position="top-center" richColors />
+          <NotificationUI />
         </Providers>
       </body>
     </html>

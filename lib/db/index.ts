@@ -1,5 +1,10 @@
 import { Redis } from "ioredis";
+
+// Create separate Redis connections for different purposes
 export const redis = new Redis(process.env.NEXT_REDIS_URL as string);
+export const redisClient = redis; // Alias for general Redis operations
+export const redisPublisher = new Redis(process.env.NEXT_REDIS_URL as string);
+export const redisSubscriber = new Redis(process.env.NEXT_REDIS_URL as string);
 
 const isLocal = process.env.isLocal === "true";
 

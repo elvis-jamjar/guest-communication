@@ -1,0 +1,380 @@
+"use client";
+
+import { useNotifications } from "@/hooks/useNotification";
+import { cn } from "@/lib/utils";
+import { ArrowUpRightIcon, ChevronLeftCircle, XIcon } from "lucide-react";
+import { MdClearAll } from "react-icons/md";
+import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+
+export default function NotificationUI() {
+    const {
+        notifications,
+        isExpanded,
+        expandNotifications,
+        collapseNotifications,
+        clear,
+        clearAll
+    } = useNotifications();
+
+    const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set());
+    const [isHovering, setIsHovering] = useState(false);
+    const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
+
+    // Check if message should be truncated
+    const shouldTruncateMessage = (message: string) => {
+        return message.length > 100; // Truncate if longer than 100 characters
+    };
+
+    const hasMoreNotifications = notifications.length > 1;
+
+    // Handle mouse enter with delay
+    const handleMouseEnter = () => {
+        if (hasMoreNotifications) {
+            setIsHovering(true);
+            // Clear any pending collapse timeout
+            if (collapseTimeout) {
+                clearTimeout(collapseTimeout);
+                setCollapseTimeout(null);
+            }
+            expandNotifications();
+        }
+    };
+
+    // Handle mouse leave with delay
+    const handleMouseLeave = () => {
+        if (hasMoreNotifications) {
+            setIsHovering(false);
+            // Set a delay before collapsing
+            const timeout = setTimeout(() => {
+                if (!isHovering) {
+                    collapseNotifications();
+                }
+            }, 1000); // 1 second delay
+            setCollapseTimeout(timeout);
+        }
+    };
+
+    // Handle click outside to collapse
+    const handleClickOutside = (event: MouseEvent) => {
+        const target = event.target as Element;
+        const notificationContainer = document.querySelector('[data-notification-container]');
+
+        if (notificationContainer && !notificationContainer.contains(target)) {
+            if (hasMoreNotifications && isExpanded) {
+                collapseNotifications();
+            }
+        }
+    };
+
+    // Add click outside listener
+    React.useEffect(() => {
+        if (isExpanded) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [isExpanded, hasMoreNotifications]);
+
+    // Cleanup timeout on unmount
+    React.useEffect(() => {
+        return () => {
+            if (collapseTimeout) {
+                clearTimeout(collapseTimeout);
+            }
+        };
+    }, [collapseTimeout]);
+
+    if (!notifications || notifications.length === 0) return null;
+
+
+    // Toggle message expansion
+    const toggleMessageExpansion = (notificationId: string) => {
+        setExpandedMessages(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(notificationId)) {
+                newSet.delete(notificationId);
+            } else {
+                newSet.add(notificationId);
+            }
+            return newSet;
+        });
+    };
+
+
+    // Animation variants
+    const notificationVariants = {
+        hidden: {
+            opacity: 0,
+            y: 50,
+            scale: 0.8,
+            height: 0,
+            marginBottom: 0,
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            height: "auto",
+            marginBottom: 4,
+        },
+        collapsed: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            height: "auto",
+            marginBottom: 0,
+        },
+        stacked: {
+            opacity: 0.7,
+            y: 0,
+            scale: 0.92,
+            height: "auto",
+            marginBottom: 0,
+        },
+        exit: {
+            opacity: 0,
+            x: 300,
+            scale: 0.8,
+            height: 0,
+            marginBottom: 0,
+            transition: {
+                duration: 0.4,
+                ease: "easeInOut"
+            }
+        },
+    };
+
+    const containerVariants = {
+        hidden: {
+            opacity: 0,
+            height: 0,
+        },
+        visible: {
+            opacity: 1,
+            height: "auto",
+            transition: {
+                duration: 0.3,
+                ease: "easeOut",
+                staggerChildren: 0.05
+            }
+        },
+        exit: {
+            opacity: 0,
+            height: 0,
+            transition: {
+                duration: 0.3,
+                ease: "easeInOut"
+            }
+        }
+    };
+
+    // Show only the first notification when collapsed, all when expanded
+    // const displayNotifications = isExpanded ? notifications : notifications.slice(0, 1);
+
+    return (
+        <div
+            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-sm md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl")}
+            data-notification-container
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            {/* Clear all button - only show when expanded */}
+            <div
+                className={cn(
+                    "transition-all flex justify-between items-center duration-500 ease-out transform",
+                    isExpanded && notifications.length > 1
+                        ? "opacity-100 translate-x-0 scale-100"
+                        : "opacity-0 translate-x-8 scale-95 pointer-events-none"
+                )}
+                style={{
+                    transitionDelay: isExpanded
+                        ? `${notifications.length * 150}ms`
+                        : '0ms'
+                }}
+            >
+                <h2 className="md:text-primary-purple text-white text-lg font-bold mb-2">Notifications</h2>
+                <div className="flex justify-center gap-4 items-center">
+                    <button
+                        onClick={clearAll}
+                        className="bg-primary-purple flex items-center gap-1 hover:bg-primary-purple/80 text-white px-3 py-2 rounded-lg text-xs transition-colors duration-200"
+                    >
+                        <MdClearAll className="size-4" />
+                        Clear All
+                    </button>
+                    {/* minimize button */}
+                    <button
+                        onClick={collapseNotifications}
+                        className="bg-primary-purple rounded-full flex items-center gap-1 hover:bg-primary-purple/80 text-white p-2 text-xs transition-colors duration-200"
+                    >
+                        <ChevronLeftCircle className="size-4 -rotate-90" />
+                    </button>
+                </div>
+            </div>
+            <div className={cn(
+                "w-full h-fit transition-all duration-500 ease-in-out",
+                isExpanded
+                    ? "max-h-[72dvh] overflow-y-auto no-scrollbar"
+                    : "h-auto"
+            )}>
+                <div className={cn("h-full", !isExpanded && notifications.length > 1 ? "h-40" : "h-auto")}>
+                    <AnimatePresence mode="popLayout">
+                        <motion.div
+                            className={cn(
+                                "relative w-full h-full",
+                                isExpanded
+                                    ? "flex flex-col-reverse space-y-reverse"
+                                    : ""
+                            )}
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                        >
+                            {notifications.map((notification, index) => {
+                                // With flex-col-reverse, first notification (index 0) appears at bottom
+                                const isFirstNotification = index === 0;
+                                const isSecondNotification = index === 1;
+                                const isThirdNotification = index === 2;
+
+                                return (
+                                    <motion.div
+                                        key={notification.id}
+                                        layout
+                                        // if its first add:
+                                        {...(isFirstNotification && {
+                                            onMouseEnter: hasMoreNotifications ? expandNotifications : undefined,
+                                            onTouchStart: hasMoreNotifications ? expandNotifications : undefined
+                                        })}
+                                        className={cn(
+                                            "relative w-full",
+                                            !isExpanded && "absolute top-0 left-0 right-0",
+                                            isExpanded
+                                                ? "opacity-100"
+                                                : isFirstNotification
+                                                    ? "opacity-100 z-30"
+                                                    : isSecondNotification
+                                                        ? "opacity-80 z-20"
+                                                        : isThirdNotification
+                                                            ? "opacity-60 z-10"
+                                                            : "opacity-0 pointer-events-none z-0"
+                                        )}
+                                        variants={notificationVariants}
+                                        initial="hidden"
+                                        animate={
+                                            isExpanded
+                                                ? "visible"
+                                                : isFirstNotification
+                                                    ? "collapsed"
+                                                    : isSecondNotification || isThirdNotification
+                                                        ? "stacked"
+                                                        : "hidden"
+                                        }
+                                        exit="exit"
+                                        transition={{
+                                            duration: 0.5,
+                                            delay: isExpanded
+                                                ? index * 0.1
+                                                : isFirstNotification
+                                                    ? 0
+                                                    : (notifications.length - index) * 0.1
+                                        }}
+                                        style={{
+                                            // Stack cards with slight offset when collapsed
+                                            transform: !isExpanded && !isFirstNotification
+                                                ? `translateY(${-(index + 1) * 16}px) scale(${1 - index * 0.05})`
+                                                : undefined
+                                        }}
+                                    >
+                                        {/* Gradient border animation container */}
+                                        <div className={cn(
+                                            "relative p-0.5 group",
+                                            !isExpanded && !isFirstNotification && "shadow-lg border border-gray-700/30"
+                                        )}>
+                                            {/* Rotating gradient border */}
+                                            {/* <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary-main via-primary-purple to-primary-main smooth-rotate"></div> */}
+                                            {/* Pulsing gradient overlay */}
+                                            {/* <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary-purple via-primary-main to-primary-purple animate-pulse opacity-60"></div> */}
+                                            {/* Static content container */}
+                                            <div className={cn(
+                                                "relative text-white rounded-xl shadow-lg p-4",
+                                                !isExpanded && !isFirstNotification
+                                                    ? "bg-gray-700"
+                                                    : "bg-black"
+                                            )}>
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <h3 className="font-bold line-clamp-1 text-base">{notification.title}</h3>
+                                                        {/* {!isExpanded && hasMoreNotifications && isFirstNotification && (
+                                                            <span className="bg-primary-main text-white text-xs px-2 py-1 rounded-full transition-all duration-300 ease-in-out">
+                                                                +{notifications.length - 1}
+                                                            </span>
+                                                        )} */}
+                                                    </div>
+                                                    <button
+                                                        onClick={() => clear(notification.id)}
+                                                        className="text-gray-400 hover:text-white text-xs ml-2"
+                                                    >
+                                                        <XIcon className="size-4" />
+                                                    </button>
+                                                </div>
+                                                <div className="mb-3">
+                                                    <p className="text-sm text-white">
+                                                        {!isExpanded && shouldTruncateMessage(notification.message) && !expandedMessages.has(notification.id)
+                                                            ? `${notification.message.substring(0, 40)}...`
+                                                            : notification.message
+                                                        }
+                                                    </p>
+                                                    {/* {!isExpanded && shouldTruncateMessage(notification.message) && (
+                                                        <button
+                                                            onClick={() => toggleMessageExpansion(notification.id)}
+                                                            className="text-primary-main text-xs mt-1 hover:text-primary-main/80 transition-colors"
+                                                        >
+                                                            {expandedMessages.has(notification.id) ? 'Read less' : 'Read more'}
+                                                        </button>
+                                                    )} */}
+                                                </div>
+
+                                                {/* Render notification links as buttons */}
+                                                {notification.links && notification.links.length > 0 && (
+                                                    <div className="flex flex-wrap gap-2 mb-3">
+                                                        {notification.links.map((link, linkIndex) => (
+                                                            <a
+                                                                key={linkIndex}
+                                                                href={link.url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="bg-primary-main flex-1 flex items-center justify-center gap-2 text-white group px-3 py-2 rounded-lg text-xs transition-colors hover:bg-primary-main/80"
+                                                            >
+                                                                {link.label}
+                                                                <ArrowUpRightIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+                                                            </a>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Notification metadata */}
+                                                <div className="flex justify-between items-center text-xs text-gray-400">
+                                                    <span>{new Date(notification.timestamp).toLocaleTimeString()}</span>
+                                                    {notification.priority && (
+                                                        <span className={`px-2 py-1 capitalize rounded text-xs ${notification.priority === 'high' ? 'bg-red-500/20 text-red-400' :
+                                                            notification.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                                'bg-blue-500/20 text-blue-400'
+                                                            }`}>
+                                                            {notification.priority} Priority
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+            </div>
+        </div>
+    );
+}
