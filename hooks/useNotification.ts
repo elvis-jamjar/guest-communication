@@ -17,55 +17,79 @@ export function useNotifications() {
 
   // Load dismissed notification IDs, read message IDs, and notifications from localStorage
   useEffect(() => {
-    try {
-      const storedIds = localStorage.getItem("dismissedNotifications");
-      if (storedIds) {
-        const dismissedArray = JSON.parse(storedIds);
-        setDismissedIds(new Set(dismissedArray));
-      }
-
-      const storedReadIds = localStorage.getItem("readMessageIds");
-      if (storedReadIds) {
-        const readIdsArray = JSON.parse(storedReadIds);
-        setReadMessageIds(new Set(readIdsArray));
-      }
-
-      // Load persisted notifications
-      const storedNotifications = localStorage.getItem(
-        "persistedNotifications"
-      );
-      if (storedNotifications) {
-        const notificationsArray = JSON.parse(storedNotifications);
-
-        // Filter out test notifications and welcome messages if not on preview path
-        let filteredNotifications = notificationsArray;
-        if (
-          typeof window !== "undefined" &&
-          window.location.pathname !== "/preview"
-        ) {
-          filteredNotifications = notificationsArray.filter(
-            (notification: Notification) => {
-              const title = notification.title?.toLowerCase() || "";
-              // const message = notification.message?.toLowerCase() || "";
-
-              return (
-                title !== "test" && !title.includes("welcome!")
-                // !message.includes("welcome")
-              );
-            }
-          );
+    const loadNotifications = async () => {
+      try {
+        const storedIds = localStorage.getItem("dismissedNotifications");
+        if (storedIds) {
+          const dismissedArray = JSON.parse(storedIds);
+          setDismissedIds(new Set(dismissedArray));
         }
 
-        setNotifications(filteredNotifications);
-      }
+        const storedReadIds = localStorage.getItem("readMessageIds");
+        if (storedReadIds) {
+          const readIdsArray = JSON.parse(storedReadIds);
+          setReadMessageIds(new Set(readIdsArray));
+        }
 
-      // Mark data as loaded
-      setIsDataLoaded(true);
-    } catch (error) {
-      console.error("Error loading notification data:", error);
-      // Still mark as loaded even if there's an error
-      setIsDataLoaded(true);
-    }
+        // Load persisted notifications
+        const storedNotifications = localStorage.getItem(
+          "persistedNotifications"
+        );
+        if (storedNotifications) {
+          const notificationsArray = JSON.parse(storedNotifications);
+
+          // Filter out test notifications and welcome messages if not on preview path
+          let filteredNotifications = notificationsArray;
+          if (
+            typeof window !== "undefined" &&
+            window.location.pathname !== "/preview"
+          ) {
+            filteredNotifications = notificationsArray.filter(
+              (notification: Notification) => {
+                const title = notification.title?.toLowerCase() || "";
+                // const message = notification.message?.toLowerCase() || "";
+                return (
+                  title !== "test" && !title.includes("welcome!")
+                  // !message.includes("welcome")
+                );
+              }
+            );
+          }
+
+          // Validate notifications against server - only show notifications that exist on server
+          try {
+            const response = await fetch("/api/notifications/recent");
+            if (response.ok) {
+              const serverData = await response.json();
+              const serverNotificationIds = new Set(
+                serverData.notifications?.map((n: Notification) => n.id) || []
+              );
+
+              // Filter to only include notifications that exist on server
+              filteredNotifications = filteredNotifications.filter(
+                (notification: Notification) =>
+                  serverNotificationIds.has(notification.id)
+              );
+            }
+          } catch (error) {
+            console.error("Error validating notifications with server:", error);
+            // If server validation fails, don't show any notifications from localStorage
+            filteredNotifications = [];
+          }
+
+          setNotifications(filteredNotifications);
+        }
+
+        // Mark data as loaded
+        setIsDataLoaded(true);
+      } catch (error) {
+        console.error("Error loading notification data:", error);
+        // Still mark as loaded even if there's an error
+        setIsDataLoaded(true);
+      }
+    };
+
+    loadNotifications();
   }, []);
 
   // Save dismissed notification IDs to localStorage
@@ -513,6 +537,40 @@ export function useNotifications() {
 
     // Fetch recent notifications on first load
     fetchRecentNotifications();
+
+    // Set up periodic server validation to ensure notifications still exist on server
+    const validationInterval = setInterval(async () => {
+      try {
+        const response = await fetch("/api/notifications/recent");
+        if (response.ok) {
+          const serverData = await response.json();
+          const serverNotificationIds = new Set(
+            serverData.notifications?.map((n: Notification) => n.id) || []
+          );
+
+          // Remove notifications that no longer exist on server
+          setNotifications((prevNotifications) => {
+            const validNotifications = prevNotifications.filter(
+              (notification) => serverNotificationIds.has(notification.id)
+            );
+
+            // Only update if there are changes
+            if (validNotifications.length !== prevNotifications.length) {
+              saveNotifications(validNotifications);
+              return validNotifications;
+            }
+
+            return prevNotifications;
+          });
+        }
+      } catch (error) {
+        console.error("Error validating notifications with server:", error);
+      }
+    }, 30000); // Check every 30 seconds
+
+    return () => {
+      clearInterval(validationInterval);
+    };
   }, [
     isDataLoaded,
     getValidNotifications,
