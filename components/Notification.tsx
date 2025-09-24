@@ -2,7 +2,7 @@
 
 import { useNotifications } from "@/hooks/useNotification";
 import { cn } from "@/lib/utils";
-import { ArrowUpRightIcon, ChevronLeftCircle, XIcon, Trash2 } from "lucide-react";
+import { ArrowUpRightIcon, ChevronLeftCircle, XIcon } from "lucide-react";
 import { MdClearAll } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";

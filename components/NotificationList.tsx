@@ -28,7 +28,6 @@ import {
     Users,
     BarChart3,
     Clock,
-    Play,
     AlertTriangle
 } from "lucide-react";
 import {
@@ -514,7 +513,7 @@ export default function NotificationList({
                             Delete Notification
                         </DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete "{selectedNotification?.title}"? This action cannot be undone.
+                            {`Are you sure you want to delete "${selectedNotification?.title}"? This action cannot be undone.`}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -545,7 +544,7 @@ export default function NotificationList({
                             Publish Notification
                         </DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to publish "{selectedNotification?.title}"? This will send the notification to {selectedNotification?.targetAudience || "all"} users.
+                            {`Are you sure you want to publish "${selectedNotification?.title}"? This will send the notification to ${selectedNotification?.targetAudience || "all"} users.`}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
