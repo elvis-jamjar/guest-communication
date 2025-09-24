@@ -7,16 +7,11 @@ export function useNotifications() {
   const pathname = usePathname();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
-  const [voiceGender, setVoiceGender] = useState<"male" | "female" | "auto">(
-    "auto"
-  );
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
   const [readMessageIds, setReadMessageIds] = useState<Set<string>>(new Set());
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Load dismissed notification IDs, read message IDs, and notifications from localStorage
   useEffect(() => {
@@ -448,92 +443,6 @@ export function useNotifications() {
     }
   }, [soundEnabled]);
 
-  // Speak notification text
-  const speakNotification = useCallback(
-    (text: string) => {
-      if (ttsEnabled && "speechSynthesis" in window) {
-        // Cancel any ongoing speech
-        if (speechSynthesisRef.current) {
-          speechSynthesis.cancel();
-        }
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 0.8;
-
-        // Get available voices
-        const voices = speechSynthesis.getVoices();
-
-        let selectedVoice = null;
-
-        if (voiceGender === "male") {
-          // Look for male voices
-          selectedVoice = voices.find(
-            (voice) =>
-              voice.lang.startsWith("en") &&
-              (voice.name.toLowerCase().includes("male") ||
-                voice.name.toLowerCase().includes("man") ||
-                voice.name.toLowerCase().includes("david") ||
-                voice.name.toLowerCase().includes("daniel") ||
-                voice.name.toLowerCase().includes("alex") ||
-                voice.name.toLowerCase().includes("google male") ||
-                voice.name.toLowerCase().includes("microsoft male"))
-          );
-        } else if (voiceGender === "female") {
-          // Look for female voices first
-          selectedVoice = voices.find(
-            (voice) =>
-              voice.lang.startsWith("en") &&
-              (voice.name.toLowerCase().includes("female") ||
-                voice.name.toLowerCase().includes("woman") ||
-                voice.name.toLowerCase().includes("samantha") ||
-                voice.name.toLowerCase().includes("susan") ||
-                voice.name.toLowerCase().includes("karen") ||
-                voice.name.toLowerCase().includes("google female") ||
-                voice.name.toLowerCase().includes("microsoft female") ||
-                voice.name.toLowerCase().includes("zira"))
-          );
-
-          // If no female voice found, fall back to auto mode
-          if (!selectedVoice) {
-            selectedVoice = voices.find(
-              (voice) =>
-                voice.lang.startsWith("en") &&
-                (voice.name.includes("Google") ||
-                  voice.name.includes("Microsoft") ||
-                  voice.name.includes("Alex") ||
-                  voice.name.includes("Samantha"))
-            );
-          }
-        } else {
-          // Auto mode - try to find the best available voice
-          selectedVoice = voices.find(
-            (voice) =>
-              voice.lang.startsWith("en") &&
-              (voice.name.includes("Google") ||
-                voice.name.includes("Microsoft") ||
-                voice.name.includes("Alex") ||
-                voice.name.includes("Samantha"))
-          );
-        }
-
-        // Final fallback to any English voice if specific gender not found
-        if (!selectedVoice) {
-          selectedVoice = voices.find((voice) => voice.lang.startsWith("en"));
-        }
-
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        }
-
-        speechSynthesisRef.current = utterance;
-        speechSynthesis.speak(utterance);
-      }
-    },
-    [ttsEnabled, voiceGender]
-  );
-
   // Fetch recent notifications when user first connects and data is loaded
   useEffect(() => {
     if (!isDataLoaded) return; // Wait for localStorage data to be loaded
@@ -561,11 +470,9 @@ export function useNotifications() {
               setNotifications(validNotifications);
               saveNotifications(validNotifications);
 
-              // Play sound and speak notification for the most recent notification
+              // Play sound for the most recent notification
               if (validNotifications.length > 0) {
-                const latestNotification = validNotifications[0];
                 playNotificationSound();
-                speakNotification(latestNotification.title);
               }
             }
           }
@@ -616,7 +523,6 @@ export function useNotifications() {
     getValidNotifications,
     notifications,
     playNotificationSound,
-    speakNotification,
   ]); // Include all dependencies
 
   useEffect(() => {
@@ -641,9 +547,8 @@ export function useNotifications() {
 
         addNotification(notificationWithId);
 
-        // Play sound and speak notification
+        // Play sound
         playNotificationSound();
-        speakNotification(data.title);
       } catch (error) {
         console.error("Error parsing notification data:", error);
       }
@@ -656,18 +561,8 @@ export function useNotifications() {
     return () => {
       console.log("Closing SSE connection");
       ev.close();
-      // Cancel any ongoing speech when component unmounts
-      if (speechSynthesisRef.current) {
-        speechSynthesis.cancel();
-      }
     };
-  }, [
-    soundEnabled,
-    ttsEnabled,
-    addNotification,
-    playNotificationSound,
-    speakNotification,
-  ]);
+  }, [soundEnabled, addNotification, playNotificationSound]);
 
   return {
     notifications,
@@ -708,9 +603,5 @@ export function useNotifications() {
     },
     soundEnabled,
     setSoundEnabled,
-    ttsEnabled,
-    setTtsEnabled,
-    voiceGender,
-    setVoiceGender,
   };
 }
