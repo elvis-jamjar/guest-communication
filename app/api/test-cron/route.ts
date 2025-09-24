@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // Test endpoint to manually trigger the cron job
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     console.log("Manual cron test triggered at:", new Date().toISOString());
 

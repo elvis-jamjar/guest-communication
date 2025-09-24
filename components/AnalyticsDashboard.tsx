@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +51,7 @@ export default function AnalyticsDashboard({ notificationId, onRefresh }: Analyt
     const [timeRange, setTimeRange] = useState("7d");
     const [error, setError] = useState<string | null>(null);
 
-    const fetchAnalytics = async () => {
+    const fetchAnalytics = useCallback(async () => {
         setIsLoading(true);
         setError(null);
 
@@ -75,11 +75,11 @@ export default function AnalyticsDashboard({ notificationId, onRefresh }: Analyt
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [timeRange, notificationId]);
 
     useEffect(() => {
         fetchAnalytics();
-    }, [timeRange, notificationId]);
+    }, [timeRange, notificationId, fetchAnalytics]);
 
     const formatNumber = (num: number) => {
         if (num >= 1000000) {

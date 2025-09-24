@@ -387,7 +387,7 @@ import Cropper, { ReactCropperElement } from 'react-cropper';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-import { Upload, X, RotateCcw, Check, ZoomIn, ZoomOut, ImageIcon } from 'lucide-react';
+import { Upload, RotateCcw, ZoomIn, ZoomOut, ImageIcon } from 'lucide-react';
 import { uploadFile } from '@/app/actions/timeline';
 import { toast } from 'sonner';
 
@@ -435,8 +435,8 @@ export function ImageUploadWithCropper({
     const cropperRef = useRef<ReactCropperElement>(null);
     const [completedCrop, setCompletedCrop] = useState<{ width: number; height: number }>();
     const [isUploading, setIsUploading] = useState(false);
-    const [_, setIsCropping] = useState(false);
-    const [zoom, setZoom] = useState(1);
+    const [_isCropping, setIsCropping] = useState(false);
+    const [_zoom, setZoom] = useState(1);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [cropMode, setCropMode] = useState<'face' | 'square' | 'rect' | 'free'>(() => {
@@ -469,7 +469,7 @@ export function ImageUploadWithCropper({
         setIsDialogOpen(true);
     }, [acceptedFileTypes, maxFileSize]);
 
-    const onImageLoad = useCallback((_e: React.SyntheticEvent<HTMLImageElement>) => {
+    const _onImageLoad = useCallback((_e: React.SyntheticEvent<HTMLImageElement>) => {
         // Cropper will handle initialization; nothing needed here
     }, []);
 
@@ -493,7 +493,7 @@ export function ImageUploadWithCropper({
             if (!cropper) throw new Error('Cropper not ready');
             // Use cropper to get a canvas
             let canvas = cropper.getCroppedCanvas({
-                imageSmoothingQuality: 'high' as any,
+                imageSmoothingQuality: 'high' as ImageSmoothingQuality,
                 maxWidth: 2048,
                 maxHeight: 2048
             });
@@ -589,11 +589,11 @@ export function ImageUploadWithCropper({
     }, []);
 
     // Aspect ratio for Cropper
-    const getCropAspectRatio = () => {
+    const getCropAspectRatio = useCallback(() => {
         if (cropMode === 'face' || cropMode === 'square') return 1;
         if (cropMode === 'rect') return 16 / 9;
         return NaN; // Free mode - no aspect ratio constraint
-    };
+    }, [cropMode]);
 
     // Re-center crop when switching modes
     React.useEffect(() => {
@@ -606,7 +606,7 @@ export function ImageUploadWithCropper({
             cropper.reset();
             cropper.crop();
         }, 100);
-    }, [cropMode]);
+    }, [cropMode, getCropAspectRatio]);
 
     return (
         <Card className={`w-full p-2 border-none shadow-none max-w-2xl mx-auto ${className}`}>

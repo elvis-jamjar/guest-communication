@@ -2,7 +2,7 @@
 
 import { useNotifications } from "@/hooks/useNotification";
 import { cn } from "@/lib/utils";
-import { ArrowUpRightIcon, ChevronLeftCircle, XIcon } from "lucide-react";
+import { ArrowUpRightIcon, ChevronLeftCircle, XIcon, Trash2 } from "lucide-react";
 import { MdClearAll } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
@@ -13,11 +13,11 @@ export default function NotificationUI() {
         isExpanded,
         expandNotifications,
         collapseNotifications,
-        clear,
+        dismiss,
+        delete: deleteNotification,
         clearAll
     } = useNotifications();
 
-    const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set());
     const [isHovering, setIsHovering] = useState(false);
     const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
 
@@ -55,27 +55,26 @@ export default function NotificationUI() {
         }
     };
 
-    // Handle click outside to collapse
-    const handleClickOutside = (event: MouseEvent) => {
-        const target = event.target as Element;
-        const notificationContainer = document.querySelector('[data-notification-container]');
-
-        if (notificationContainer && !notificationContainer.contains(target)) {
-            if (hasMoreNotifications && isExpanded) {
-                collapseNotifications();
-            }
-        }
-    };
-
     // Add click outside listener
     React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Element;
+            const notificationContainer = document.querySelector('[data-notification-container]');
+
+            if (notificationContainer && !notificationContainer.contains(target)) {
+                if (hasMoreNotifications && isExpanded) {
+                    collapseNotifications();
+                }
+            }
+        };
+
         if (isExpanded) {
             document.addEventListener('mousedown', handleClickOutside);
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside);
             };
         }
-    }, [isExpanded, hasMoreNotifications]);
+    }, [isExpanded, hasMoreNotifications, collapseNotifications]);
 
     // Cleanup timeout on unmount
     React.useEffect(() => {
@@ -89,18 +88,6 @@ export default function NotificationUI() {
     if (!notifications || notifications.length === 0) return null;
 
 
-    // Toggle message expansion
-    const toggleMessageExpansion = (notificationId: string) => {
-        setExpandedMessages(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(notificationId)) {
-                newSet.delete(notificationId);
-            } else {
-                newSet.add(notificationId);
-            }
-            return newSet;
-        });
-    };
 
 
     // Animation variants
@@ -175,7 +162,7 @@ export default function NotificationUI() {
 
     return (
         <div
-            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-sm md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl")}
+            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-sm md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl", notifications.length === 1 && "md:max-w-sm bg-transparent")}
             data-notification-container
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -194,7 +181,7 @@ export default function NotificationUI() {
                         : '0ms'
                 }}
             >
-                <h2 className="md:text-primary-purple text-white text-lg font-bold mb-2">Notifications</h2>
+                <h2 className="md:text-black text-white text-xl font-bold mb-2">Notifications</h2>
                 <div className="flex justify-center gap-4 items-center">
                     <button
                         onClick={clearAll}
@@ -218,7 +205,7 @@ export default function NotificationUI() {
                     ? "max-h-[72dvh] overflow-y-auto no-scrollbar"
                     : "h-auto"
             )}>
-                <div className={cn("h-full", !isExpanded && notifications.length > 1 ? "h-40" : "h-auto")}>
+                <div className={cn("h-full", !isExpanded && hasMoreNotifications ? "h-40" : "h-auto")}>
                     <AnimatePresence mode="popLayout">
                         <motion.div
                             className={cn(
@@ -249,7 +236,7 @@ export default function NotificationUI() {
                                         })}
                                         className={cn(
                                             "relative w-full",
-                                            !isExpanded && "absolute top-0 left-0 right-0",
+                                            !isExpanded && hasMoreNotifications && "absolute top-0 left-0 right-0",
                                             isExpanded
                                                 ? "opacity-100"
                                                 : isFirstNotification
@@ -282,7 +269,7 @@ export default function NotificationUI() {
                                         }}
                                         style={{
                                             // Stack cards with slight offset when collapsed
-                                            transform: !isExpanded && !isFirstNotification
+                                            transform: !isExpanded && hasMoreNotifications && !isFirstNotification
                                                 ? `translateY(${-(index + 1) * 16}px) scale(${1 - index * 0.05})`
                                                 : undefined
                                         }}
@@ -290,7 +277,8 @@ export default function NotificationUI() {
                                         {/* Gradient border animation container */}
                                         <div className={cn(
                                             "relative p-0.5 group",
-                                            !isExpanded && !isFirstNotification && "shadow-lg border border-gray-700/30"
+                                            !isExpanded && hasMoreNotifications && !isFirstNotification && "shadow-lg border border-gray-700/30",
+                                            "hover:scale-[1.02] transition-transform duration-200"
                                         )}>
                                             {/* Rotating gradient border */}
                                             {/* <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary-main via-primary-purple to-primary-main smooth-rotate"></div> */}
@@ -298,30 +286,42 @@ export default function NotificationUI() {
                                             {/* <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary-purple via-primary-main to-primary-purple animate-pulse opacity-60"></div> */}
                                             {/* Static content container */}
                                             <div className={cn(
-                                                "relative text-white rounded-xl shadow-lg p-4",
-                                                !isExpanded && !isFirstNotification
-                                                    ? "bg-gray-700"
-                                                    : "bg-black"
+                                                "relative text-white rounded-xl shadow-lg p-4 border-l-4",
+                                                !isExpanded && hasMoreNotifications && !isFirstNotification
+                                                    ? "bg-gray-700 border-l-primary-main/50"
+                                                    : "bg-black border-l-primary-main"
                                             )}>
                                                 <div className="flex justify-between items-start mb-2">
                                                     <div className="flex items-center gap-2">
                                                         <h3 className="font-bold line-clamp-1 text-base">{notification.title}</h3>
+                                                        {/* Unread indicator */}
+                                                        <div className="w-2 h-2 bg-primary-main rounded-full animate-pulse"></div>
                                                         {/* {!isExpanded && hasMoreNotifications && isFirstNotification && (
                                                             <span className="bg-primary-main text-white text-xs px-2 py-1 rounded-full transition-all duration-300 ease-in-out">
                                                                 +{notifications.length - 1}
                                                             </span>
                                                         )} */}
                                                     </div>
-                                                    <button
-                                                        onClick={() => clear(notification.id)}
-                                                        className="text-gray-400 hover:text-white text-xs ml-2"
-                                                    >
-                                                        <XIcon className="size-4" />
-                                                    </button>
+                                                    <div className="flex items-center gap-1">
+                                                        <button
+                                                            onClick={() => deleteNotification(notification.id)}
+                                                            className="text-red-400 hover:text-red-300 text-xs p-1 rounded hover:bg-red-500/20 transition-colors"
+                                                            title="Delete notification"
+                                                        >
+                                                            <Trash2 className="size-3" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => dismiss(notification.id)}
+                                                            className="text-gray-400 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
+                                                            title="Dismiss notification"
+                                                        >
+                                                            <XIcon className="size-3" />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <div className="mb-3">
                                                     <p className="text-sm text-white">
-                                                        {!isExpanded && shouldTruncateMessage(notification.message) && !expandedMessages.has(notification.id)
+                                                        {!isExpanded && shouldTruncateMessage(notification.message)
                                                             ? `${notification.message.substring(0, 40)}...`
                                                             : notification.message
                                                         }

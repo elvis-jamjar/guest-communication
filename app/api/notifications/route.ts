@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { redisSubscriber, redisClient } from "@/lib/db";
+import { redisSubscriber } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   const stream = new ReadableStream({
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
           if (!isControllerClosed) {
             controller.enqueue(data);
           }
-        } catch (error) {
+        } catch (_error) {
           console.log("Controller is closed, stopping enqueue operations");
           isControllerClosed = true;
         }
@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
         redisSubscriber.unsubscribe("notifications");
         try {
           controller.close();
-        } catch (error) {
+        } catch (_error) {
           // Controller might already be closed
         }
       });

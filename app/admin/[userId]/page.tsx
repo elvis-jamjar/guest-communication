@@ -105,7 +105,7 @@ export default function Home({ params }: { params: { userId: string } }) {
             allSponsorsBanner: allSponsorsBanner || { image: "" },
             allPartnersBanner: allPartnersBanner || { image: "" }
         })
-    }, [schedules, pageContent, columns, allSponsorsBanner, allPartnersBanner])
+    }, [schedules, pageContent, columns, allSponsorsBanner, allPartnersBanner, data])
 
 
     const handleUpdateAllData = async () => {

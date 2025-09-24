@@ -8,10 +8,8 @@ import {
     Plus,
     BarChart3,
     Bell,
-    Settings,
     RefreshCw,
     Eye,
-    Send,
     ArrowLeft
 } from "lucide-react";
 import { toast } from "sonner";
@@ -80,7 +78,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
     };
 
     // Update notification
-    const handleUpdateNotification = async (notificationData: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>) => {
+    const handleUpdateNotification = async (notificationData: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>, clearForm = true) => {
         if (!editingNotification) return;
 
         try {
@@ -100,10 +98,13 @@ export default function NotificationManagementPage({ params }: { params: { userI
                 setNotifications(prev =>
                     prev.map(n => n.id === editingNotification.id ? data.notification : n)
                 );
-                // Clear form and switch to list after successful update
-                setEditingNotification(null);
-                setActiveTab("list");
-                toast.success("Notification updated successfully");
+
+                // Only clear form and switch to list if explicitly requested (not when called from publish)
+                if (clearForm) {
+                    setEditingNotification(null);
+                    setActiveTab("list");
+                    toast.success("Notification updated successfully");
+                }
                 return data.notification; // Return the updated notification
             } else {
                 throw new Error("Failed to update notification");
@@ -142,7 +143,10 @@ export default function NotificationManagementPage({ params }: { params: { userI
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ notificationId, targetAudience }),
+                body: JSON.stringify({
+                    notificationId,
+                    targetAudience
+                }),
             });
 
             if (response.ok) {
@@ -154,9 +158,6 @@ export default function NotificationManagementPage({ params }: { params: { userI
                             : n
                     )
                 );
-                // Clear form and switch to list after successful publishing
-                setEditingNotification(null);
-                setActiveTab("list");
                 toast.success("Notification published successfully");
             } else {
                 const errorData = await response.json();
@@ -378,12 +379,11 @@ export default function NotificationManagementPage({ params }: { params: { userI
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200">
                                     <NotificationForm
                                         onSave={editingNotification ? handleUpdateNotification : handleCreateNotification}
-                                        onPublish={handlePublishNotification}
                                         initialData={editingNotification || undefined}
                                         isEditing={!!editingNotification}
                                         onCancel={handleCancelEdit}
                                         onSuccess={() => {
-                                            // This will be called after successful save or publish
+                                            // This will be called after successful save
                                             // The form will already be cleared and tab switched in the handlers above
                                         }}
                                     />

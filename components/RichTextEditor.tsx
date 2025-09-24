@@ -53,7 +53,6 @@ import {
     MoreHorizontal,
     Link as LinkIcon,
     Unlink,
-    Palette
 } from 'lucide-react';
 import { cn, isLink, normalizeUrl } from '@/lib/utils';
 import { useEffect, useState, useRef } from 'react';

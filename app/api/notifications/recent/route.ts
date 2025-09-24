@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { redisClient } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Fetch recent notifications from Redis
     const recentNotificationsData = await redisClient.lrange(
       "recent_notifications",
       0,
-      3
+      5
     ); // Get last 5
 
     let recentNotifications = [];
@@ -25,21 +25,8 @@ export async function GET(req: NextRequest) {
         })
         .filter((notification) => notification !== null);
     } else {
-      // Fallback: return a welcome notification if no recent notifications exist
-      recentNotifications = [
-        {
-          title: "Welcome!",
-          message:
-            "You've connected to the notification system. Check out our latest updates!",
-          links: [
-            {
-              label: "View Updates",
-              url: "/updates",
-            },
-          ],
-          timestamp: new Date().toISOString(),
-        },
-      ];
+      // No recent notifications exist - return empty array
+      recentNotifications = [];
     }
 
     return NextResponse.json({ notifications: recentNotifications });

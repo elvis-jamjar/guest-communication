@@ -1,4 +1,4 @@
-import { streamText, generateText, CoreMessage, tool, UIMessage } from "ai";
+import { streamText, generateText, tool, UIMessage } from "ai";
 import { google } from "@ai-sdk/google";
 import { NextResponse } from "next/server";
 import { getPublishedData } from "@/app/actions/timeline";
@@ -161,7 +161,7 @@ Generate a clear, focused prompt that will help find the exact information being
 
 const generateScheduleResponse = async (
   generatedPrompt: string,
-  schedules: any[]
+  schedules: unknown[]
 ): Promise<string> => {
   const response = await generateText({
     model: google(MODEL),

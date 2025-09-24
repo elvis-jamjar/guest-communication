@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Notification } from "@/app/types";
 
 export function useNotifications() {
@@ -15,7 +15,7 @@ export function useNotifications() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Load dismissed notification IDs and read message IDs from localStorage
+  // Load dismissed notification IDs, read message IDs, and notifications from localStorage
   useEffect(() => {
     try {
       const storedIds = localStorage.getItem("dismissedNotifications");
@@ -28,6 +28,15 @@ export function useNotifications() {
       if (storedReadIds) {
         const readIdsArray = JSON.parse(storedReadIds);
         setReadMessageIds(new Set(readIdsArray));
+      }
+
+      // Load persisted notifications
+      const storedNotifications = localStorage.getItem(
+        "persistedNotifications"
+      );
+      if (storedNotifications) {
+        const notificationsArray = JSON.parse(storedNotifications);
+        setNotifications(notificationsArray);
       }
 
       // Mark data as loaded
@@ -60,6 +69,18 @@ export function useNotifications() {
     }
   };
 
+  // Save notifications to localStorage
+  const saveNotifications = (notifications: Notification[]) => {
+    try {
+      localStorage.setItem(
+        "persistedNotifications",
+        JSON.stringify(notifications)
+      );
+    } catch (error) {
+      console.error("Error saving notifications:", error);
+    }
+  };
+
   // Helper function to check if notification is expired
   const isNotificationExpired = (notification: Notification): boolean => {
     if (!notification.expiresAt) return false;
@@ -67,14 +88,20 @@ export function useNotifications() {
   };
 
   // Helper function to check if notification is dismissed by ID
-  const isNotificationDismissed = (notification: Notification): boolean => {
-    return dismissedIds.has(notification.id);
-  };
+  const isNotificationDismissed = useCallback(
+    (notification: Notification): boolean => {
+      return dismissedIds.has(notification.id);
+    },
+    [dismissedIds]
+  );
 
   // Helper function to check if notification message ID has been read
-  const isNotificationRead = (notification: Notification): boolean => {
-    return readMessageIds.has(notification.id);
-  };
+  const isNotificationRead = useCallback(
+    (notification: Notification): boolean => {
+      return readMessageIds.has(notification.id);
+    },
+    [readMessageIds]
+  );
 
   // Helper function to create content key for deduplication
   const createContentKey = (title: string, message: string): string => {
@@ -109,76 +136,101 @@ export function useNotifications() {
   };
 
   // Helper function to filter valid notifications (not expired, not dismissed, not read, and not duplicate)
-  const getValidNotifications = (
-    notifications: Notification[]
-  ): Notification[] => {
-    // First filter out expired, dismissed, and read notifications
-    let filteredNotifications = notifications.filter(
-      (notification) =>
-        !isNotificationExpired(notification) &&
-        !isNotificationDismissed(notification) &&
-        !isNotificationRead(notification)
-    );
-
-    // Filter out preview notifications if not on preview path
-    if (!isPreviewPath()) {
-      filteredNotifications = filteredNotifications.filter(
-        (notification) => !notification.isPreview
+  const getValidNotifications = useCallback(
+    (notifications: Notification[]): Notification[] => {
+      // First filter out expired, dismissed, and read notifications
+      let filteredNotifications = notifications.filter(
+        (notification) =>
+          !isNotificationExpired(notification) &&
+          !isNotificationDismissed(notification) &&
+          !isNotificationRead(notification)
       );
-    }
 
-    // Then remove duplicates, keeping only the first occurrence of each unique content
-    const uniqueNotifications: Notification[] = [];
-    const seenContentKeys = new Set<string>();
-
-    for (const notification of filteredNotifications) {
-      const contentKey = createContentKey(
-        notification.title,
-        notification.message
-      );
-      if (!seenContentKeys.has(contentKey)) {
-        seenContentKeys.add(contentKey);
-        uniqueNotifications.push(notification);
-      }
-    }
-
-    return uniqueNotifications;
-  };
-
-  // Helper function to add notification
-  const addNotification = (notification: Notification) => {
-    setNotifications((prev) => {
-      // Check if this notification is a duplicate of any existing notification
-      const isDuplicate = prev.some((existingNotification) => {
-        const existingContentKey = createContentKey(
-          existingNotification.title,
-          existingNotification.message
+      // Filter out preview notifications if not on preview path
+      if (!isPreviewPath()) {
+        filteredNotifications = filteredNotifications.filter(
+          (notification) => !notification.isPreview
         );
-        const newContentKey = createContentKey(
+      }
+
+      // Then remove duplicates, keeping only the first occurrence of each unique content
+      const uniqueNotifications: Notification[] = [];
+      const seenContentKeys = new Set<string>();
+
+      for (const notification of filteredNotifications) {
+        const contentKey = createContentKey(
           notification.title,
           notification.message
         );
-        return existingContentKey === newContentKey;
+        if (!seenContentKeys.has(contentKey)) {
+          seenContentKeys.add(contentKey);
+          uniqueNotifications.push(notification);
+        }
+      }
+
+      return uniqueNotifications;
+    },
+    [isNotificationDismissed, isNotificationRead]
+  );
+
+  // Helper function to add notification
+  const addNotification = useCallback(
+    (notification: Notification) => {
+      setNotifications((prev) => {
+        // First check if notification with same ID already exists
+        const existingById = prev.find(
+          (existingNotification) => existingNotification.id === notification.id
+        );
+
+        if (existingById) {
+          console.log(
+            "Notification with ID already exists, skipping duplicate:",
+            notification.id
+          );
+          return prev;
+        }
+
+        // Check if this notification is a duplicate of any existing notification by content
+        const isDuplicate = prev.some((existingNotification) => {
+          const existingContentKey = createContentKey(
+            existingNotification.title,
+            existingNotification.message
+          );
+          const newContentKey = createContentKey(
+            notification.title,
+            notification.message
+          );
+          return existingContentKey === newContentKey;
+        });
+
+        // If it's a duplicate, don't add it
+        if (isDuplicate) {
+          console.log(
+            "Notification with same content already exists, skipping duplicate"
+          );
+          return prev;
+        }
+
+        // Filter out preview notifications if not on preview path
+        if (!isPreviewPath() && notification.isPreview) {
+          return prev;
+        }
+
+        // Otherwise, add the notification and filter valid ones
+        const newNotifications = [...prev, notification];
+        const validNotifications = getValidNotifications(newNotifications);
+
+        // Save to localStorage
+        saveNotifications(validNotifications);
+
+        return validNotifications;
       });
+    },
+    [getValidNotifications]
+  );
 
-      // If it's a duplicate, don't add it
-      if (isDuplicate) {
-        return prev;
-      }
-
-      // Filter out preview notifications if not on preview path
-      if (!isPreviewPath() && notification.isPreview) {
-        return prev;
-      }
-
-      // Otherwise, add the notification and filter valid ones
-      const newNotifications = [...prev, notification];
-      return getValidNotifications(newNotifications);
-    });
-  };
-
-  // Helper function to remove notification
-  const removeNotification = (notificationId: string) => {
+  // Helper function to dismiss notification (hide but keep unread)
+  const dismissNotification = (notificationId: string) => {
     // Add to dismissed set
     setDismissedIds((prev) => {
       const newSet = new Set(prev);
@@ -187,6 +239,16 @@ export function useNotifications() {
       return newSet;
     });
 
+    // Remove from current notifications
+    setNotifications((prev) => {
+      const newNotifications = prev.filter((n) => n.id !== notificationId);
+      saveNotifications(newNotifications);
+      return newNotifications;
+    });
+  };
+
+  // Helper function to delete/discard notification (mark as read and remove)
+  const deleteNotification = (notificationId: string) => {
     // Mark message ID as read
     setReadMessageIds((prev) => {
       const newSet = new Set(prev);
@@ -195,8 +257,20 @@ export function useNotifications() {
       return newSet;
     });
 
+    // Add to dismissed set as well
+    setDismissedIds((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(notificationId);
+      saveDismissedIds(newSet);
+      return newSet;
+    });
+
     // Remove from current notifications
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+    setNotifications((prev) => {
+      const newNotifications = prev.filter((n) => n.id !== notificationId);
+      saveNotifications(newNotifications);
+      return newNotifications;
+    });
   };
 
   // Helper function to expand notifications
@@ -223,7 +297,8 @@ export function useNotifications() {
       if (!audioContext) {
         try {
           audioContext = new (window.AudioContext ||
-            (window as any).webkitAudioContext)();
+            (window as unknown as { webkitAudioContext: typeof AudioContext })
+              .webkitAudioContext)();
           console.log("Audio context enabled for notifications");
         } catch (error) {
           console.log("Could not initialize audio context:", error);
@@ -244,12 +319,13 @@ export function useNotifications() {
   }, []);
 
   // Play notification sound
-  const playNotificationSound = () => {
+  const playNotificationSound = useCallback(() => {
     if (soundEnabled && audioRef.current) {
       try {
         // Create a new audio context for each notification
         const audioContext = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
@@ -281,56 +357,68 @@ export function useNotifications() {
         console.log("Could not play notification sound:", error);
       }
     }
-  };
+  }, [soundEnabled]);
 
   // Speak notification text
-  const speakNotification = (text: string) => {
-    if (ttsEnabled && "speechSynthesis" in window) {
-      // Cancel any ongoing speech
-      if (speechSynthesisRef.current) {
-        speechSynthesis.cancel();
-      }
+  const speakNotification = useCallback(
+    (text: string) => {
+      if (ttsEnabled && "speechSynthesis" in window) {
+        // Cancel any ongoing speech
+        if (speechSynthesisRef.current) {
+          speechSynthesis.cancel();
+        }
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.volume = 0.8;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 0.8;
 
-      // Get available voices
-      const voices = speechSynthesis.getVoices();
+        // Get available voices
+        const voices = speechSynthesis.getVoices();
 
-      let selectedVoice = null;
+        let selectedVoice = null;
 
-      if (voiceGender === "male") {
-        // Look for male voices
-        selectedVoice = voices.find(
-          (voice) =>
-            voice.lang.startsWith("en") &&
-            (voice.name.toLowerCase().includes("male") ||
-              voice.name.toLowerCase().includes("man") ||
-              voice.name.toLowerCase().includes("david") ||
-              voice.name.toLowerCase().includes("daniel") ||
-              voice.name.toLowerCase().includes("alex") ||
-              voice.name.toLowerCase().includes("google male") ||
-              voice.name.toLowerCase().includes("microsoft male"))
-        );
-      } else if (voiceGender === "female") {
-        // Look for female voices first
-        selectedVoice = voices.find(
-          (voice) =>
-            voice.lang.startsWith("en") &&
-            (voice.name.toLowerCase().includes("female") ||
-              voice.name.toLowerCase().includes("woman") ||
-              voice.name.toLowerCase().includes("samantha") ||
-              voice.name.toLowerCase().includes("susan") ||
-              voice.name.toLowerCase().includes("karen") ||
-              voice.name.toLowerCase().includes("google female") ||
-              voice.name.toLowerCase().includes("microsoft female") ||
-              voice.name.toLowerCase().includes("zira"))
-        );
+        if (voiceGender === "male") {
+          // Look for male voices
+          selectedVoice = voices.find(
+            (voice) =>
+              voice.lang.startsWith("en") &&
+              (voice.name.toLowerCase().includes("male") ||
+                voice.name.toLowerCase().includes("man") ||
+                voice.name.toLowerCase().includes("david") ||
+                voice.name.toLowerCase().includes("daniel") ||
+                voice.name.toLowerCase().includes("alex") ||
+                voice.name.toLowerCase().includes("google male") ||
+                voice.name.toLowerCase().includes("microsoft male"))
+          );
+        } else if (voiceGender === "female") {
+          // Look for female voices first
+          selectedVoice = voices.find(
+            (voice) =>
+              voice.lang.startsWith("en") &&
+              (voice.name.toLowerCase().includes("female") ||
+                voice.name.toLowerCase().includes("woman") ||
+                voice.name.toLowerCase().includes("samantha") ||
+                voice.name.toLowerCase().includes("susan") ||
+                voice.name.toLowerCase().includes("karen") ||
+                voice.name.toLowerCase().includes("google female") ||
+                voice.name.toLowerCase().includes("microsoft female") ||
+                voice.name.toLowerCase().includes("zira"))
+          );
 
-        // If no female voice found, fall back to auto mode
-        if (!selectedVoice) {
+          // If no female voice found, fall back to auto mode
+          if (!selectedVoice) {
+            selectedVoice = voices.find(
+              (voice) =>
+                voice.lang.startsWith("en") &&
+                (voice.name.includes("Google") ||
+                  voice.name.includes("Microsoft") ||
+                  voice.name.includes("Alex") ||
+                  voice.name.includes("Samantha"))
+            );
+          }
+        } else {
+          // Auto mode - try to find the best available voice
           selectedVoice = voices.find(
             (voice) =>
               voice.lang.startsWith("en") &&
@@ -340,31 +428,22 @@ export function useNotifications() {
                 voice.name.includes("Samantha"))
           );
         }
-      } else {
-        // Auto mode - try to find the best available voice
-        selectedVoice = voices.find(
-          (voice) =>
-            voice.lang.startsWith("en") &&
-            (voice.name.includes("Google") ||
-              voice.name.includes("Microsoft") ||
-              voice.name.includes("Alex") ||
-              voice.name.includes("Samantha"))
-        );
-      }
 
-      // Final fallback to any English voice if specific gender not found
-      if (!selectedVoice) {
-        selectedVoice = voices.find((voice) => voice.lang.startsWith("en"));
-      }
+        // Final fallback to any English voice if specific gender not found
+        if (!selectedVoice) {
+          selectedVoice = voices.find((voice) => voice.lang.startsWith("en"));
+        }
 
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      }
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
 
-      speechSynthesisRef.current = utterance;
-      speechSynthesis.speak(utterance);
-    }
-  };
+        speechSynthesisRef.current = utterance;
+        speechSynthesis.speak(utterance);
+      }
+    },
+    [ttsEnabled, voiceGender]
+  );
 
   // Fetch recent notifications when user first connects and data is loaded
   useEffect(() => {
@@ -376,17 +455,29 @@ export function useNotifications() {
         if (response.ok) {
           const data = await response.json();
           if (data.notifications && data.notifications.length > 0) {
-            // Filter out expired and dismissed notifications
-            const validNotifications = getValidNotifications(
-              data.notifications
-            );
-            setNotifications(validNotifications);
+            // Get current persisted notifications
+            const currentNotifications = notifications;
 
-            // Play sound and speak notification for the most recent notification
-            if (validNotifications.length > 0) {
-              const latestNotification = validNotifications[0];
-              playNotificationSound();
-              speakNotification(latestNotification.title);
+            // Merge with new notifications from server
+            const allNotifications = [
+              ...currentNotifications,
+              ...data.notifications,
+            ];
+
+            // Filter out expired and dismissed notifications
+            const validNotifications = getValidNotifications(allNotifications);
+
+            // Only update if there are new valid notifications
+            if (validNotifications.length !== currentNotifications.length) {
+              setNotifications(validNotifications);
+              saveNotifications(validNotifications);
+
+              // Play sound and speak notification for the most recent notification
+              if (validNotifications.length > 0) {
+                const latestNotification = validNotifications[0];
+                playNotificationSound();
+                speakNotification(latestNotification.title);
+              }
             }
           }
         }
@@ -397,7 +488,13 @@ export function useNotifications() {
 
     // Fetch recent notifications on first load
     fetchRecentNotifications();
-  }, [isDataLoaded]); // Only depend on isDataLoaded
+  }, [
+    isDataLoaded,
+    getValidNotifications,
+    notifications,
+    playNotificationSound,
+    speakNotification,
+  ]); // Include all dependencies
 
   useEffect(() => {
     const ev = new EventSource("/api/notifications");
@@ -441,14 +538,22 @@ export function useNotifications() {
         speechSynthesis.cancel();
       }
     };
-  }, [soundEnabled, ttsEnabled]);
+  }, [
+    soundEnabled,
+    ttsEnabled,
+    addNotification,
+    playNotificationSound,
+    speakNotification,
+  ]);
 
   return {
     notifications,
     isExpanded,
     expandNotifications,
     collapseNotifications,
-    clear: (notificationId: string) => removeNotification(notificationId),
+    dismiss: (notificationId: string) => dismissNotification(notificationId),
+    delete: (notificationId: string) => deleteNotification(notificationId),
+    clear: (notificationId: string) => deleteNotification(notificationId), // Keep for backward compatibility
     clearAll: () => {
       setNotifications([]);
       // Also clear all dismissed IDs and read message IDs
@@ -456,12 +561,27 @@ export function useNotifications() {
       setReadMessageIds(new Set());
       saveDismissedIds(new Set());
       saveReadMessageIds(new Set());
+      saveNotifications([]);
     },
     resetDismissed: () => {
       setDismissedIds(new Set());
       setReadMessageIds(new Set());
       saveDismissedIds(new Set());
       saveReadMessageIds(new Set());
+      // Also clear notifications from localStorage
+      localStorage.removeItem("persistedNotifications");
+    },
+    clearWelcomeNotifications: () => {
+      // Clear welcome notifications from localStorage
+      setNotifications((prev) => {
+        const filtered = prev.filter(
+          (notification) =>
+            !notification.title?.toLowerCase().includes("welcome") &&
+            !notification.message?.toLowerCase().includes("welcome")
+        );
+        saveNotifications(filtered);
+        return filtered;
+      });
     },
     soundEnabled,
     setSoundEnabled,

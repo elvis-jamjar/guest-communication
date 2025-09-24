@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { redisClient, redisPublisher } from "@/lib/db";
 import { Notification } from "@/app/types";
 
@@ -100,7 +100,7 @@ async function processScheduledNotifications() {
 }
 
 // GET - Get scheduled notifications that are ready to be published
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const result = await processScheduledNotifications();
     return NextResponse.json(result);
@@ -114,7 +114,7 @@ export async function GET(req: NextRequest) {
 }
 
 // POST - Process scheduled notifications (called by cron job)
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const result = await processScheduledNotifications();
     return NextResponse.json(result);

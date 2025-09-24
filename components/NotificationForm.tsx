@@ -8,13 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { ArrowUpRightIcon, Eye, Plus, Save, Send, Trash2, X, Clock, Calendar } from "lucide-react";
+import { ArrowUpRightIcon, Eye, Plus, Save, Trash2, X, Clock, Calendar } from "lucide-react";
 import { Notification, NotificationLink } from "@/app/types";
 import { toast } from "sonner";
 
 interface NotificationFormProps {
-    onSave: (notification: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>) => Promise<Notification>;
-    onPublish: (notificationId: string, targetAudience: string) => Promise<void>;
+    onSave: (notification: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>, clearForm?: boolean) => Promise<Notification>;
     initialData?: Partial<Notification>;
     isEditing?: boolean;
     onCancel?: () => void;
@@ -23,7 +22,6 @@ interface NotificationFormProps {
 
 export default function NotificationForm({
     onSave,
-    onPublish,
     initialData,
     isEditing = false,
     onCancel,
@@ -42,7 +40,6 @@ export default function NotificationForm({
     });
 
     const [isSaving, setIsSaving] = useState(false);
-    const [isPublishing, setIsPublishing] = useState(false);
     const [newLink, setNewLink] = useState({ label: "", url: "" });
     const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
@@ -63,7 +60,7 @@ export default function NotificationForm({
         setValidationErrors({});
     };
 
-    const handleInputChange = (field: string, value: any) => {
+    const handleInputChange = (field: string, value: unknown) => {
         setFormData(prev => ({ ...prev, [field]: value }));
 
         // Clear validation errors for this field
@@ -176,7 +173,7 @@ export default function NotificationForm({
 
         setIsSaving(true);
         try {
-            const savedNotification = await onSave(formData);
+            const savedNotification = await onSave(formData, true); // Clear form when manually saving
             toast.success(isEditing ? "Notification updated successfully" : "Notification saved successfully");
             resetForm();
             onSuccess?.();
@@ -190,54 +187,6 @@ export default function NotificationForm({
         }
     };
 
-    const handlePublish = async () => {
-        if (!formData.title.trim() || !formData.message.trim()) {
-            toast.error("Title and message are required");
-            return;
-        }
-
-        // Validate dates
-        const dateErrors = validateDates();
-        if (dateErrors.length > 0) {
-            toast.error(dateErrors[0]);
-            return;
-        }
-
-        setIsPublishing(true);
-        try {
-            let notificationId = initialData?.id;
-            console.log("Starting publish process:", { isEditing, notificationId, formData });
-
-            // First save if it's a new notification
-            if (!isEditing) {
-                console.log("Saving new notification first...");
-                const savedNotification = await onSave(formData);
-                console.log("Saved notification:", savedNotification);
-                // Extract the ID from the saved notification response
-                notificationId = savedNotification?.id || notificationId;
-            }
-
-            console.log("Publishing with notification ID:", notificationId);
-            // Then publish using the correct notification ID
-            if (notificationId) {
-                await onPublish(notificationId, formData.targetAudience);
-                if (formData.isScheduled) {
-                    toast.success(`Notification scheduled for ${new Date(formData.scheduledFor).toLocaleString()}`);
-                } else {
-                    toast.success("Notification published successfully");
-                }
-                resetForm();
-                onSuccess?.();
-            } else {
-                throw new Error("No notification ID available for publishing");
-            }
-        } catch (error) {
-            toast.error("Failed to publish notification");
-            console.error("Publish error:", error);
-        } finally {
-            setIsPublishing(false);
-        }
-    };
 
     const previewNotification: Notification = {
         id: "preview",
@@ -468,18 +417,12 @@ export default function NotificationForm({
                                     className="bg-primary-main text-white"
                                 >
                                     <Save className="w-4 h-4 mr-2" />
-                                    {isSaving ? "Saving..." : "Save Draft"}
-                                </Button>
-
-                                <Button
-                                    onClick={handlePublish}
-                                    disabled={isPublishing || !formData.title.trim() || !formData.message.trim()}
-                                    className="bg-primary-purple text-white"
-                                >
-                                    <Send className="w-4 h-4 mr-2" />
-                                    {isPublishing ? "Publishing..." : "Publish Now"}
+                                    {isSaving ? "Saving..." : (isEditing ? "Update Notification" : "Create Notification")}
                                 </Button>
                             </div>
+                            <p className="text-sm text-gray-500 mt-2">
+                                {isEditing ? "Update your notification. You can publish it later from the notification list." : "Create your notification. You can publish it later from the notification list."}
+                            </p>
                         </CardContent>
                     </Card>
                 </div>

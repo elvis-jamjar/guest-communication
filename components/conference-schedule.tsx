@@ -12,7 +12,6 @@ import {
   Tv,
   PartyPopper,
   Flag,
-  User
 } from 'lucide-react'
 import Image from 'next/image'
 import { DynamicImage } from './ui/dynamic-image';

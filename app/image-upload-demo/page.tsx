@@ -56,7 +56,7 @@ export default function ImageUploadDemoPage() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-blue-800 mb-3">New Features Added:</h3>
                 <ul className="space-y-2 text-blue-700">
-                    <li>• <strong>Face Cropping:</strong> Set <code>aspectRatio="face"</code> for circular face crops</li>
+                    <li>• <strong>Face Cropping:</strong> Set <code>aspectRatio=&quot;face&quot;</code> for circular face crops</li>
                     <li>• <strong>Zoom Controls:</strong> Zoom in/out buttons with visual zoom percentage display</li>
                     <li>• <strong>Enhanced UI:</strong> Face crop mode indicator and circular crop visualization</li>
                     <li>• <strong>Smart Cropping:</strong> Face crops automatically center and size appropriately</li>

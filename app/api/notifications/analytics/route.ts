@@ -17,12 +17,12 @@ export async function GET(req: NextRequest) {
     const notifications = allNotificationsData.map((n) => JSON.parse(n));
 
     // Get analytics data
-    const analyticsData = await redisClient.lrange(
+    const _analyticsData = await redisClient.lrange(
       "notification_analytics",
       0,
       -1
     );
-    const analytics = analyticsData.map((a) => JSON.parse(a));
+    // const analytics = _analyticsData.map((a) => JSON.parse(a));
 
     // Filter by notification ID if provided
     let filteredNotifications = notifications;

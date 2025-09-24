@@ -55,7 +55,7 @@ export function Confirmation({
             setIsConfirming(true)
             await onConfirm()
             handleOpenChange(false)
-        } catch (_) {
+        } catch {
             // Keep dialog open on error; surface handling is up to caller
         } finally {
             setIsConfirming(false)

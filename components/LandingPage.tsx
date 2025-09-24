@@ -47,7 +47,7 @@ export default function LandingPage({ isPreview = false }: { isPreview?: boolean
         refetchInterval: isPreview ? false : 65000, // 1 minute 5 seconds
     });
 
-    const [_, setIsSelectedSection] = React.useState<string | null>(null);
+    const [_isSelectedSection, setIsSelectedSection] = React.useState<string | null>(null);
 
     // listen for scroll events to update the selected section
     React.useEffect(() => {

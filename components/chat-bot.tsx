@@ -5,11 +5,10 @@ import { useChat } from '@ai-sdk/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
-import { Send, MessageSquare, X, ChevronDown, StopCircle, ExternalLink, Loader2 } from 'lucide-react';
+import { Send, MessageSquare, X, StopCircle, ExternalLink } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { formatTime, getGreeting } from '@/utils/date';
 import { toast } from 'sonner';
-import { ChatBotStateUpdate } from './chat-bot-state-update';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useChatBotStore } from '@/lib/store';
@@ -100,7 +99,7 @@ export const PopOverChat = () => {
     const isMobile = useMobile();
     // const isKeyboardOpen = useKeyboardStatus();
 
-    const { handleSubmit, messages, handleInputChange, status, setInput: setChatInput, input, stop, isLoading } = useChat({
+    const { handleSubmit, messages, handleInputChange, status, input, stop, isLoading } = useChat({
         api: '/api/chat',
         initialMessages: [
             {

@@ -5,8 +5,16 @@ import { Notification } from "@/app/types";
 // POST - Publish a notification
 export async function POST(req: NextRequest) {
   try {
-    const { notificationId, targetAudience = "all" } = await req.json();
-    console.log("Publishing notification:", { notificationId, targetAudience });
+    const {
+      notificationId,
+      targetAudience = "all",
+      notificationData,
+    } = await req.json();
+    console.log("Publishing notification:", {
+      notificationId,
+      targetAudience,
+      hasNotificationData: !!notificationData,
+    });
 
     if (!notificationId) {
       console.error("No notification ID provided");
@@ -16,34 +24,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get all notifications
-    const allNotificationsData = await redisClient.lrange(
-      "admin_notifications",
-      0,
-      -1
-    );
-    const notifications = allNotificationsData.map((n) => JSON.parse(n));
+    let notification;
 
-    // Find the notification
-    const notificationIndex = notifications.findIndex(
-      (n) => n.id === notificationId
-    );
-    console.log(
-      "Found notification at index:",
-      notificationIndex,
-      "Total notifications:",
-      notifications.length
-    );
-
-    if (notificationIndex === -1) {
-      console.error("Notification not found:", notificationId);
-      return NextResponse.json(
-        { error: "Notification not found" },
-        { status: 404 }
+    // If notification data is provided, use it directly (for updated notifications)
+    if (notificationData) {
+      console.log("Using provided notification data for publishing");
+      notification = notificationData;
+    } else {
+      // Otherwise, fetch from Redis (for existing notifications)
+      console.log("Fetching notification from Redis");
+      const allNotificationsData = await redisClient.lrange(
+        "admin_notifications",
+        0,
+        -1
       );
+      const notifications = allNotificationsData.map((n) => JSON.parse(n));
+
+      // Find the notification
+      const notificationIndex = notifications.findIndex(
+        (n) => n.id === notificationId
+      );
+      console.log(
+        "Found notification at index:",
+        notificationIndex,
+        "Total notifications:",
+        notifications.length
+      );
+
+      if (notificationIndex === -1) {
+        console.error("Notification not found:", notificationId);
+        return NextResponse.json(
+          { error: "Notification not found" },
+          { status: 404 }
+        );
+      }
+
+      notification = notifications[notificationIndex];
     }
 
-    const notification = notifications[notificationIndex];
     console.log("Publishing notification:", notification.title);
 
     // Check if this is a scheduled notification
@@ -67,12 +85,31 @@ export async function POST(req: NextRequest) {
     }
 
     // Update the notification in Redis
-    notifications[notificationIndex] = notification;
+    const allNotificationsData = await redisClient.lrange(
+      "admin_notifications",
+      0,
+      -1
+    );
+    const allNotifications = allNotificationsData.map((n) => JSON.parse(n));
+
+    const notificationIndex = allNotifications.findIndex(
+      (n) => n.id === notificationId
+    );
+
+    if (notificationIndex !== -1) {
+      // Update existing notification
+      allNotifications[notificationIndex] = notification;
+    } else {
+      // Add new notification (for cases where notificationData was provided but not yet in Redis)
+      allNotifications.push(notification);
+    }
+
+    // Update Redis with the complete list
     await redisClient.del("admin_notifications");
-    if (notifications.length > 0) {
+    if (allNotifications.length > 0) {
       await redisClient.lpush(
         "admin_notifications",
-        ...notifications.map((n) => JSON.stringify(n))
+        ...allNotifications.map((n) => JSON.stringify(n))
       );
     }
 
