@@ -36,7 +36,27 @@ export function useNotifications() {
       );
       if (storedNotifications) {
         const notificationsArray = JSON.parse(storedNotifications);
-        setNotifications(notificationsArray);
+
+        // Filter out test notifications and welcome messages if not on preview path
+        let filteredNotifications = notificationsArray;
+        if (
+          typeof window !== "undefined" &&
+          window.location.pathname !== "/preview"
+        ) {
+          filteredNotifications = notificationsArray.filter(
+            (notification: Notification) => {
+              const title = notification.title?.toLowerCase() || "";
+              // const message = notification.message?.toLowerCase() || "";
+
+              return (
+                title !== "test" && !title.includes("welcome!")
+                // !message.includes("welcome")
+              );
+            }
+          );
+        }
+
+        setNotifications(filteredNotifications);
       }
 
       // Mark data as loaded
@@ -108,27 +128,6 @@ export function useNotifications() {
     return `${title.trim().toLowerCase()}|${message.trim().toLowerCase()}`;
   };
 
-  // Helper function to check if notification content is duplicate
-  //   const isNotificationDuplicate = (
-  //     notification: Notification,
-  //     allNotifications: Notification[]
-  //   ): boolean => {
-  //     const currentContentKey = createContentKey(
-  //       notification.title,
-  //       notification.message
-  //     );
-
-  //     // Check if any other notification has the same content
-  //     return allNotifications.some((otherNotification) => {
-  //       if (otherNotification.id === notification.id) return false; // Don't compare with itself
-  //       const otherContentKey = createContentKey(
-  //         otherNotification.title,
-  //         otherNotification.message
-  //       );
-  //       return currentContentKey === otherContentKey;
-  //     });
-  //   };
-
   // Helper function to check if we're on the preview path
   const isPreviewPath = (): boolean => {
     if (typeof window === "undefined") return false;
@@ -150,6 +149,18 @@ export function useNotifications() {
       if (!isPreviewPath()) {
         filteredNotifications = filteredNotifications.filter(
           (notification) => !notification.isPreview
+        );
+
+        // Filter out notifications with title "test" if not on preview path
+        filteredNotifications = filteredNotifications.filter(
+          (notification) => notification.title?.toLowerCase() !== "test"
+        );
+
+        // Filter out welcome messages if not on preview path
+        filteredNotifications = filteredNotifications.filter(
+          (notification) =>
+            !notification.title?.toLowerCase().includes("welcome") &&
+            !notification.message?.toLowerCase().includes("welcome!")
         );
       }
 
@@ -213,6 +224,20 @@ export function useNotifications() {
 
         // Filter out preview notifications if not on preview path
         if (!isPreviewPath() && notification.isPreview) {
+          return prev;
+        }
+
+        // Filter out notifications with title "test" if not on preview path
+        if (!isPreviewPath() && notification.title?.toLowerCase() === "test") {
+          return prev;
+        }
+
+        // Filter out welcome messages if not on preview path
+        if (
+          !isPreviewPath() &&
+          (notification.title?.toLowerCase().includes("welcome") ||
+            notification.message?.toLowerCase().includes("welcome"))
+        ) {
           return prev;
         }
 
