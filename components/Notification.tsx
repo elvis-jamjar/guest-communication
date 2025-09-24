@@ -14,7 +14,7 @@ export default function NotificationUI() {
         expandNotifications,
         collapseNotifications,
         dismiss,
-        delete: deleteNotification,
+        // delete: deleteNotification,
         clearAll
     } = useNotifications();
 
@@ -303,13 +303,13 @@ export default function NotificationUI() {
                                                         )} */}
                                                     </div>
                                                     <div className="flex items-center gap-1">
-                                                        <button
+                                                        {/* <button
                                                             onClick={() => deleteNotification(notification.id)}
                                                             className="text-red-400 hover:text-red-300 text-xs p-1 rounded hover:bg-red-500/20 transition-colors"
                                                             title="Delete notification"
                                                         >
                                                             <Trash2 className="size-3" />
-                                                        </button>
+                                                        </button> */}
                                                         <button
                                                             onClick={() => dismiss(notification.id)}
                                                             className="text-gray-400 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
