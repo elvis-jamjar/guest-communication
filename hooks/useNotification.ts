@@ -573,13 +573,10 @@ export function useNotifications() {
     delete: (notificationId: string) => deleteNotification(notificationId),
     clear: (notificationId: string) => deleteNotification(notificationId), // Keep for backward compatibility
     clearAll: () => {
-      setNotifications([]);
-      // Also clear all dismissed IDs and read message IDs
-      setDismissedIds(new Set());
-      setReadMessageIds(new Set());
-      saveDismissedIds(new Set());
-      saveReadMessageIds(new Set());
-      saveNotifications([]);
+      // loop through notifications and delete each one
+      notifications.forEach((notification) => {
+        dismissNotification(notification.id);
+      });
     },
     resetDismissed: () => {
       setDismissedIds(new Set());
