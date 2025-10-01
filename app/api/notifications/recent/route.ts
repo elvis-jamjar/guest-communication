@@ -1,5 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { redisClient } from "@/lib/db";
+import { Notification } from "@/app/types";
+
+// Helper function to deduplicate notifications by ID
+function deduplicateNotifications(
+  notifications: Notification[]
+): Notification[] {
+  const seen = new Set<string>();
+  return notifications.filter((notification) => {
+    if (seen.has(notification.id)) {
+      return false;
+    }
+    seen.add(notification.id);
+    return true;
+  });
+}
 
 export async function GET(_req: NextRequest) {
   try {
@@ -10,7 +25,7 @@ export async function GET(_req: NextRequest) {
       -1
     ); // Get all admin notifications
 
-    let notifications = [];
+    let notifications: Notification[] = [];
 
     if (adminNotificationsData && adminNotificationsData.length > 0) {
       // Parse the stored notifications and filter for isShowing: true
@@ -25,6 +40,9 @@ export async function GET(_req: NextRequest) {
         })
         .filter((notification) => notification !== null)
         .filter((notification) => notification.isShowing === true);
+
+      // Remove duplicates by ID
+      notifications = deduplicateNotifications(notifications);
     } else {
       // No admin notifications exist - return empty array
       notifications = [];
@@ -59,12 +77,15 @@ export async function DELETE(req: NextRequest) {
       0,
       -1
     );
-    const adminNotifications = adminNotificationsData.map((n) => JSON.parse(n));
+    let adminNotifications = adminNotificationsData.map((n) => JSON.parse(n));
+
+    // Remove duplicates before processing
+    adminNotifications = deduplicateNotifications(adminNotifications);
 
     // Filter out the notification to delete
     const filteredNotifications = adminNotifications.filter((n) => n.id !== id);
 
-    // Update Redis
+    // Update Redis - clear and rebuild to prevent duplicates
     await redisClient.del("admin_notifications");
     if (filteredNotifications.length > 0) {
       await redisClient.lpush(

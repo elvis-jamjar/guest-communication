@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { redisClient, redisPublisher } from "@/lib/db";
 import { Notification } from "@/app/types";
 
+// Helper function to deduplicate notifications by ID
+function deduplicateNotifications(
+  notifications: Notification[]
+): Notification[] {
+  const seen = new Set<string>();
+  return notifications.filter((notification) => {
+    if (seen.has(notification.id)) {
+      return false;
+    }
+    seen.add(notification.id);
+    return true;
+  });
+}
+
 // POST - Publish a notification
 export async function POST(req: NextRequest) {
   try {
@@ -20,9 +34,12 @@ export async function POST(req: NextRequest) {
       0,
       -1
     );
-    const notifications = allNotificationsData.map((n) =>
+    let notifications = allNotificationsData.map((n) =>
       JSON.parse(n)
     ) as Notification[];
+
+    // Remove duplicates before processing
+    notifications = deduplicateNotifications(notifications);
     console.log("notifications", notifications);
 
     // Find the notification to update
@@ -126,7 +143,10 @@ export async function PUT(req: NextRequest) {
       0,
       -1
     );
-    const notifications = allNotificationsData.map((n) => JSON.parse(n));
+    let notifications = allNotificationsData.map((n) => JSON.parse(n));
+
+    // Remove duplicates before processing
+    notifications = deduplicateNotifications(notifications);
 
     // Find the notification
     const notificationIndex = notifications.findIndex(
@@ -145,7 +165,7 @@ export async function PUT(req: NextRequest) {
     notification.status = "archived";
     notification.archivedAt = new Date().toISOString();
 
-    // Update the notification in Redis
+    // Update the notification in Redis - clear and rebuild to prevent duplicates
     notifications[notificationIndex] = notification;
     await redisClient.del("admin_notifications");
     if (notifications.length > 0) {

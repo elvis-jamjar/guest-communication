@@ -2,6 +2,20 @@ import { NextResponse } from "next/server";
 import { redisClient, redisPublisher } from "@/lib/db";
 import { Notification } from "@/app/types";
 
+// Helper function to deduplicate notifications by ID
+function deduplicateNotifications(
+  notifications: Notification[]
+): Notification[] {
+  const seen = new Set<string>();
+  return notifications.filter((notification) => {
+    if (seen.has(notification.id)) {
+      return false;
+    }
+    seen.add(notification.id);
+    return true;
+  });
+}
+
 // Process scheduled notifications (works for both GET and POST)
 async function processScheduledNotifications() {
   try {
@@ -14,7 +28,10 @@ async function processScheduledNotifications() {
       0,
       -1
     );
-    const notifications = allNotificationsData.map((n) => JSON.parse(n));
+    let notifications = allNotificationsData.map((n) => JSON.parse(n));
+
+    // Remove duplicates before processing
+    notifications = deduplicateNotifications(notifications);
 
     // Find scheduled notifications that are ready to be published
     const readyToPublish = notifications.filter((notification) => {
@@ -73,7 +90,7 @@ async function processScheduledNotifications() {
       }
     }
 
-    // Update the main admin_notifications list in Redis
+    // Update the main admin_notifications list in Redis - clear and rebuild to prevent duplicates
     const updatedNotifications = notifications.map((n) => {
       const published = publishedNotifications.find((p) => p.id === n.id);
       return published || n;

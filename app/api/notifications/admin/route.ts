@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { redisClient } from "@/lib/db";
 import { Notification } from "@/app/types";
 
+// Helper function to deduplicate notifications by ID
+function deduplicateNotifications(
+  notifications: Notification[]
+): Notification[] {
+  const seen = new Set<string>();
+  return notifications.filter((notification) => {
+    if (seen.has(notification.id)) {
+      return false;
+    }
+    seen.add(notification.id);
+    return true;
+  });
+}
+
 // GET - Fetch all notifications for admin management
 export async function GET(req: NextRequest) {
   try {
@@ -31,6 +45,9 @@ export async function GET(req: NextRequest) {
           }
         })
         .filter((notification) => notification !== null);
+
+      // Remove duplicates by ID
+      notifications = deduplicateNotifications(notifications);
     }
 
     // Apply filters
@@ -121,7 +138,10 @@ export async function PUT(req: NextRequest) {
       0,
       -1
     );
-    const notifications = allNotificationsData.map((n) => JSON.parse(n));
+    let notifications = allNotificationsData.map((n) => JSON.parse(n));
+
+    // Remove duplicates before processing
+    notifications = deduplicateNotifications(notifications);
 
     // Find and update the notification
     const notificationIndex = notifications.findIndex((n) => n.id === id);
@@ -140,7 +160,7 @@ export async function PUT(req: NextRequest) {
 
     notifications[notificationIndex] = updatedNotification;
 
-    // Update Redis
+    // Update Redis - clear and rebuild to prevent duplicates
     await redisClient.del("admin_notifications");
     if (notifications.length > 0) {
       await redisClient.lpush(
@@ -178,12 +198,15 @@ export async function DELETE(req: NextRequest) {
       0,
       -1
     );
-    const notifications = allNotificationsData.map((n) => JSON.parse(n));
+    let notifications = allNotificationsData.map((n) => JSON.parse(n));
+
+    // Remove duplicates before processing
+    notifications = deduplicateNotifications(notifications);
 
     // Filter out the notification to delete
     const filteredNotifications = notifications.filter((n) => n.id !== id);
 
-    // Update Redis
+    // Update Redis - clear and rebuild to prevent duplicates
     await redisClient.del("admin_notifications");
     if (filteredNotifications.length > 0) {
       await redisClient.lpush(
