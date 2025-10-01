@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -17,183 +18,134 @@ import NotificationForm from "@/components/NotificationForm";
 import NotificationList from "@/components/NotificationList";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import { Notification } from "@/app/types";
+import {
+    createNotification,
+    updateNotification,
+    deleteNotification,
+    publishNotification,
+    archiveNotification,
+    getNotifications
+} from "@/app/actions/timeline";
 
 export default function NotificationManagementPage({ params }: { params: { userId: string } }) {
     const router = useRouter();
-    const [notifications, setNotifications] = useState<Notification[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const queryClient = useQueryClient();
     const [editingNotification, setEditingNotification] = useState<Notification | null>(null);
     const [activeTab, setActiveTab] = useState("list");
 
-    // Fetch notifications
-    const fetchNotifications = async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch("/api/notifications/admin");
-            if (response.ok) {
-                const data = await response.json();
-                setNotifications(data.notifications || []);
-            } else {
-                throw new Error("Failed to fetch notifications");
-            }
-        } catch (error) {
-            console.error("Error fetching notifications:", error);
-            toast.error("Failed to load notifications");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // Fetch notifications using React Query
+    const { data: notifications = [], isLoading, refetch } = useQuery({
+        queryKey: ['admin-notifications'],
+        queryFn: async () => await getNotifications(),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
 
-    useEffect(() => {
-        fetchNotifications();
-    }, []);
-
-    // Create notification
-    const handleCreateNotification = async (notificationData: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>) => {
-        try {
-            const response = await fetch("/api/notifications/admin", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(notificationData),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setNotifications(prev => [data.notification, ...prev]);
-                // Clear form and switch to list after successful creation
-                setEditingNotification(null);
-                setActiveTab("list");
-                toast.success("Notification created successfully");
-                return data.notification; // Return the created notification
-            } else {
-                throw new Error("Failed to create notification");
-            }
-        } catch (error) {
+    // Create notification mutation
+    const createNotificationMutation = useMutation({
+        mutationFn: createNotification,
+        onSuccess: (newNotification) => {
+            queryClient.setQueryData(['admin-notifications'], (old: Notification[] = []) => [newNotification, ...old]);
+            setEditingNotification(null);
+            setActiveTab("list");
+            toast.success("Notification created successfully");
+        },
+        onError: (error) => {
             console.error("Error creating notification:", error);
             toast.error("Failed to create notification");
-            throw error; // Re-throw to be caught by the calling function
         }
-    };
+    });
 
-    // Update notification
-    const handleUpdateNotification = async (notificationData: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>, clearForm = true) => {
-        if (!editingNotification) return;
-
-        try {
-            const response = await fetch("/api/notifications/admin", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: editingNotification.id,
-                    ...notificationData,
-                }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setNotifications(prev =>
-                    prev.map(n => n.id === editingNotification.id ? data.notification : n)
-                );
-
-                // Only clear form and switch to list if explicitly requested (not when called from publish)
-                if (clearForm) {
-                    setEditingNotification(null);
-                    setActiveTab("list");
-                    toast.success("Notification updated successfully");
-                }
-                return data.notification; // Return the updated notification
-            } else {
-                throw new Error("Failed to update notification");
-            }
-        } catch (error) {
+    // Update notification mutation
+    const updateNotificationMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: Partial<Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>> }) =>
+            updateNotification(id, data),
+        onSuccess: (updatedNotification, variables) => {
+            queryClient.setQueryData(['admin-notifications'], (old: Notification[] = []) =>
+                old.map(n => n.id === variables.id ? updatedNotification : n)
+            );
+            setEditingNotification(null);
+            setActiveTab("list");
+            toast.success("Notification updated successfully");
+        },
+        onError: (error) => {
             console.error("Error updating notification:", error);
             toast.error("Failed to update notification");
-            throw error; // Re-throw to be caught by the calling function
         }
-    };
+    });
 
-    // Delete notification
-    const handleDeleteNotification = async (notificationId: string) => {
-        try {
-            const response = await fetch(`/api/notifications/admin?id=${notificationId}`, {
-                method: "DELETE",
-            });
-
-            if (response.ok) {
-                setNotifications(prev => prev.filter(n => n.id !== notificationId));
-                toast.success("Notification deleted successfully");
-            } else {
-                throw new Error("Failed to delete notification");
-            }
-        } catch (error) {
+    // Delete notification mutation
+    const deleteNotificationMutation = useMutation({
+        mutationFn: deleteNotification,
+        onSuccess: (_, notificationId) => {
+            queryClient.setQueryData(['admin-notifications'], (old: Notification[] = []) =>
+                old.filter(n => n.id !== notificationId)
+            );
+            toast.success("Notification deleted successfully");
+        },
+        onError: (error) => {
             console.error("Error deleting notification:", error);
             toast.error("Failed to delete notification");
         }
-    };
+    });
 
-    // Publish notification
-    const handlePublishNotification = async (notificationId: string, targetAudience: string) => {
-        try {
-            const response = await fetch("/api/notifications/publish", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    notificationId,
-                    targetAudience
-                }),
-            });
-
-            if (response.ok) {
-                // Refresh notifications from server to get the updated data
-                await fetchNotifications();
-                toast.success("Notification published successfully");
-            } else {
-                const errorData = await response.json();
-                const errorMessage = errorData.error || "Failed to publish notification";
-                throw new Error(errorMessage);
-            }
-        } catch (error) {
+    // Publish notification mutation
+    const publishNotificationMutation = useMutation({
+        mutationFn: ({ notificationId, targetAudience }: { notificationId: string; targetAudience: string }) =>
+            publishNotification(notificationId, targetAudience),
+        onSuccess: (updatedNotification) => {
+            queryClient.setQueryData(['admin-notifications'], (old: Notification[] = []) =>
+                old.map(n => n.id === updatedNotification.id ? updatedNotification : n)
+            );
+            toast.success("Notification published successfully");
+        },
+        onError: (error) => {
             console.error("Error publishing notification:", error);
             const errorMessage = error instanceof Error ? error.message : "Failed to publish notification";
             toast.error(errorMessage);
-            throw error; // Re-throw to be caught by the calling function
         }
-    };
+    });
 
-    // Archive notification
-    const handleArchiveNotification = async (notificationId: string) => {
-        try {
-            const response = await fetch("/api/notifications/publish", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ notificationId }),
-            });
-
-            if (response.ok) {
-                // Update the notification status in the list
-                setNotifications(prev =>
-                    prev.map(n =>
-                        n.id === notificationId
-                            ? { ...n, status: 'archived', archivedAt: new Date().toISOString() }
-                            : n
-                    )
-                );
-                toast.success("Notification archived successfully");
-            } else {
-                throw new Error("Failed to archive notification");
-            }
-        } catch (error) {
+    // Archive notification mutation
+    const archiveNotificationMutation = useMutation({
+        mutationFn: archiveNotification,
+        onSuccess: (updatedNotification) => {
+            queryClient.setQueryData(['admin-notifications'], (old: Notification[] = []) =>
+                old.map(n => n.id === updatedNotification.id ? updatedNotification : n)
+            );
+            toast.success("Notification archived successfully");
+        },
+        onError: (error) => {
             console.error("Error archiving notification:", error);
             toast.error("Failed to archive notification");
         }
+    });
+
+    // Handler functions that use the mutations
+    const handleCreateNotification = async (notificationData: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>) => {
+        return createNotificationMutation.mutateAsync(notificationData);
+    };
+
+    const handleUpdateNotification = async (notificationData: Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>, _clearForm = true) => {
+        if (!editingNotification) throw new Error("No notification being edited");
+
+        const result = await updateNotificationMutation.mutateAsync({
+            id: editingNotification.id,
+            data: notificationData
+        });
+
+        return result;
+    };
+
+    const handleDeleteNotification = async (notificationId: string) => {
+        return deleteNotificationMutation.mutateAsync(notificationId);
+    };
+
+    const handlePublishNotification = async (notificationId: string, targetAudience: string) => {
+        await publishNotificationMutation.mutateAsync({ notificationId, targetAudience });
+    };
+
+    const handleArchiveNotification = async (notificationId: string) => {
+        await archiveNotificationMutation.mutateAsync(notificationId);
     };
 
     // Handle edit
@@ -241,7 +193,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
 
                         <div className="flex items-center gap-3">
                             <Button
-                                onClick={fetchNotifications}
+                                onClick={() => refetch()}
                                 variant="outline"
                                 size="sm"
                                 disabled={isLoading}
@@ -363,7 +315,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
                                         onDelete={handleDeleteNotification}
                                         onPublish={handlePublishNotification}
                                         onArchive={handleArchiveNotification}
-                                        onRefresh={fetchNotifications}
+                                        onRefresh={() => refetch()}
                                         isLoading={isLoading}
                                     />
                                 </div>
@@ -386,7 +338,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
 
                             {activeTab === "analytics" && (
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                                    <AnalyticsDashboard onRefresh={fetchNotifications} />
+                                    <AnalyticsDashboard onRefresh={() => refetch()} />
                                 </div>
                             )}
 

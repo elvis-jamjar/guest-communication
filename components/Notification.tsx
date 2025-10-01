@@ -1,34 +1,78 @@
 "use client";
 
-import { useNotificationsPolling } from "@/hooks/useNotificationPolling";
 import { cn } from "@/lib/utils";
-import { ArrowUpRightIcon, ChevronLeftCircle, XIcon } from "lucide-react";
+import { ArrowUpRightIcon, ChevronLeftCircle, XIcon, RefreshCw } from "lucide-react";
 // import { MdClearAll } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getNotifications } from "@/app/actions/timeline";
 
 export default function NotificationUI() {
-    const {
-        notifications,
-        isLoading,
-        error,
-        isExpanded,
-        expandNotifications,
-        collapseNotifications,
-        dismiss,
-        // delete: deleteNotification,
-        // clearAll
-    } = useNotificationsPolling();
+    const { data: notifications, refetch, isLoading, error } = useQuery({
+        queryKey: ['admin-notifications'],
+        queryFn: async () => await getNotifications(),
+        staleTime: 1000 * 60 * 10, // 10 minutes
+        refetchInterval: 15000, // Refetch every 15 seconds
+    });
 
     const [isHovering, setIsHovering] = useState(false);
     const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [dismissedNotifications, setDismissedNotifications] = useState<Set<string>>(new Set());
+    const [trackedImpressions, setTrackedImpressions] = useState<Set<string>>(new Set());
 
     // Check if message should be truncated
     const shouldTruncateMessage = (message: string) => {
         return message.length > 100; // Truncate if longer than 100 characters
     };
 
-    const hasMoreNotifications = notifications.length > 1;
+    // Track impression for a notification
+    const trackImpression = async (notificationId: string) => {
+        // Only track once per notification per session
+        if (trackedImpressions.has(notificationId)) {
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/notifications/impression', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ notificationId }),
+            });
+
+            if (response.ok) {
+                setTrackedImpressions(prev => new Set(prev).add(notificationId));
+            }
+        } catch (error) {
+            console.error('Failed to track impression:', error);
+        }
+    };
+
+    // Filter out dismissed notifications and only show ones that are showing
+    const activeNotifications = notifications?.filter(notification =>
+        !dismissedNotifications.has(notification.id) &&
+        notification.isShowing
+    ) || [];
+
+    const hasMoreNotifications = activeNotifications.length > 1;
+
+    // Expand notifications function
+    const expandNotifications = () => {
+        setIsExpanded(true);
+    };
+
+    // Collapse notifications function
+    const collapseNotifications = useCallback(() => {
+        setIsExpanded(false);
+    }, []);
+
+    // Dismiss notification function
+    const dismiss = (notificationId: string) => {
+        setDismissedNotifications(prev => new Set(Array.from(prev).concat(notificationId)));
+    };
 
     // Handle mouse enter with delay
     const handleMouseEnter = () => {
@@ -87,6 +131,16 @@ export default function NotificationUI() {
         };
     }, [collapseTimeout]);
 
+    // Track impressions when notifications are displayed
+    useEffect(() => {
+        if (activeNotifications && activeNotifications.length > 0) {
+            // Track impressions for all visible notifications
+            activeNotifications.forEach(notification => {
+                trackImpression(notification.id);
+            });
+        }
+    }, [activeNotifications]);
+
     // Show loading state
     if (isLoading) {
         return (
@@ -114,7 +168,7 @@ export default function NotificationUI() {
         );
     }
 
-    if (!notifications || notifications.length === 0) return null;
+    if (!activeNotifications || activeNotifications.length === 0) return null;
 
 
     // Animation variants
@@ -189,7 +243,7 @@ export default function NotificationUI() {
 
     return (
         <div
-            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl", notifications.length === 1 && "md:max-w-xl bg-transparent")}
+            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl", activeNotifications.length === 1 && "md:max-w-xl bg-transparent")}
             data-notification-container
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}>
@@ -197,30 +251,32 @@ export default function NotificationUI() {
             <div
                 className={cn(
                     "transition-all flex justify-between items-center duration-500 ease-out transform",
-                    isExpanded && notifications.length > 1
+                    isExpanded && activeNotifications.length > 1
                         ? "opacity-100 translate-x-0 scale-100"
                         : "opacity-0 translate-x-8 scale-95 pointer-events-none"
                 )}
                 style={{
                     transitionDelay: isExpanded
-                        ? `${notifications.length * 150}ms`
+                        ? `${activeNotifications.length * 150}ms`
                         : '0ms'
                 }}
             >
                 <h2 className="md:text-black text-white text-xl font-bold mb-2">Notifications</h2>
                 <div className="flex justify-end gap-4 items-center">
-                    {/* <button
-                        hidden={true}
-                        onClick={clearAll}
-                        className="bg-primary-purple opacity-0 hidden items-center gap-1 hover:bg-primary-purple/80 text-white px-3 py-2 rounded-lg text-xs transition-colors duration-200"
+                    {/* Refresh button */}
+                    <button
+                        onClick={() => refetch()}
+                        disabled={isLoading}
+                        className="bg-primary-main rounded-full flex items-center gap-1 hover:bg-primary-main/80 text-white p-2 text-xs transition-colors duration-200 disabled:opacity-50"
+                        title="Refresh notifications"
                     >
-                        <MdClearAll className="size-4" />
-                        Clear All
-                    </button> */}
+                        <RefreshCw className={`size-4 ${isLoading ? 'animate-spin' : ''}`} />
+                    </button>
                     {/* minimize button */}
                     <button
                         onClick={collapseNotifications}
                         className="bg-primary-purple rounded-full flex items-center gap-1 hover:bg-primary-purple/80 text-white p-2 text-xs transition-colors duration-200"
+                        title="Minimize notifications"
                     >
                         <ChevronLeftCircle className="size-4 -rotate-90" />
                     </button>
@@ -245,7 +301,7 @@ export default function NotificationUI() {
                             initial="hidden"
                             animate="visible"
                             exit="exit">
-                            {notifications.map((notification, index) => {
+                            {activeNotifications.map((notification, index) => {
                                 // With flex-col-reverse, first notification (index 0) appears at bottom
                                 const isFirstNotification = index === 0;
                                 const isSecondNotification = index === 1;
@@ -290,7 +346,7 @@ export default function NotificationUI() {
                                                 ? index * 0.1
                                                 : isFirstNotification
                                                     ? 0
-                                                    : (notifications.length - index) * 0.1
+                                                    : (activeNotifications.length - index) * 0.1
                                         }}
                                         style={{
                                             // Stack cards with slight offset when collapsed
@@ -321,11 +377,11 @@ export default function NotificationUI() {
                                                         <h3 className="font-bold line-clamp-1 text-base">{notification.title}</h3>
                                                         {/* Unread indicator */}
                                                         <div className="w-2 h-2 bg-primary-main rounded-full animate-pulse"></div>
-                                                        {/* {!isExpanded && hasMoreNotifications && isFirstNotification && (
+                                                        {!isExpanded && hasMoreNotifications && isFirstNotification && (
                                                             <span className="bg-primary-main text-white text-xs px-2 py-1 rounded-full transition-all duration-300 ease-in-out">
-                                                                +{notifications.length - 1}
+                                                                +{activeNotifications.length - 1}
                                                             </span>
-                                                        )} */}
+                                                        )}
                                                     </div>
                                                     <div className="flex items-center gap-1">
                                                         {/* <button
@@ -336,9 +392,8 @@ export default function NotificationUI() {
                                                             <Trash2 className="size-3" />
                                                         </button> */}
                                                         <button
-                                                            hidden={true}
                                                             onClick={() => dismiss(notification.id)}
-                                                            className="text-gray-400 hidden opacity-0 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
+                                                            className="text-gray-400 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
                                                             title="Dismiss notification">
                                                             <XIcon className="size-3" />
                                                         </button>
@@ -346,7 +401,7 @@ export default function NotificationUI() {
                                                 </div>
                                                 <div className="mb-3">
                                                     <p className="text-sm text-gray-300">
-                                                        {!isExpanded && shouldTruncateMessage(notification.message) && notifications.length > 1
+                                                        {!isExpanded && shouldTruncateMessage(notification.message) && activeNotifications.length > 1
                                                             ? `${notification.message.substring(0, 40)}...`
                                                             : notification.message
                                                         }

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
     Dialog,
     DialogContent,
@@ -173,6 +174,18 @@ export default function NotificationList({
                     console.error(error);
                 }
                 break;
+        }
+    };
+
+    const handleTogglePublish = async (notification: Notification) => {
+        try {
+            await onPublish(notification.id, notification.targetAudience || "all");
+            // const action = notification.isShowing ? "unpublished" : "published";
+            // toast.success(`Notification ${action} successfully`);
+        } catch (error) {
+            const action = notification.isShowing ? "unpublish" : "publish";
+            toast.error(`Failed to ${action} notification`);
+            console.error(error);
         }
     };
 
@@ -432,28 +445,17 @@ export default function NotificationList({
                                             <Edit className="w-4 h-4" />
                                         </Button>
 
-                                        {/* Toggle Publish/Unpublish Button */}
-                                        <Button
-                                            variant={notification.isShowing ? "default" : "outline"}
-                                            size="sm"
-                                            onClick={() => handleAction("publish", notification)}
-                                            className={`${notification.isShowing
-                                                ? "bg-green-600 hover:bg-green-700 text-white"
-                                                : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                                                }`}
-                                        >
-                                            {notification.isShowing ? (
-                                                <>
-                                                    <EyeOff className="w-4 h-4 mr-1" />
-                                                    Unpublish
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Send className="w-4 h-4 mr-1" />
-                                                    Publish
-                                                </>
-                                            )}
-                                        </Button>
+                                        {/* Toggle Publish/Unpublish Switch */}
+                                        <div className="flex w-32 items-center gap-2">
+                                            <Switch
+                                                checked={notification.isShowing}
+                                                onCheckedChange={() => handleTogglePublish(notification)}
+                                                className="data-[state=checked]:bg-green-600"
+                                            />
+                                            <span className="text-sm text-gray-600">
+                                                {notification.isShowing ? "Published" : "Draft"}
+                                            </span>
+                                        </div>
 
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>

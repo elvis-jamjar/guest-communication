@@ -93,6 +93,9 @@ export const DATABASE_KEYS = {
   OLD_PAGE_CONTENT: isLocal
     ? `${PROJECT_NAME_LOCAL}-page-content`
     : `${PROJECT_NAME}-page-content`,
+  NOTIFICATIONS: isLocal
+    ? `${PROJECT_NAME_LOCAL}-notifications`
+    : `admin-notifications`,
 
   // history
   HISTORY: isLocal

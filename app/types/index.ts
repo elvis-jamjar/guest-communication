@@ -106,6 +106,7 @@ export interface Notification {
   recipientIPs?: string[];
   publishedAt?: string;
   archivedAt?: string;
+  totalImpressions?: number;
   scheduledFor?: string; // ISO string for scheduled publish time
   isScheduled?: boolean;
 }

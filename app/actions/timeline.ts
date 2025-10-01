@@ -6,6 +6,7 @@ import {
   DataType,
   PageContent,
   Settings,
+  Notification as NotificationType,
 } from "@/app/types";
 import { DATABASE_KEYS } from "@/lib/db";
 import { formatDateTime } from "@/utils/date";
@@ -216,4 +217,162 @@ export async function uploadFile(formData: FormData): Promise<string> {
   }
   const data = await response.json();
   return data.url as string;
+}
+
+// create notification
+export async function createNotification(
+  notificationData: Omit<
+    NotificationType,
+    "id" | "timestamp" | "impressions" | "uniqueRecipients" | "recipientIPs"
+  >
+): Promise<NotificationType> {
+  const notifications = await getNotifications();
+
+  const newNotification: NotificationType = {
+    id: crypto.randomUUID(),
+    timestamp: new Date().toISOString(),
+    impressions: 0,
+    uniqueRecipients: 0,
+    recipientIPs: [],
+    ...notificationData,
+  };
+
+  const updatedNotifications = [newNotification, ...notifications];
+  await redis.set(
+    DATABASE_KEYS.NOTIFICATIONS,
+    JSON.stringify(updatedNotifications)
+  );
+
+  return newNotification;
+}
+
+// update notification
+export async function updateNotification(
+  id: string,
+  notificationData: Partial<
+    Omit<
+      NotificationType,
+      "id" | "timestamp" | "impressions" | "uniqueRecipients" | "recipientIPs"
+    >
+  >
+): Promise<NotificationType> {
+  const notifications = await getNotifications();
+  const notificationIndex = notifications.findIndex((n) => n.id === id);
+
+  if (notificationIndex === -1) {
+    throw new Error("Notification not found");
+  }
+
+  const updatedNotification = {
+    ...notifications[notificationIndex],
+    ...notificationData,
+  };
+
+  notifications[notificationIndex] = updatedNotification;
+  await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
+
+  return updatedNotification;
+}
+
+// get notifications
+export async function getNotifications(): Promise<NotificationType[]> {
+  const notifications = await redis.get(DATABASE_KEYS.NOTIFICATIONS);
+  if (!notifications) return [];
+  return JSON.parse(notifications);
+}
+
+// delete notification
+export async function deleteNotification(id: string): Promise<void> {
+  const notifications = await getNotifications();
+  const filteredNotifications = notifications.filter(
+    (notification) => notification.id !== id
+  );
+  await redis.set(
+    DATABASE_KEYS.NOTIFICATIONS,
+    JSON.stringify(filteredNotifications)
+  );
+}
+
+// publish notification
+export async function publishNotification(
+  notificationId: string,
+  targetAudience: string
+): Promise<NotificationType> {
+  const notifications = await getNotifications();
+  const notificationIndex = notifications.findIndex(
+    (n) => n.id === notificationId
+  );
+
+  if (notificationIndex === -1) {
+    throw new Error("Notification not found");
+  }
+
+  const updatedNotification = {
+    ...notifications[notificationIndex],
+    status: "active" as const,
+    targetAudience: targetAudience as "all" | "preview" | "public",
+    publishedAt: new Date().toISOString(),
+    isShowing: !notifications[notificationIndex].isShowing,
+  };
+
+  notifications[notificationIndex] = updatedNotification;
+  await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
+
+  return updatedNotification;
+}
+
+// update impressions
+export async function updateImpressions(
+  notificationId: string,
+  userIp: string
+): Promise<void> {
+  const notifications = await getNotifications();
+  const notificationIndex = notifications.findIndex(
+    (n) => n.id === notificationId
+  );
+  if (notificationIndex === -1) {
+    throw new Error("Notification not found");
+  }
+
+  const notification = notifications[notificationIndex];
+  const recipientIPs = notification.recipientIPs || [];
+
+  if (!recipientIPs.includes(userIp)) {
+    recipientIPs.push(userIp);
+    const updatedNotification = {
+      ...notification,
+      impressions: (notification.impressions || 0) + 1,
+      uniqueRecipients: recipientIPs.length,
+      recipientIPs: recipientIPs,
+    };
+
+    notifications[notificationIndex] = updatedNotification;
+    await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
+  }
+}
+
+// archive notification
+export async function archiveNotification(
+  notificationId: string
+): Promise<NotificationType> {
+  const notifications = await getNotifications();
+  const notificationIndex = notifications.findIndex(
+    (n) => n.id === notificationId
+  );
+
+  if (notificationIndex === -1) {
+    throw new Error("Notification not found");
+  }
+
+  const updatedNotification = {
+    ...notifications[notificationIndex],
+    status: "archived" as const,
+    archivedAt: new Date().toISOString(),
+    isShowing: false,
+  };
+
+  notifications[notificationIndex] = updatedNotification;
+  await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
+
+  return updatedNotification;
 }
