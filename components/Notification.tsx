@@ -10,12 +10,14 @@ import { getNotifications } from "@/app/actions/timeline";
 
 export default function NotificationUI() {
     const { data: notifications, refetch, isLoading, error, isError } = useQuery({
-        queryKey: ['admin-notifications'],
+        queryKey: ['user-admin-notifications'],
         queryFn: async () => await getNotifications(),
         staleTime: 1000 * 60 * 10, // 10 minutes
         refetchOnWindowFocus: false,
         refetchOnMount: true,
         retry: 1,
+        refetchInterval: 15000, // Refetch every 15 seconds
+        refetchIntervalInBackground: true,
     });
 
     const [isHovering, setIsHovering] = useState(false);
