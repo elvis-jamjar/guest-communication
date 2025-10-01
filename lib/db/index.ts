@@ -17,6 +17,8 @@ export const redis = new Redis(redisUrl, {
   enableReadyCheck: false,
   maxRetriesPerRequest: 3,
   lazyConnect: true,
+  connectTimeout: 10000, // 10 seconds
+  commandTimeout: 5000, // 5 seconds
 });
 
 export const redisClient = redis; // Alias for general Redis operations
@@ -24,11 +26,15 @@ export const redisPublisher = new Redis(redisUrl, {
   enableReadyCheck: false,
   maxRetriesPerRequest: 3,
   lazyConnect: true,
+  connectTimeout: 10000, // 10 seconds
+  commandTimeout: 5000, // 5 seconds
 });
 export const redisSubscriber = new Redis(redisUrl, {
   enableReadyCheck: false,
   maxRetriesPerRequest: 3,
   lazyConnect: true,
+  connectTimeout: 10000, // 10 seconds
+  commandTimeout: 5000, // 5 seconds
 });
 
 // Add connection event listeners for debugging
@@ -95,7 +101,7 @@ export const DATABASE_KEYS = {
     : `${PROJECT_NAME}-page-content`,
   NOTIFICATIONS: isLocal
     ? `${PROJECT_NAME_LOCAL}-notifications`
-    : `admin_notifications`,
+    : `${PROJECT_NAME}-notifications`,
 
   // history
   HISTORY: isLocal

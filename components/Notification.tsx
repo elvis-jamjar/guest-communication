@@ -9,11 +9,24 @@ import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "@/app/actions/timeline";
 
 export default function NotificationUI() {
-    const { data: notifications, refetch, isLoading, error } = useQuery({
+    const { data: notifications, refetch, isLoading, error, isError } = useQuery({
         queryKey: ['admin-notifications'],
-        queryFn: async () => await getNotifications(),
-        staleTime: 1000 * 60 * 10, // 10 minutes
-        refetchInterval: 15000, // Refetch every 15 seconds
+        queryFn: async () => {
+            try {
+                const result = await getNotifications();
+                console.log('Notifications fetched successfully:', result?.length || 0, 'notifications');
+                return result;
+            } catch (err) {
+                console.error('Error fetching notifications:', err);
+                throw err;
+            }
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        refetchInterval: 30000, // Refetch every 30 seconds
+        refetchIntervalInBackground: false,
+        retry: 3,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        enabled: true, // Explicitly enable the query
     });
 
     const [isHovering, setIsHovering] = useState(false);
@@ -28,7 +41,7 @@ export default function NotificationUI() {
     };
 
     // Track impression for a notification
-    const trackImpression = async (notificationId: string) => {
+    const trackImpression = useCallback(async (notificationId: string) => {
         // Only track once per notification per session
         if (trackedImpressions.has(notificationId)) {
             return;
@@ -49,7 +62,7 @@ export default function NotificationUI() {
         } catch (error) {
             console.error('Failed to track impression:', error);
         }
-    };
+    }, [trackedImpressions]);
 
     // Filter out dismissed notifications and only show ones that are showing
     const activeNotifications = notifications?.filter(notification =>
@@ -139,7 +152,7 @@ export default function NotificationUI() {
                 trackImpression(notification.id);
             });
         }
-    }, [activeNotifications]);
+    }, [activeNotifications, trackImpression]);
 
     // Show loading state
     if (isLoading) {
@@ -156,13 +169,24 @@ export default function NotificationUI() {
     }
 
     // Show error state
-    if (error) {
+    if (isError || error) {
         return (
             <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
                 <div className="bg-red-900 border-l-red-500 border-l-4 text-white rounded-xl shadow-lg p-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between gap-2">
                         <span className="text-sm">Failed to load notifications</span>
+                        <button
+                            onClick={() => refetch()}
+                            className="text-xs bg-red-700 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                        >
+                            Retry
+                        </button>
                     </div>
+                    {process.env.NODE_ENV === 'development' && (
+                        <div className="mt-2 text-xs text-red-200">
+                            Error: {error instanceof Error ? error.message : 'Unknown error'}
+                        </div>
+                    )}
                 </div>
             </div>
         );

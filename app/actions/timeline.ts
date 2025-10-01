@@ -276,9 +276,33 @@ export async function updateNotification(
 
 // get notifications
 export async function getNotifications(): Promise<NotificationType[]> {
-  const notifications = await redis.get(DATABASE_KEYS.NOTIFICATIONS);
-  if (!notifications) return [];
-  return JSON.parse(notifications);
+  try {
+    console.log(
+      "Fetching notifications from Redis with key:",
+      DATABASE_KEYS.NOTIFICATIONS
+    );
+    const notifications = await redis.get(DATABASE_KEYS.NOTIFICATIONS);
+    console.log(
+      "Raw notifications data:",
+      notifications ? "Found data" : "No data"
+    );
+
+    if (!notifications) {
+      console.log("No notifications found, returning empty array");
+      return [];
+    }
+
+    const parsedNotifications = JSON.parse(notifications);
+    console.log("Parsed notifications count:", parsedNotifications.length);
+    return parsedNotifications;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    throw new Error(
+      `Failed to fetch notifications: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
+  }
 }
 
 // delete notification
