@@ -214,14 +214,12 @@ export default function NotificationUI() {
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
-                            exit="exit"
-                        >
+                            exit="exit">
                             {notifications.map((notification, index) => {
                                 // With flex-col-reverse, first notification (index 0) appears at bottom
                                 const isFirstNotification = index === 0;
                                 const isSecondNotification = index === 1;
                                 const isThirdNotification = index === 2;
-                                notification.message = "Hello greetest world the longest messages to show to users here to see if it works"
                                 return (
                                     <motion.div
                                         key={notification.id}

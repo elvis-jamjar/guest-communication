@@ -3,18 +3,18 @@ import { redisClient } from "@/lib/db";
 
 export async function GET(_req: NextRequest) {
   try {
-    // Fetch recent notifications from Redis
-    const recentNotificationsData = await redisClient.lrange(
-      "recent_notifications",
+    // Fetch admin notifications from Redis
+    const adminNotificationsData = await redisClient.lrange(
+      "admin_notifications",
       0,
-      20
-    ); // Get last 20
+      -1
+    ); // Get all admin notifications
 
-    let recentNotifications = [];
+    let notifications = [];
 
-    if (recentNotificationsData && recentNotificationsData.length > 0) {
-      // Parse the stored notifications
-      recentNotifications = recentNotificationsData
+    if (adminNotificationsData && adminNotificationsData.length > 0) {
+      // Parse the stored notifications and filter for isShowing: true
+      notifications = adminNotificationsData
         .map((notification) => {
           try {
             return JSON.parse(notification);
@@ -23,23 +23,24 @@ export async function GET(_req: NextRequest) {
             return null;
           }
         })
-        .filter((notification) => notification !== null);
+        .filter((notification) => notification !== null)
+        .filter((notification) => notification.isShowing === true);
     } else {
-      // No recent notifications exist - return empty array
-      recentNotifications = [];
+      // No admin notifications exist - return empty array
+      notifications = [];
     }
 
-    return NextResponse.json({ notifications: recentNotifications });
+    return NextResponse.json({ notifications });
   } catch (error) {
-    console.error("Error fetching recent notifications:", error);
+    console.error("Error fetching admin notifications:", error);
     return NextResponse.json(
-      { error: "Failed to fetch recent notifications" },
+      { error: "Failed to fetch admin notifications" },
       { status: 500 }
     );
   }
 }
 
-// DELETE - Delete a notification from recent notifications
+// DELETE - Delete a notification from admin notifications
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -52,35 +53,31 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    // Get all recent notifications
-    const recentNotificationsData = await redisClient.lrange(
-      "recent_notifications",
+    // Get all admin notifications
+    const adminNotificationsData = await redisClient.lrange(
+      "admin_notifications",
       0,
       -1
     );
-    const recentNotifications = recentNotificationsData.map((n) =>
-      JSON.parse(n)
-    );
+    const adminNotifications = adminNotificationsData.map((n) => JSON.parse(n));
 
     // Filter out the notification to delete
-    const filteredNotifications = recentNotifications.filter(
-      (n) => n.id !== id
-    );
+    const filteredNotifications = adminNotifications.filter((n) => n.id !== id);
 
     // Update Redis
-    await redisClient.del("recent_notifications");
+    await redisClient.del("admin_notifications");
     if (filteredNotifications.length > 0) {
       await redisClient.lpush(
-        "recent_notifications",
+        "admin_notifications",
         ...filteredNotifications.map((n) => JSON.stringify(n))
       );
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting notification from recent:", error);
+    console.error("Error deleting notification from admin:", error);
     return NextResponse.json(
-      { error: "Failed to delete notification from recent" },
+      { error: "Failed to delete notification from admin" },
       { status: 500 }
     );
   }

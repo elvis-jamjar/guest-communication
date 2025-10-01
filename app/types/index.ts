@@ -100,6 +100,7 @@ export interface Notification {
   status?: "draft" | "active" | "expired" | "archived" | "scheduled";
   targetAudience?: "all" | "preview" | "public";
   createdBy?: string;
+  isShowing?: boolean;
   impressions?: number;
   uniqueRecipients?: number;
   recipientIPs?: string[];

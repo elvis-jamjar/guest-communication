@@ -57,12 +57,12 @@ export async function POST(req: NextRequest) {
         JSON.stringify(notification)
       );
 
-      // add the notification back to the list
+      // add the notification back to the list with toggled isShowing field
       await redisClient.lpush(
         "admin_notifications",
         JSON.stringify({
           ...notification,
-          status: "active",
+          isShowing: !notification.isShowing,
           publishedAt: new Date().toISOString(),
         })
       );
@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
       status: "active",
       targetAudience: targetAudience,
       publishedAt: notification.publishedAt,
+      isShowing: !notification.isShowing,
     };
 
     // Publish to SSE subscribers only
@@ -93,7 +94,7 @@ export async function POST(req: NextRequest) {
       success: true,
       notification: {
         id: notificationId,
-        status: "active",
+        isShowing: !notification.isShowing,
         publishedAt: notification.publishedAt,
         targetAudience: targetAudience,
       },

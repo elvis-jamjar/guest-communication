@@ -28,7 +28,8 @@ import {
     Users,
     BarChart3,
     Clock,
-    AlertTriangle
+    AlertTriangle,
+    EyeOff
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -198,11 +199,13 @@ export default function NotificationList({
         setIsActionLoading(true);
         try {
             await onPublish(selectedNotification.id, selectedNotification.targetAudience || "all");
-            toast.success("Notification published successfully");
+            const action = selectedNotification.isShowing ? "unpublished" : "published";
+            toast.success(`Notification ${action} successfully`);
             setShowPublishDialog(false);
             setSelectedNotification(null);
         } catch (error) {
-            toast.error("Failed to publish notification");
+            const action = selectedNotification.isShowing ? "unpublish" : "publish";
+            toast.error(`Failed to ${action} notification`);
             console.error(error);
         } finally {
             setIsActionLoading(false);
@@ -429,6 +432,29 @@ export default function NotificationList({
                                             <Edit className="w-4 h-4" />
                                         </Button>
 
+                                        {/* Toggle Publish/Unpublish Button */}
+                                        <Button
+                                            variant={notification.isShowing ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => handleAction("publish", notification)}
+                                            className={`${notification.isShowing
+                                                ? "bg-green-600 hover:bg-green-700 text-white"
+                                                : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                                                }`}
+                                        >
+                                            {notification.isShowing ? (
+                                                <>
+                                                    <EyeOff className="w-4 h-4 mr-1" />
+                                                    Unpublish
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Send className="w-4 h-4 mr-1" />
+                                                    Publish
+                                                </>
+                                            )}
+                                        </Button>
+
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="outline" size="sm">
@@ -437,18 +463,9 @@ export default function NotificationList({
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem onClick={() => handleAction("publish", notification)}>
-                                                    <Send className="w-4 h-4 mr-2" />
-                                                    {notification.status === "active"
-                                                        ? (
-                                                            <span>
-                                                                Publish again
-                                                            </span>
-                                                        )
-                                                        : (
-                                                            <span>
-                                                                Publish
-                                                            </span>
-                                                        )
+                                                    {notification.isShowing ? <EyeOff className="w-4 h-4 mr-2" /> : <Send className="w-4 h-4 mr-2" />}
+                                                    {
+                                                        notification.isShowing ? "Unpublish" : "Publish"
                                                     }
                                                 </DropdownMenuItem>
                                                 {/* {notification.status === "scheduled" && (
@@ -535,16 +552,23 @@ export default function NotificationList({
                 </DialogContent>
             </Dialog>
 
-            {/* Publish Confirmation Dialog */}
+            {/* Publish/Unpublish Confirmation Dialog */}
             <Dialog open={showPublishDialog} onOpenChange={setShowPublishDialog}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <Send className="w-5 h-5 text-blue-500" />
-                            Publish Notification
+                            {selectedNotification?.isShowing ? (
+                                <EyeOff className="w-5 h-5 text-orange-500" />
+                            ) : (
+                                <Send className="w-5 h-5 text-blue-500" />
+                            )}
+                            {selectedNotification?.isShowing ? "Unpublish" : "Publish"} Notification
                         </DialogTitle>
                         <DialogDescription>
-                            {`Are you sure you want to publish "${selectedNotification?.title}"? This will send the notification to ${selectedNotification?.targetAudience || "all"} users.`}
+                            {selectedNotification?.isShowing
+                                ? `Are you sure you want to unpublish "${selectedNotification?.title}"? This will hide the notification from users.`
+                                : `Are you sure you want to publish "${selectedNotification?.title}"? This will send the notification to ${selectedNotification?.targetAudience || "all"} users.`
+                            }
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -558,8 +582,12 @@ export default function NotificationList({
                         <Button
                             onClick={handleConfirmPublish}
                             disabled={isActionLoading}
+                            className={selectedNotification?.isShowing ? "bg-orange-600 hover:bg-orange-700" : ""}
                         >
-                            {isActionLoading ? "Publishing..." : "Publish"}
+                            {isActionLoading
+                                ? (selectedNotification?.isShowing ? "Unpublishing..." : "Publishing...")
+                                : (selectedNotification?.isShowing ? "Unpublish" : "Publish")
+                            }
                         </Button>
                     </DialogFooter>
                 </DialogContent>

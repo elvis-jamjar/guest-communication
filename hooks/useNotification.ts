@@ -141,12 +141,13 @@ export function useNotifications() {
   // Helper function to filter valid notifications (not expired, not dismissed, not read, and not duplicate)
   const getValidNotifications = useCallback(
     (notifications: Notification[]): Notification[] => {
-      // First filter out expired, dismissed, and read notifications
+      // First filter out expired, dismissed, read notifications, and notifications that are not showing
       let filteredNotifications = notifications.filter(
         (notification) =>
           !isNotificationExpired(notification) &&
           !isNotificationDismissed(notification) &&
-          !isNotificationRead(notification)
+          !isNotificationRead(notification) &&
+          notification.isShowing !== false // Only show notifications where isShowing is true or undefined
       );
 
       // Filter out preview notifications if not on preview path
@@ -254,6 +255,11 @@ export function useNotifications() {
           (notification.title?.toLowerCase().includes("welcome") ||
             notification.message?.toLowerCase().includes("welcome"))
         ) {
+          return prev;
+        }
+
+        // Filter out notifications that are not showing
+        if (notification.isShowing === false) {
           return prev;
         }
 
