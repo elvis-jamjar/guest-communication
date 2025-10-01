@@ -450,10 +450,20 @@ export function useNotifications() {
 
     const fetchRecentNotifications = async () => {
       try {
+        console.log(
+          "Fetching recent notifications from /api/notifications/recent"
+        );
         const response = await fetch("/api/notifications/recent");
+        console.log("Recent notifications response status:", response.status);
+
         if (response.ok) {
           const data = await response.json();
+          console.log("Recent notifications data:", data);
+
           if (data.notifications && data.notifications.length > 0) {
+            console.log(
+              `Found ${data.notifications.length} recent notifications`
+            );
             // Get current persisted notifications from state
             setNotifications((currentNotifications) => {
               // Merge with new notifications from server
@@ -466,6 +476,10 @@ export function useNotifications() {
               const validNotifications =
                 getValidNotifications(allNotifications);
 
+              console.log(
+                `After filtering, ${validNotifications.length} valid notifications`
+              );
+
               // Save to localStorage
               saveNotifications(validNotifications);
 
@@ -476,12 +490,17 @@ export function useNotifications() {
 
               return validNotifications;
             });
+          } else {
+            console.log("No recent notifications found");
           }
         } else {
           console.error(
             "Failed to fetch recent notifications:",
-            response.status
+            response.status,
+            response.statusText
           );
+          const errorText = await response.text();
+          console.error("Error response:", errorText);
         }
       } catch (error) {
         console.error("Error fetching recent notifications:", error);
@@ -514,10 +533,11 @@ export function useNotifications() {
   }, [isDataLoaded, getValidNotifications, playNotificationSound]); // Removed notifications from dependencies to prevent infinite loop
 
   useEffect(() => {
+    console.log("Setting up SSE connection to /api/notifications");
     const ev = new EventSource("/api/notifications");
 
     ev.onopen = () => {
-      console.log("SSE connection opened");
+      console.log("SSE connection opened successfully");
     };
 
     ev.onmessage = (e) => {
@@ -533,17 +553,29 @@ export function useNotifications() {
           timestamp: data.timestamp || new Date().toISOString(),
         };
 
+        console.log("Adding notification:", notificationWithId);
         addNotification(notificationWithId);
 
         // Play sound
         playNotificationSound();
       } catch (error) {
         console.error("Error parsing notification data:", error);
+        console.error("Raw data:", e.data);
       }
     };
 
     ev.onerror = (error) => {
       console.error("SSE error:", error);
+      console.error("SSE readyState:", ev.readyState);
+
+      // Attempt to reconnect after a delay
+      setTimeout(() => {
+        if (ev.readyState === EventSource.CLOSED) {
+          console.log("Attempting to reconnect SSE...");
+          ev.close();
+          // The useEffect will run again and create a new connection
+        }
+      }, 5000);
     };
 
     return () => {

@@ -1,10 +1,67 @@
 import { Redis } from "ioredis";
 
 // Create separate Redis connections for different purposes
-export const redis = new Redis(process.env.NEXT_REDIS_URL as string);
+const redisUrl = process.env.NEXT_REDIS_URL;
+
+if (!redisUrl) {
+  console.error("NEXT_REDIS_URL environment variable is not set!");
+  throw new Error("Redis URL is required");
+}
+
+console.log(
+  "Connecting to Redis:",
+  redisUrl.replace(/\/\/.*@/, "//***@") + " (password hidden)"
+);
+
+export const redis = new Redis(redisUrl, {
+  retryDelayOnFailover: 100,
+  enableReadyCheck: false,
+  maxRetriesPerRequest: 3,
+  lazyConnect: true,
+});
+
 export const redisClient = redis; // Alias for general Redis operations
-export const redisPublisher = new Redis(process.env.NEXT_REDIS_URL as string);
-export const redisSubscriber = new Redis(process.env.NEXT_REDIS_URL as string);
+export const redisPublisher = new Redis(redisUrl, {
+  retryDelayOnFailover: 100,
+  enableReadyCheck: false,
+  maxRetriesPerRequest: 3,
+  lazyConnect: true,
+});
+export const redisSubscriber = new Redis(redisUrl, {
+  retryDelayOnFailover: 100,
+  enableReadyCheck: false,
+  maxRetriesPerRequest: 3,
+  lazyConnect: true,
+});
+
+// Add connection event listeners for debugging
+redis.on("connect", () => {
+  console.log("Redis client connected");
+});
+
+redis.on("error", (err) => {
+  console.error("Redis client error:", err);
+});
+
+redis.on("close", () => {
+  console.log("Redis client connection closed");
+});
+
+redisPublisher.on("connect", () => {
+  console.log("Redis publisher connected");
+});
+
+redisPublisher.on("error", (err) => {
+  console.error("Redis publisher error:", err);
+});
+
+redisSubscriber.on("connect", () => {
+  console.log("Redis subscriber connected");
+});
+
+redisSubscriber.on("error", (err) => {
+  console.error("Redis subscriber error:", err);
+});
 
 const isLocal = process.env.isLocal === "true";
 

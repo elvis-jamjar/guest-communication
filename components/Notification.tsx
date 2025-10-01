@@ -1,6 +1,6 @@
 "use client";
 
-import { useNotifications } from "@/hooks/useNotification";
+import { useNotificationsPolling } from "@/hooks/useNotificationPolling";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon, ChevronLeftCircle, XIcon } from "lucide-react";
 import { MdClearAll } from "react-icons/md";
@@ -10,13 +10,15 @@ import React, { useState } from "react";
 export default function NotificationUI() {
     const {
         notifications,
+        isLoading,
+        error,
         isExpanded,
         expandNotifications,
         collapseNotifications,
         dismiss,
         // delete: deleteNotification,
         clearAll
-    } = useNotifications();
+    } = useNotificationsPolling();
 
     const [isHovering, setIsHovering] = useState(false);
     const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -84,6 +86,33 @@ export default function NotificationUI() {
             }
         };
     }, [collapseTimeout]);
+
+    // Show loading state
+    if (isLoading) {
+        return (
+            <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
+                <div className="bg-black border-l-primary-main border-l-4 text-white rounded-xl shadow-lg p-4">
+                    <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-main"></div>
+                        <span className="text-sm">Loading notifications...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show error state
+    if (error) {
+        return (
+            <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
+                <div className="bg-red-900 border-l-red-500 border-l-4 text-white rounded-xl shadow-lg p-4">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm">Failed to load notifications</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!notifications || notifications.length === 0) return null;
 
@@ -306,8 +335,9 @@ export default function NotificationUI() {
                                                             <Trash2 className="size-3" />
                                                         </button> */}
                                                         <button
+                                                            hidden={true}
                                                             onClick={() => dismiss(notification.id)}
-                                                            className="text-gray-400 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
+                                                            className="text-gray-400 hidden opacity-0 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
                                                             title="Dismiss notification">
                                                             <XIcon className="size-3" />
                                                         </button>

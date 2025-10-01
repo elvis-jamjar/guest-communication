@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: false, // Keep console logs for debugging notifications
   },
   experimental: {
     typedRoutes: true,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { redisClient, redisPublisher } from "@/lib/db";
+import { redisClient } from "@/lib/db";
 import { Notification } from "@/app/types";
 
 // Helper function to deduplicate notifications by ID
@@ -85,8 +85,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Publish to SSE subscribers (without storing in recent_notifications)
-    const sseNotification: Notification = {
+    // Store the published notification in recent_notifications for polling
+    const publishedNotification: Notification = {
       id: notification.id,
       title: notification.title,
       message: notification.message,
@@ -101,11 +101,12 @@ export async function POST(req: NextRequest) {
       isShowing: !notification.isShowing,
     };
 
-    // Publish to SSE subscribers only
-    await redisPublisher.publish(
-      "notifications",
-      JSON.stringify(sseNotification)
+    // Store in recent notifications for polling system
+    await redisClient.lpush(
+      "recent_notifications",
+      JSON.stringify(publishedNotification)
     );
+    await redisClient.ltrim("recent_notifications", 0, 19); // Keep only last 20
 
     return NextResponse.json({
       success: true,
