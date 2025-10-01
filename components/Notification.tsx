@@ -88,8 +88,6 @@ export default function NotificationUI() {
     if (!notifications || notifications.length === 0) return null;
 
 
-
-
     // Animation variants
     const notificationVariants = {
         hidden: {
@@ -165,8 +163,7 @@ export default function NotificationUI() {
             className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-sm md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl", notifications.length === 1 && "md:max-w-sm bg-transparent")}
             data-notification-container
             onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+            onMouseLeave={handleMouseLeave}>
             {/* Clear all button - only show when expanded */}
             <div
                 className={cn(
@@ -224,7 +221,7 @@ export default function NotificationUI() {
                                 const isFirstNotification = index === 0;
                                 const isSecondNotification = index === 1;
                                 const isThirdNotification = index === 2;
-
+                                notification.message = "Hello greetest world the longest messages to show to users here to see if it works"
                                 return (
                                     <motion.div
                                         key={notification.id}
@@ -313,15 +310,14 @@ export default function NotificationUI() {
                                                         <button
                                                             onClick={() => dismiss(notification.id)}
                                                             className="text-gray-400 hover:text-white text-xs p-1 rounded hover:bg-gray-500/20 transition-colors"
-                                                            title="Dismiss notification"
-                                                        >
+                                                            title="Dismiss notification">
                                                             <XIcon className="size-3" />
                                                         </button>
                                                     </div>
                                                 </div>
                                                 <div className="mb-3">
                                                     <p className="text-sm text-white">
-                                                        {!isExpanded && shouldTruncateMessage(notification.message)
+                                                        {!isExpanded && shouldTruncateMessage(notification.message) && notifications.length > 1
                                                             ? `${notification.message.substring(0, 40)}...`
                                                             : notification.message
                                                         }

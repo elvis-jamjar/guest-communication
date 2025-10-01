@@ -7,8 +7,8 @@ export async function GET(_req: NextRequest) {
     const recentNotificationsData = await redisClient.lrange(
       "recent_notifications",
       0,
-      5
-    ); // Get last 5
+      20
+    ); // Get last 20
 
     let recentNotifications = [];
 

@@ -54,26 +54,9 @@ export function useNotifications() {
             );
           }
 
-          // Validate notifications against server - only show notifications that exist on server
-          try {
-            const response = await fetch("/api/notifications/recent");
-            if (response.ok) {
-              const serverData = await response.json();
-              const serverNotificationIds = new Set(
-                serverData.notifications?.map((n: Notification) => n.id) || []
-              );
-
-              // Filter to only include notifications that exist on server
-              filteredNotifications = filteredNotifications.filter(
-                (notification: Notification) =>
-                  serverNotificationIds.has(notification.id)
-              );
-            }
-          } catch (error) {
-            console.error("Error validating notifications with server:", error);
-            // If server validation fails, don't show any notifications from localStorage
-            filteredNotifications = [];
-          }
+          // Note: Removed server validation to allow late-joining users to see notifications
+          // that were sent before they joined. The server validation was preventing users
+          // from seeing notifications that were no longer in the recent notifications list.
 
           setNotifications(filteredNotifications);
         }
@@ -185,11 +168,23 @@ export function useNotifications() {
         );
       }
 
-      // Then remove duplicates, keeping only the first occurrence of each unique content
+      // First remove duplicates by ID, keeping the first occurrence
+      const idSeen = new Set<string>();
+      const uniqueByIdNotifications = filteredNotifications.filter(
+        (notification) => {
+          if (idSeen.has(notification.id)) {
+            return false;
+          }
+          idSeen.add(notification.id);
+          return true;
+        }
+      );
+
+      // Then remove duplicates by content, keeping only the first occurrence of each unique content
       const uniqueNotifications: Notification[] = [];
       const seenContentKeys = new Set<string>();
 
-      for (const notification of filteredNotifications) {
+      for (const notification of uniqueByIdNotifications) {
         const contentKey = createContentKey(
           notification.title,
           notification.message
@@ -453,29 +448,34 @@ export function useNotifications() {
         if (response.ok) {
           const data = await response.json();
           if (data.notifications && data.notifications.length > 0) {
-            // Get current persisted notifications
-            const currentNotifications = notifications;
+            // Get current persisted notifications from state
+            setNotifications((currentNotifications) => {
+              // Merge with new notifications from server
+              const allNotifications = [
+                ...currentNotifications,
+                ...data.notifications,
+              ];
 
-            // Merge with new notifications from server
-            const allNotifications = [
-              ...currentNotifications,
-              ...data.notifications,
-            ];
+              // Filter out expired and dismissed notifications
+              const validNotifications =
+                getValidNotifications(allNotifications);
 
-            // Filter out expired and dismissed notifications
-            const validNotifications = getValidNotifications(allNotifications);
-
-            // Only update if there are new valid notifications
-            if (validNotifications.length !== currentNotifications.length) {
-              setNotifications(validNotifications);
+              // Save to localStorage
               saveNotifications(validNotifications);
 
-              // Play sound for the most recent notification
+              // Play sound for the most recent notification if there are notifications
               if (validNotifications.length > 0) {
                 playNotificationSound();
               }
-            }
+
+              return validNotifications;
+            });
           }
+        } else {
+          console.error(
+            "Failed to fetch recent notifications:",
+            response.status
+          );
         }
       } catch (error) {
         console.error("Error fetching recent notifications:", error);
@@ -485,45 +485,27 @@ export function useNotifications() {
     // Fetch recent notifications on first load
     fetchRecentNotifications();
 
-    // Set up periodic server validation to ensure notifications still exist on server
-    const validationInterval = setInterval(async () => {
-      try {
-        const response = await fetch("/api/notifications/recent");
-        if (response.ok) {
-          const serverData = await response.json();
-          const serverNotificationIds = new Set(
-            serverData.notifications?.map((n: Notification) => n.id) || []
-          );
+    // Set up periodic cleanup to remove expired notifications
+    const cleanupInterval = setInterval(() => {
+      setNotifications((prevNotifications) => {
+        const validNotifications = prevNotifications.filter(
+          (notification) => !isNotificationExpired(notification)
+        );
 
-          // Remove notifications that no longer exist on server
-          setNotifications((prevNotifications) => {
-            const validNotifications = prevNotifications.filter(
-              (notification) => serverNotificationIds.has(notification.id)
-            );
-
-            // Only update if there are changes
-            if (validNotifications.length !== prevNotifications.length) {
-              saveNotifications(validNotifications);
-              return validNotifications;
-            }
-
-            return prevNotifications;
-          });
+        // Only update if there are changes
+        if (validNotifications.length !== prevNotifications.length) {
+          saveNotifications(validNotifications);
+          return validNotifications;
         }
-      } catch (error) {
-        console.error("Error validating notifications with server:", error);
-      }
+
+        return prevNotifications;
+      });
     }, 30000); // Check every 30 seconds
 
     return () => {
-      clearInterval(validationInterval);
+      clearInterval(cleanupInterval);
     };
-  }, [
-    isDataLoaded,
-    getValidNotifications,
-    notifications,
-    playNotificationSound,
-  ]); // Include all dependencies
+  }, [isDataLoaded, getValidNotifications, playNotificationSound]); // Removed notifications from dependencies to prevent infinite loop
 
   useEffect(() => {
     const ev = new EventSource("/api/notifications");

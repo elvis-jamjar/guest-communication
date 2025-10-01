@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
       timestamp: notificationData.timestamp || new Date().toISOString(),
     };
 
-    // Store in a list of recent notifications (keep last 10)
+    // Store in a list of recent notifications (keep last 20)
     await redisClient.lpush(
       "recent_notifications",
       JSON.stringify(notificationWithTimestamp)
     );
-    await redisClient.ltrim("recent_notifications", 0, 9); // Keep only last 10
+    await redisClient.ltrim("recent_notifications", 0, 19); // Keep only last 20
 
     return NextResponse.json({ status: "ok" });
   } catch (error) {
