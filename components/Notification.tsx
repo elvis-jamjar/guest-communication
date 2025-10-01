@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "@/app/actions/timeline";
 
 export default function NotificationUI() {
-    const { data: notifications, refetch, isLoading, error, isError } = useQuery({
+    const { data: notifications, refetch, isLoading, isError } = useQuery({
         queryKey: ['user-admin-notifications'],
         queryFn: async () => await getNotifications(),
         staleTime: 1000 * 60 * 10, // 10 minutes
@@ -113,44 +113,44 @@ export default function NotificationUI() {
 
 
     // Show loading state
-    if (isLoading) {
-        return (
-            <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
-                <div className="bg-black border-l-primary-main border-l-4 text-white rounded-xl shadow-lg p-4">
-                    <div className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-main"></div>
-                        <span className="text-sm">Loading notifications...</span>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    // if (isLoading) {
+    //     return (
+    //         <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
+    //             <div className="bg-black border-l-primary-main border-l-4 text-white rounded-xl shadow-lg p-4">
+    //                 <div className="flex items-center gap-2">
+    //                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-main"></div>
+    //                     <span className="text-sm">Loading notifications...</span>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
     // Show error state
-    if (isError || error) {
-        return (
-            <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
-                <div className="bg-red-900 border-l-red-500 border-l-4 text-white rounded-xl shadow-lg p-4">
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm">Failed to load notifications</span>
-                        <button
-                            onClick={() => refetch()}
-                            className="text-xs bg-red-700 hover:bg-red-600 px-2 py-1 rounded transition-colors"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                    {process.env.NODE_ENV === 'development' && (
-                        <div className="mt-2 text-xs text-red-200">
-                            Error: {error instanceof Error ? error.message : 'Unknown error'}
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    }
+    // if (isError || error) {
+    //     return (
+    //         <div className="fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0">
+    //             <div className="bg-red-900 border-l-red-500 border-l-4 text-white rounded-xl shadow-lg p-4">
+    //                 <div className="flex items-center justify-between gap-2">
+    //                     <span className="text-sm">Failed to load notifications</span>
+    //                     <button
+    //                         onClick={() => refetch()}
+    //                         className="text-xs bg-red-700 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+    //                     >
+    //                         Retry
+    //                     </button>
+    //                 </div>
+    //                 {process.env.NODE_ENV === 'development' && (
+    //                     <div className="mt-2 text-xs text-red-200">
+    //                         Error: {error instanceof Error ? error.message : 'Unknown error'}
+    //                     </div>
+    //                 )}
+    //             </div>
+    //         </div>
+    //     );
+    // }
 
-    if (!activeNotifications || activeNotifications.length === 0) return null;
+    if (!activeNotifications || activeNotifications.length === 0 || isLoading || isError) return null;
 
 
     // Animation variants
