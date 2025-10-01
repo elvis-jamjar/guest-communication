@@ -14,7 +14,6 @@ console.log(
 );
 
 export const redis = new Redis(redisUrl, {
-  retryDelayOnFailover: 100,
   enableReadyCheck: false,
   maxRetriesPerRequest: 3,
   lazyConnect: true,
@@ -22,13 +21,11 @@ export const redis = new Redis(redisUrl, {
 
 export const redisClient = redis; // Alias for general Redis operations
 export const redisPublisher = new Redis(redisUrl, {
-  retryDelayOnFailover: 100,
   enableReadyCheck: false,
   maxRetriesPerRequest: 3,
   lazyConnect: true,
 });
 export const redisSubscriber = new Redis(redisUrl, {
-  retryDelayOnFailover: 100,
   enableReadyCheck: false,
   maxRetriesPerRequest: 3,
   lazyConnect: true,

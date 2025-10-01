@@ -37,7 +37,7 @@ export function useNotificationsPolling() {
   } = useQuery({
     queryKey: ["notifications"],
     queryFn: fetchNotifications,
-    refetchInterval: 30000, // Poll every 30 seconds
+    refetchInterval: 10000, // Poll every 10 seconds
     refetchIntervalInBackground: true,
     staleTime: 0, // Always consider data stale to ensure fresh polling
     enabled: isDataLoaded, // Only start polling after localStorage data is loaded
