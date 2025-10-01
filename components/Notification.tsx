@@ -3,7 +3,7 @@
 import { useNotificationsPolling } from "@/hooks/useNotificationPolling";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon, ChevronLeftCircle, XIcon } from "lucide-react";
-import { MdClearAll } from "react-icons/md";
+// import { MdClearAll } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 
@@ -17,7 +17,7 @@ export default function NotificationUI() {
         collapseNotifications,
         dismiss,
         // delete: deleteNotification,
-        clearAll
+        // clearAll
     } = useNotificationsPolling();
 
     const [isHovering, setIsHovering] = useState(false);
@@ -208,14 +208,15 @@ export default function NotificationUI() {
                 }}
             >
                 <h2 className="md:text-black text-white text-xl font-bold mb-2">Notifications</h2>
-                <div className="flex justify-center gap-4 items-center">
-                    <button
+                <div className="flex justify-end gap-4 items-center">
+                    {/* <button
+                        hidden={true}
                         onClick={clearAll}
-                        className="bg-primary-purple flex items-center gap-1 hover:bg-primary-purple/80 text-white px-3 py-2 rounded-lg text-xs transition-colors duration-200"
+                        className="bg-primary-purple opacity-0 hidden items-center gap-1 hover:bg-primary-purple/80 text-white px-3 py-2 rounded-lg text-xs transition-colors duration-200"
                     >
                         <MdClearAll className="size-4" />
                         Clear All
-                    </button>
+                    </button> */}
                     {/* minimize button */}
                     <button
                         onClick={collapseNotifications}
