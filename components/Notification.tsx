@@ -160,7 +160,7 @@ export default function NotificationUI() {
 
     return (
         <div
-            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-sm md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl", notifications.length === 1 && "md:max-w-sm bg-transparent")}
+            className={cn("fixed bottom-4 md:bottom-4 right-1/2 translate-x-1/2 z-50 w-full max-w-full p-4 md:p-2 md:max-w-md md:right-4 md:translate-x-0", isExpanded && "md:max-w-xl bg-primary-main/30 backdrop-blur-sm rounded-xl", notifications.length === 1 && "md:max-w-xl bg-transparent")}
             data-notification-container
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}>
@@ -314,7 +314,7 @@ export default function NotificationUI() {
                                                     </div>
                                                 </div>
                                                 <div className="mb-3">
-                                                    <p className="text-sm text-white">
+                                                    <p className="text-sm text-gray-300">
                                                         {!isExpanded && shouldTruncateMessage(notification.message) && notifications.length > 1
                                                             ? `${notification.message.substring(0, 40)}...`
                                                             : notification.message
