@@ -4,65 +4,30 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon, ChevronLeftCircle, XIcon, RefreshCw } from "lucide-react";
 // import { MdClearAll } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "@/app/actions/timeline";
 
 export default function NotificationUI() {
     const { data: notifications, refetch, isLoading, error, isError } = useQuery({
         queryKey: ['admin-notifications'],
-        queryFn: async () => {
-            try {
-                const result = await getNotifications();
-                console.log('Notifications fetched successfully:', result?.length || 0, 'notifications');
-                return result;
-            } catch (err) {
-                console.error('Error fetching notifications:', err);
-                throw err;
-            }
-        },
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        refetchInterval: 30000, // Refetch every 30 seconds
-        refetchIntervalInBackground: false,
-        retry: 3,
-        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-        enabled: true, // Explicitly enable the query
+        queryFn: async () => await getNotifications(),
+        staleTime: 1000 * 60 * 10, // 10 minutes
+        refetchOnWindowFocus: false,
+        refetchOnMount: true,
+        retry: 1,
     });
 
     const [isHovering, setIsHovering] = useState(false);
     const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
     const [dismissedNotifications, setDismissedNotifications] = useState<Set<string>>(new Set());
-    const [trackedImpressions, setTrackedImpressions] = useState<Set<string>>(new Set());
 
     // Check if message should be truncated
     const shouldTruncateMessage = (message: string) => {
         return message.length > 100; // Truncate if longer than 100 characters
     };
 
-    // Track impression for a notification
-    const trackImpression = useCallback(async (notificationId: string) => {
-        // Only track once per notification per session
-        if (trackedImpressions.has(notificationId)) {
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/notifications/impression', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ notificationId }),
-            });
-
-            if (response.ok) {
-                setTrackedImpressions(prev => new Set(prev).add(notificationId));
-            }
-        } catch (error) {
-            console.error('Failed to track impression:', error);
-        }
-    }, [trackedImpressions]);
 
     // Filter out dismissed notifications and only show ones that are showing
     const activeNotifications = notifications?.filter(notification =>
@@ -144,15 +109,6 @@ export default function NotificationUI() {
         };
     }, [collapseTimeout]);
 
-    // Track impressions when notifications are displayed
-    useEffect(() => {
-        if (activeNotifications && activeNotifications.length > 0) {
-            // Track impressions for all visible notifications
-            activeNotifications.forEach(notification => {
-                trackImpression(notification.id);
-            });
-        }
-    }, [activeNotifications, trackImpression]);
 
     // Show loading state
     if (isLoading) {

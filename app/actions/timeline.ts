@@ -276,33 +276,9 @@ export async function updateNotification(
 
 // get notifications
 export async function getNotifications(): Promise<NotificationType[]> {
-  try {
-    console.log(
-      "Fetching notifications from Redis with key:",
-      DATABASE_KEYS.NOTIFICATIONS
-    );
-    const notifications = await redis.get(DATABASE_KEYS.NOTIFICATIONS);
-    console.log(
-      "Raw notifications data:",
-      notifications ? "Found data" : "No data"
-    );
-
-    if (!notifications) {
-      console.log("No notifications found, returning empty array");
-      return [];
-    }
-
-    const parsedNotifications = JSON.parse(notifications);
-    console.log("Parsed notifications count:", parsedNotifications.length);
-    return parsedNotifications;
-  } catch (error) {
-    console.error("Error fetching notifications:", error);
-    throw new Error(
-      `Failed to fetch notifications: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
-  }
+  const notifications = await redis.get(DATABASE_KEYS.NOTIFICATIONS);
+  if (!notifications) return [];
+  return JSON.parse(notifications);
 }
 
 // delete notification
@@ -343,36 +319,6 @@ export async function publishNotification(
   await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
 
   return updatedNotification;
-}
-
-// update impressions
-export async function updateImpressions(
-  notificationId: string,
-  userIp: string
-): Promise<void> {
-  const notifications = await getNotifications();
-  const notificationIndex = notifications.findIndex(
-    (n) => n.id === notificationId
-  );
-  if (notificationIndex === -1) {
-    throw new Error("Notification not found");
-  }
-
-  const notification = notifications[notificationIndex];
-  const recipientIPs = notification.recipientIPs || [];
-
-  if (!recipientIPs.includes(userIp)) {
-    recipientIPs.push(userIp);
-    const updatedNotification = {
-      ...notification,
-      impressions: (notification.impressions || 0) + 1,
-      uniqueRecipients: recipientIPs.length,
-      recipientIPs: recipientIPs,
-    };
-
-    notifications[notificationIndex] = updatedNotification;
-    await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
-  }
 }
 
 // archive notification
