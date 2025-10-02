@@ -4,26 +4,60 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon, ChevronLeftCircle, XIcon, RefreshCw } from "lucide-react";
 // import { MdClearAll } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useState, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getNotifications } from "@/app/actions/timeline";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getNotifications, increaseImpressions } from "@/app/actions/timeline";
+const USER_NOTFICATION_IMPRESSIONS_KEY = 'user-notification-impressions';
 
 export default function NotificationUI() {
     const { data: notifications, refetch, isLoading, isError } = useQuery({
-        queryKey: ['user-admin-notifications'],
+        queryKey: ['user-notifications'],
         queryFn: async () => await getNotifications(),
         staleTime: 1000 * 60 * 10, // 10 minutes
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus: true,
         refetchOnMount: true,
-        retry: 1,
+        retry: Infinity,
         refetchInterval: 15000, // Refetch every 15 seconds
-        refetchIntervalInBackground: true,
+        refetchIntervalInBackground: false,
+    });
+
+    const increaseImpressionsMutation = useMutation({
+        mutationFn: increaseImpressions,
+        onSuccess: (updatedNotification) => {
+            // get existing impressions
+            const existingImpressions = document.cookie.split(`${USER_NOTFICATION_IMPRESSIONS_KEY}=`)[1];
+            if (existingImpressions) {
+                const impressions = existingImpressions.split(',');
+                impressions.push(updatedNotification.id);
+                document.cookie = `${USER_NOTFICATION_IMPRESSIONS_KEY}=${impressions.join(',')}; path=/`;
+            } else {
+                document.cookie = `${USER_NOTFICATION_IMPRESSIONS_KEY}=${updatedNotification.id}; path=/`;
+            }
+        },
     });
 
     const [isHovering, setIsHovering] = useState(false);
     const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
     const [dismissedNotifications, setDismissedNotifications] = useState<Set<string>>(new Set());
+
+    //store user notification impressions in cookies
+    const storeImpression = useCallback(async (_activeNotifications: typeof activeNotifications) => {
+        const _notificationsToSendImpressions: string[] = [];
+        for (let i = 0; i < _activeNotifications.length; i++) {
+            const notification = _activeNotifications[i];
+            const existingImpressions = document.cookie.split(`${USER_NOTFICATION_IMPRESSIONS_KEY}=`)[1];
+            const impressions = existingImpressions ? existingImpressions.split(',') : [];
+
+            if (!impressions.includes(notification.id) && notification.isShowing) {
+                _notificationsToSendImpressions.push(notification.id);
+            }
+        }
+        if (_notificationsToSendImpressions.length > 0) {
+            await Promise.all(_notificationsToSendImpressions.map(id => increaseImpressionsMutation.mutateAsync(id)));
+        }
+    }, [increaseImpressionsMutation]);
+
 
     // Check if message should be truncated
     const shouldTruncateMessage = (message: string) => {
@@ -32,12 +66,23 @@ export default function NotificationUI() {
 
 
     // Filter out dismissed notifications and only show ones that are showing
-    const activeNotifications = notifications?.filter(notification =>
-        !dismissedNotifications.has(notification.id) &&
-        notification.isShowing
-    ) || [];
+    const activeNotifications = useMemo(() =>
+        notifications?.filter(notification =>
+            !dismissedNotifications.has(notification.id) &&
+            notification.isShowing
+        ) || [],
+        [notifications, dismissedNotifications]);
 
     const hasMoreNotifications = activeNotifications.length > 1;
+
+    useEffect(() => {
+        console.log('activeNotifications', activeNotifications);
+        if (activeNotifications && activeNotifications.length > 0) {
+            console.log('storing impressions');
+            storeImpression(activeNotifications);
+        }
+    }, [storeImpression, activeNotifications.length]);
+
 
     // Expand notifications function
     const expandNotifications = () => {
@@ -152,7 +197,6 @@ export default function NotificationUI() {
 
     if (!activeNotifications || activeNotifications.length === 0 || isLoading || isError) return null;
 
-
     // Animation variants
     const notificationVariants = {
         hidden: {
@@ -232,7 +276,7 @@ export default function NotificationUI() {
             {/* Clear all button - only show when expanded */}
             <div
                 className={cn(
-                    "transition-all flex justify-between items-center duration-500 ease-out transform",
+                    "transition-all pb-2 px-1.5 flex justify-between items-center duration-500 ease-out transform",
                     isExpanded && activeNotifications.length > 1
                         ? "opacity-100 translate-x-0 scale-100"
                         : "opacity-0 translate-x-8 scale-95 pointer-events-none"
@@ -243,7 +287,7 @@ export default function NotificationUI() {
                         : '0ms'
                 }}
             >
-                <h2 className="md:text-black text-white text-xl font-bold mb-2">Notifications</h2>
+                <h2 className="md:text-primary-main text-white text-xl font-bold mb-2">Notifications</h2>
                 <div className="flex justify-end gap-4 items-center">
                     {/* Refresh button */}
                     <button
@@ -341,7 +385,7 @@ export default function NotificationUI() {
                                         <div className={cn(
                                             "relative p-0.5 group",
                                             !isExpanded && hasMoreNotifications && !isFirstNotification && "shadow-lg border border-gray-700/30",
-                                            "hover:scale-[1.02] transition-transform duration-200"
+                                            "hover:scale-[1.01] transition-transform duration-200"
                                         )}>
                                             {/* Rotating gradient border */}
                                             {/* <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary-main via-primary-purple to-primary-main smooth-rotate"></div> */}

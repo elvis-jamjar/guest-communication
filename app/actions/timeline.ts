@@ -274,6 +274,26 @@ export async function updateNotification(
   return updatedNotification;
 }
 
+// increase impressions
+export async function increaseImpressions(
+  notificationId: string
+): Promise<NotificationType> {
+  const notifications = await getNotifications();
+  const notificationIndex = notifications.findIndex(
+    (n) => n.id === notificationId
+  );
+  if (notificationIndex === -1) {
+    throw new Error("Notification not found");
+  }
+  const updatedNotification = {
+    ...notifications[notificationIndex],
+    impressions: (notifications[notificationIndex].impressions || 0) + 1,
+  };
+  notifications[notificationIndex] = updatedNotification;
+  await redis.set(DATABASE_KEYS.NOTIFICATIONS, JSON.stringify(notifications));
+  return updatedNotification;
+}
+
 // get notifications
 export async function getNotifications(): Promise<NotificationType[]> {
   const notifications = await redis.get(DATABASE_KEYS.NOTIFICATIONS);

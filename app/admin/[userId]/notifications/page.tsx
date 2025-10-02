@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Plus,
-    BarChart3,
+    // BarChart3,
     Bell,
     RefreshCw,
     Eye,
@@ -16,7 +16,7 @@ import {
 import { toast } from "sonner";
 import NotificationForm from "@/components/NotificationForm";
 import NotificationList from "@/components/NotificationList";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+// import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import { Notification } from "@/app/types";
 import {
     createNotification,
@@ -27,6 +27,8 @@ import {
     getNotifications
 } from "@/app/actions/timeline";
 
+const ADMIN_NOTIFICATIONS_KEY = 'admin-notifications';
+
 export default function NotificationManagementPage({ params }: { params: { userId: string } }) {
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -35,9 +37,11 @@ export default function NotificationManagementPage({ params }: { params: { userI
 
     // Fetch notifications using React Query
     const { data: notifications = [], isLoading, refetch } = useQuery({
-        queryKey: ['admin-notifications'],
+        queryKey: [ADMIN_NOTIFICATIONS_KEY],
         queryFn: async () => await getNotifications(),
         staleTime: 1000 * 60 * 5, // 5 minutes
+        refetchOnWindowFocus: true,
+        refetchOnMount: true
     });
 
     // Create notification mutation
@@ -60,7 +64,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
         mutationFn: ({ id, data }: { id: string; data: Partial<Omit<Notification, 'id' | 'timestamp' | 'impressions' | 'uniqueRecipients' | 'recipientIPs'>> }) =>
             updateNotification(id, data),
         onSuccess: (updatedNotification, variables) => {
-            queryClient.setQueryData(['admin-notifications'], (old: Notification[] = []) =>
+            queryClient.setQueryData([ADMIN_NOTIFICATIONS_KEY], (old: Notification[] = []) =>
                 old.map(n => n.id === variables.id ? updatedNotification : n)
             );
             setEditingNotification(null);
@@ -247,7 +251,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
                                     <Plus className="w-5 h-5" />
                                     <span className="font-medium">{editingNotification ? "Edit Notification" : "Create New"}</span>
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={() => setActiveTab("analytics")}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${activeTab === "analytics"
                                         ? "bg-primary-purple text-white shadow-sm"
@@ -256,7 +260,7 @@ export default function NotificationManagementPage({ params }: { params: { userI
                                 >
                                     <BarChart3 className="w-5 h-5" />
                                     <span className="font-medium">Analytics</span>
-                                </button>
+                                </button> */}
                                 <button
                                     onClick={() => setActiveTab("preview")}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${activeTab === "preview"
@@ -291,12 +295,12 @@ export default function NotificationManagementPage({ params }: { params: { userI
                                     </p>
                                 </div>
                             )} */}
-                            {activeTab === "analytics" && (
+                            {/* {activeTab === "analytics" && (
                                 <div>
                                     <h2 className="text-xl font-semibold text-gray-900 mb-2">Analytics Dashboard</h2>
                                     <p className="text-sm text-gray-600">Track performance and engagement metrics</p>
                                 </div>
-                            )}
+                            )} */}
                             {activeTab === "preview" && (
                                 <div>
                                     <h2 className="text-xl font-semibold text-gray-900 mb-2">Live Preview</h2>
@@ -336,11 +340,11 @@ export default function NotificationManagementPage({ params }: { params: { userI
                                 </div>
                             )}
 
-                            {activeTab === "analytics" && (
+                            {/* {activeTab === "analytics" && (
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200">
                                     <AnalyticsDashboard onRefresh={() => refetch()} />
                                 </div>
-                            )}
+                            )} */}
 
                             {activeTab === "preview" && (
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200">

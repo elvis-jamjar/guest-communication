@@ -23,7 +23,9 @@ export default function Home({ params }: { params: { userId: string } }) {
     const { data, refetch } = useQuery({
         queryKey: ['admin-data'],
         queryFn: async () => await getData(),
-        staleTime: 1000 * 60 * 10 // 
+        staleTime: 1000 * 60 * 10,
+        // refetchOnWindowFocus: true,
+        // refetchOnMount: true,
     });
     const [columns, setColumns] = useState<number>(Number(data?.settings.columns || 1));
 

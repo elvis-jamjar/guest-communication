@@ -165,21 +165,21 @@ export default function NotificationForm({
         }
 
         // Validate dates
-        const dateErrors = validateDates();
-        if (dateErrors.length > 0) {
-            toast.error(dateErrors[0]);
-            return;
-        }
+        // const dateErrors = validateDates();
+        // if (dateErrors.length > 0) {
+        //     toast.error(dateErrors[0]);
+        //     return;
+        // }
 
         setIsSaving(true);
         try {
             const savedNotification = await onSave(formData, true); // Clear form when manually saving
-            toast.success(isEditing ? "Notification updated successfully" : "Notification saved successfully");
+            // toast.success(isEditing ? "Notification updated successfully" : "Notification saved successfully");
             resetForm();
             onSuccess?.();
             return savedNotification;
         } catch (error) {
-            toast.error("Failed to save notification");
+            // toast.error("Failed to save notification");
             console.error(error);
             throw error;
         } finally {
@@ -220,7 +220,7 @@ export default function NotificationForm({
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title *</Label>
                                     <Input
@@ -257,7 +257,7 @@ export default function NotificationForm({
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className=" grid-cols-1 md:grid-cols-2 gap-4 hidden">
                                 <div className="space-y-2">
                                     <Label htmlFor="status">Status</Label>
                                     <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>
@@ -287,7 +287,7 @@ export default function NotificationForm({
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-2 hidden">
                                 <Label htmlFor="expiresAt">Expiration Date (Optional)</Label>
                                 <Input
                                     id="expiresAt"
@@ -304,7 +304,7 @@ export default function NotificationForm({
                     </Card>
 
                     {/* Scheduling Section */}
-                    <Card>
+                    <Card className="hidden">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Clock className="w-5 h-5 text-primary-purple" />

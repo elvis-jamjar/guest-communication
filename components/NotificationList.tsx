@@ -69,7 +69,7 @@ export default function NotificationList({
 
     // Dialog state management
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [showPublishDialog, setShowPublishDialog] = useState(false);
+    // const [showPublishDialog, setShowPublishDialog] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
     const [isActionLoading, setIsActionLoading] = useState(false);
 
@@ -163,14 +163,14 @@ export default function NotificationList({
                 break;
             case "publish":
                 setSelectedNotification(notification);
-                setShowPublishDialog(true);
+                // setShowPublishDialog(true);
                 break;
             case "archive":
                 try {
                     await onArchive(notification.id);
-                    toast.success("Notification archived successfully");
+                    // toast.success("Notification archived successfully");
                 } catch (error) {
-                    toast.error("Failed to archive notification");
+                    // toast.error("Failed to archive notification");
                     console.error(error);
                 }
                 break;
@@ -184,8 +184,8 @@ export default function NotificationList({
             // toast.success(`Notification ${action} successfully`);
         } catch (error) {
             const action = notification.isShowing ? "unpublish" : "publish";
-            toast.error(`Failed to ${action} notification`);
-            console.error(error);
+            // toast.error(`Failed to ${action} notification`);
+            console.error(error, action);
         }
     };
 
@@ -195,30 +195,11 @@ export default function NotificationList({
         setIsActionLoading(true);
         try {
             await onDelete(selectedNotification.id);
-            toast.success("Notification deleted successfully");
+            // toast.success("Notification deleted successfully");
             setShowDeleteDialog(false);
             setSelectedNotification(null);
         } catch (error) {
-            toast.error("Failed to delete notification");
-            console.error(error);
-        } finally {
-            setIsActionLoading(false);
-        }
-    };
-
-    const handleConfirmPublish = async () => {
-        if (!selectedNotification) return;
-
-        setIsActionLoading(true);
-        try {
-            await onPublish(selectedNotification.id, selectedNotification.targetAudience || "all");
-            const action = selectedNotification.isShowing ? "unpublished" : "published";
-            toast.success(`Notification ${action} successfully`);
-            setShowPublishDialog(false);
-            setSelectedNotification(null);
-        } catch (error) {
-            const action = selectedNotification.isShowing ? "unpublish" : "publish";
-            toast.error(`Failed to ${action} notification`);
+            // toast.error("Failed to delete notification");
             console.error(error);
         } finally {
             setIsActionLoading(false);
@@ -237,7 +218,7 @@ export default function NotificationList({
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-4">
             {/* Filters */}
             <Card>
                 <CardHeader>
@@ -368,20 +349,19 @@ export default function NotificationList({
                                         <div className="flex items-center gap-3">
                                             <h3 className="font-semibold text-lg">{notification.title}</h3>
                                             <Badge className={getStatusColor(notification.status || "draft")}>
-                                                {notification.status || "draft"}
+                                                {notification.isShowing ? "Published" : "Draft"}
                                             </Badge>
                                             <Badge className={getPriorityColor(notification.priority || "medium")}>
                                                 {notification.priority || "medium"}
                                             </Badge>
-                                            {notification.targetAudience && (
+                                            {/* {notification.targetAudience && (
                                                 <Badge variant="outline">
                                                     {notification.targetAudience}
                                                 </Badge>
-                                            )}
+                                            )} */}
                                         </div>
 
                                         <p className="text-gray-600 line-clamp-2">{notification.message}</p>
-
                                         {notification.links && notification.links.length > 0 && (
                                             <div className="flex flex-wrap gap-2">
                                                 {notification.links.map((link, index) => (
@@ -419,12 +399,12 @@ export default function NotificationList({
                                                 </div>
                                             )}
 
-                                            {notification.uniqueRecipients !== undefined && (
+                                            {/* {notification.uniqueRecipients !== undefined && (
                                                 <div className="flex items-center gap-1 whitespace-nowrap">
                                                     <Users className="w-4 h-4" />
                                                     {notification.uniqueRecipients} recipients
                                                 </div>
-                                            )}
+                                            )} */}
 
                                             {notification.expiresAt && (
                                                 <div className="flex items-center gap-1 whitespace-nowrap">
@@ -464,7 +444,7 @@ export default function NotificationList({
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleAction("publish", notification)}>
+                                                <DropdownMenuItem onClick={() => handleTogglePublish(notification)}>
                                                     {notification.isShowing ? <EyeOff className="w-4 h-4 mr-2" /> : <Send className="w-4 h-4 mr-2" />}
                                                     {
                                                         notification.isShowing ? "Unpublish" : "Publish"
@@ -476,6 +456,11 @@ export default function NotificationList({
                                                         Publish Now
                                                     </DropdownMenuItem>
                                                 )} */}
+                                                {/* edit notification */}
+                                                <DropdownMenuItem onClick={() => handleAction("edit", notification)}>
+                                                    <Edit className="w-4 h-4 mr-2" />
+                                                    Edit
+                                                </DropdownMenuItem>
                                                 {notification.status === "active" && (
                                                     <DropdownMenuItem onClick={() => handleAction("archive", notification)}>
                                                         <Archive className="w-4 h-4 mr-2" />
@@ -511,12 +496,12 @@ export default function NotificationList({
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-1">
                                     <BarChart3 className="w-4 h-4" />
-                                    Total impressions: {notifications.reduce((sum, n) => sum + (n.impressions || 0), 0)}
+                                    Total impressions: {notifications.reduce((sum, n) => sum + (Number(n.impressions) || 0), 0)}
                                 </div>
-                                <div className="flex items-center gap-1">
+                                {/* <div className="flex items-center gap-1">
                                     <Users className="w-4 h-4" />
-                                    Total recipients: {notifications.reduce((sum, n) => sum + (n.uniqueRecipients || 0), 0)}
-                                </div>
+                                    Total recipients: {notifications.reduce((sum, n) => sum + (Number(n.uniqueRecipients) || 0), 0)}
+                                </div> */}
                             </div>
                         </div>
                     </CardContent>
@@ -549,47 +534,6 @@ export default function NotificationList({
                             disabled={isActionLoading}
                         >
                             {isActionLoading ? "Deleting..." : "Delete"}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Publish/Unpublish Confirmation Dialog */}
-            <Dialog open={showPublishDialog} onOpenChange={setShowPublishDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            {selectedNotification?.isShowing ? (
-                                <EyeOff className="w-5 h-5 text-orange-500" />
-                            ) : (
-                                <Send className="w-5 h-5 text-blue-500" />
-                            )}
-                            {selectedNotification?.isShowing ? "Unpublish" : "Publish"} Notification
-                        </DialogTitle>
-                        <DialogDescription>
-                            {selectedNotification?.isShowing
-                                ? `Are you sure you want to unpublish "${selectedNotification?.title}"? This will hide the notification from users.`
-                                : `Are you sure you want to publish "${selectedNotification?.title}"? This will send the notification to ${selectedNotification?.targetAudience || "all"} users.`
-                            }
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowPublishDialog(false)}
-                            disabled={isActionLoading}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleConfirmPublish}
-                            disabled={isActionLoading}
-                            className={selectedNotification?.isShowing ? "bg-orange-600 hover:bg-orange-700" : ""}
-                        >
-                            {isActionLoading
-                                ? (selectedNotification?.isShowing ? "Unpublishing..." : "Publishing...")
-                                : (selectedNotification?.isShowing ? "Unpublish" : "Publish")
-                            }
                         </Button>
                     </DialogFooter>
                 </DialogContent>
