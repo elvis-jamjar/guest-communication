@@ -26,7 +26,7 @@ import {
     Filter,
     MoreVertical,
     Calendar,
-    Users,
+    // Users,
     BarChart3,
     Clock,
     AlertTriangle,
@@ -39,7 +39,6 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Notification } from "@/app/types";
-import { toast } from "sonner";
 
 interface NotificationListProps {
     notifications: Notification[];

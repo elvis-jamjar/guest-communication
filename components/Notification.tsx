@@ -81,7 +81,7 @@ export default function NotificationUI() {
             console.log('storing impressions');
             storeImpression(activeNotifications);
         }
-    }, [storeImpression, activeNotifications.length]);
+    }, [storeImpression, activeNotifications]);
 
 
     // Expand notifications function

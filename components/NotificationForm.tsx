@@ -122,41 +122,41 @@ export default function NotificationForm({
     };
 
     // Validation function for dates
-    const validateDates = () => {
-        const now = new Date();
-        const errors: string[] = [];
+    // const validateDates = () => {
+    //     const now = new Date();
+    //     const errors: string[] = [];
 
-        // Validate expiration date
-        if (formData.expiresAt) {
-            const expirationTime = new Date(formData.expiresAt);
-            if (expirationTime <= now) {
-                errors.push("Expiration date must be in the future");
-            }
-        }
+    //     // Validate expiration date
+    //     if (formData.expiresAt) {
+    //         const expirationTime = new Date(formData.expiresAt);
+    //         if (expirationTime <= now) {
+    //             errors.push("Expiration date must be in the future");
+    //         }
+    //     }
 
-        // Validate scheduled date
-        if (formData.isScheduled) {
-            if (!formData.scheduledFor) {
-                errors.push("Please select a schedule date and time");
-            } else {
-                const scheduledTime = new Date(formData.scheduledFor);
-                if (scheduledTime <= now) {
-                    errors.push("Scheduled time must be in the future");
-                }
-            }
-        }
+    //     // Validate scheduled date
+    //     if (formData.isScheduled) {
+    //         if (!formData.scheduledFor) {
+    //             errors.push("Please select a schedule date and time");
+    //         } else {
+    //             const scheduledTime = new Date(formData.scheduledFor);
+    //             if (scheduledTime <= now) {
+    //                 errors.push("Scheduled time must be in the future");
+    //             }
+    //         }
+    //     }
 
-        // Validate that expiration is after scheduled time
-        if (formData.expiresAt && formData.isScheduled && formData.scheduledFor) {
-            const expirationTime = new Date(formData.expiresAt);
-            const scheduledTime = new Date(formData.scheduledFor);
-            if (expirationTime <= scheduledTime) {
-                errors.push("Expiration date must be after the scheduled time");
-            }
-        }
+    //     // Validate that expiration is after scheduled time
+    //     if (formData.expiresAt && formData.isScheduled && formData.scheduledFor) {
+    //         const expirationTime = new Date(formData.expiresAt);
+    //         const scheduledTime = new Date(formData.scheduledFor);
+    //         if (expirationTime <= scheduledTime) {
+    //             errors.push("Expiration date must be after the scheduled time");
+    //         }
+    //     }
 
-        return errors;
-    };
+    //     return errors;
+    // };
 
     const handleSave = async () => {
         if (!formData.title.trim() || !formData.message.trim()) {
