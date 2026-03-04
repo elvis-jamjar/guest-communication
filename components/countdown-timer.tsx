@@ -65,7 +65,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
           //   fontSize: 'clamp(2.5rem,5vw,5.5rem)'
           // }}
           className="md:font-black font-extrabold text-4xl md:text-7xl text-[#762877]">
-          {(timeLeft[interval as keyof typeof timeLeft] as any)?.toString()?.padStart(2, '0')}
+          {(timeLeft[interval as keyof typeof timeLeft] as number)?.toString()?.padStart(2, '0')}
         </p>
         <span
           className="uppercase text-base text-primary-main mt-2 font-normal">

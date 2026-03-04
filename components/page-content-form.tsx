@@ -27,10 +27,6 @@ const DEFAULT_LINKS = {
 export function PageContentForm({ pageContent = {}, onChange }: PageContentFormProps) {
   const pc = pageContent;
 
-  const update = <K extends keyof PageContent>(key: K, value: PageContent[K]) => {
-    onChange({ ...pageContent, [key]: value });
-  };
-
   const updateNested = <K extends keyof PageContent, S extends keyof NonNullable<PageContent[K]>>(
     section: K,
     subKey: S,

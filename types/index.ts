@@ -135,8 +135,11 @@ export interface QuickLinks {
   buttonLabel?: string;
 }
 
-/** CMS-editable landing page content (excludes program outline, speakers, quick links) */
+/** CMS-editable landing page content (excludes program outline, speakers) */
 export interface PageContent {
+  aboutSection?: string;
+  quickLinksTitle?: string;
+  quickLinks?: QuickLinks[];
   hero?: {
     title?: string;
     actionButtons?: {

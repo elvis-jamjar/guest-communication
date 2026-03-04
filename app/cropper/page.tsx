@@ -368,6 +368,7 @@ export default function App() {
                     className='w-[30dvw] h-[30dvh]'
                 // circularCrop
                 >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- ReactCrop requires img for ref and measurements */}
                     <img
                         ref={imgRef}
                         alt="Crop me"

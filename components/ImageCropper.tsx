@@ -56,7 +56,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ btnTitle, onCompleteUpload 
                 console.error('Error cropping image:', error);
             }
         }
-    }, [imageSrc, croppedAreaPixels]);
+    }, [imageSrc, croppedAreaPixels, startUpload]);
 
     // const downloadCroppedImage = async () => {
     //     if (!croppedAreaPixels) return;

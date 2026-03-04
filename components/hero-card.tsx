@@ -32,7 +32,7 @@ export function HeroCard({ previewData }: HeroCardProps = {}) {
             className="md:w-[85%] md:max-w-[1000px] flex justify-center items-center m-2 md:mx-auto w-full min-h-fit md:p-12 p-4 py-10 md:py-12 shadow-2xl rounded-[1.8rem] border-none">
             <CardContent className="p-0 flex items-center justify-center py-0 px-0 min-w-0">
                 <div className="flex flex-wrap md:flex-nowrap w-full justify-center items-center gap-5 md:gap-12 min-w-0">
-                    <div className="flex shrink-0 flex-col justify-center items-center">
+                    <div className="flex flex-1 min-w-0 flex-col justify-center items-center md:basis-0">
                         <Image
                             src={"/images/4dx/new/stacked w venue_4dx summit logo.png"}
                             width={600}
@@ -46,7 +46,7 @@ export function HeroCard({ previewData }: HeroCardProps = {}) {
                         <Separator orientation="vertical" className="h-full min-h-[120px] w-px mx-2 hidden md:block bg-gray-400" />
                         <Separator orientation="horizontal" className="w-full h-px md:hidden bg-gray-300" />
                     </div>
-                    <div className="flex flex-col transition-all duration-700 w-full min-w-0 flex-1 justify-center gap-5 items-center">
+                    <div className="flex flex-col transition-all duration-700 w-full min-w-0 flex-1 md:basis-0 justify-center gap-5 items-center">
                         <div className={cn("flex flex-col font-semibold text-md md:text-lg text-pretty items-center text-center")}>
                             {/* <span>Welcome to the 4DX CEO Summit,</span>
                             <span>an exclusive annual event hosted</span>

@@ -53,7 +53,7 @@ export function EventSchedule() {
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardContent className="p-6">
-        {schedule.map((day, dayIndex) => (
+        {schedule.map((day) => (
           <div key={day.day} className="mb-8">
             <h2 className="text-2xl font-bold text-teal-600 mb-2">
               Day {day.day}

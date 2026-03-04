@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowDownButton } from "@/components/arrowdown";
 import { CountdownTimer } from "@/components/countdown-timer";
 import { HeadingText } from "@/components/heading-text";
 import { HeroCard } from "@/components/hero-card";

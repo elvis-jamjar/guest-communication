@@ -1,7 +1,7 @@
 import type { PageContent } from "@/types";
 import landingPageData from "./landingpagedata.json";
 
-const ld = landingPageData as {
+const ld = landingPageData as unknown as {
   hero?: { title?: string; actionButtons?: PageContent["hero"] extends { actionButtons?: infer A } ? A : never };
   accommodation?: PageContent["accommodation"];
   flights?: PageContent["flights"];

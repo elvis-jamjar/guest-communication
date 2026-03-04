@@ -7,8 +7,8 @@ export default function Page() {
         <div className="w-full h-screen">
             <ImageCropper
                 btnTitle="Upload Image"
-                onCompleteUpload={(url) => {
-                    // do something with the url
+                onCompleteUpload={() => {
+                    // do something with the url when upload completes
                 }} />
         </div>
 
