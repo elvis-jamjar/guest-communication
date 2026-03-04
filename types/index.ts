@@ -96,10 +96,26 @@ export interface ConferenceScheduleData {
   settings?: Settings;
   pageContent?: PageContent;
   isEventStarted?: boolean;
+  visibilityConfig?: VisibilityConfig;
 }
 
 export interface Settings {
   columns?: number;
+}
+
+/** Controls which sections are visible on the landing page. Undefined/true = visible, false = hidden */
+export interface VisibilityConfig {
+  hero?: boolean;
+  quickLinks?: boolean;
+  countdown?: boolean;
+  programme?: boolean;
+  speakers?: boolean;
+  accommodation?: boolean;
+  flights?: boolean;
+  travelRequirements?: boolean;
+  weatherAndPack?: boolean;
+  completeRegistration?: boolean;
+  footer?: boolean;
 }
 
 export interface QuickLinkData {
@@ -119,8 +135,73 @@ export interface QuickLinks {
   buttonLabel?: string;
 }
 
+/** CMS-editable landing page content (excludes program outline, speakers, quick links) */
 export interface PageContent {
-  aboutSection?: string;
-  quickLinksTitle?: string;
-  quickLinks?: QuickLinks[];
+  hero?: {
+    title?: string;
+    actionButtons?: {
+      title?: string;
+      button1?: { text?: string; link?: string };
+      button2?: { text?: string; link?: string };
+    };
+  };
+  countdown?: {
+    intro?: string;
+  };
+  accommodation?: {
+    heading?: string;
+    hotelTitle?: string;
+    description1?: string;
+    description2?: string;
+    address?: string;
+    reserveButton?: string;
+    reserveLink?: string;
+  };
+  flights?: {
+    heading?: string;
+    intro?: string;
+    airportTitle?: string;
+    arriveDate?: string;
+    departDate?: string;
+  };
+  travelRequirements?: {
+    heading?: string;
+    intro?: string;
+    requirements?: string[];
+    visaExemptionsTitle?: string;
+    visaExemptionsText?: string;
+    visaExemptionsLink?: string;
+    visaExemptionsLinkUrl?: string;
+    visaRequirementsTitle?: string;
+    visaRequirementsIntro?: string;
+    visaRequirementsText?: string;
+    visaRequirementsDetail?: string;
+    visaApplicationLink?: string;
+    visaApplicationLinkUrl?: string;
+    evisaLink?: string;
+    evisaLinkUrl?: string;
+  };
+  weather?: {
+    heading?: string;
+    description1?: string;
+    description2?: string;
+  };
+  whatToPack?: {
+    heading?: string;
+    description1?: string;
+    description2?: string;
+  };
+  completeRegistration?: {
+    heading?: string;
+    buttonAlreadyIn?: string;
+    buttonFlying?: string;
+    buttonAlreadyInLink?: string;
+    buttonFlyingLink?: string;
+  };
+  footer?: {
+    inquiryText?: string;
+    description?: string;
+    linkedinUrl?: string;
+    websiteUrl?: string;
+  };
 }

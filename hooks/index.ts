@@ -1,5 +1,7 @@
 import { DependencyList, useEffect } from "react";
 
+export { useUndoRedo } from "./use-undo-redo";
+
 export function useDebounceEffect(
   fn: () => void,
   waitTime: number,

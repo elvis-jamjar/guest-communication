@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "title": "Welcome to the 4DX CEO Summit website. We look forward to engaging sessions with you. Thank you for attending.",
+    "actionButtons": {
+      "title": "Click below to complete your registration",
+      "button1": {
+        "text": "Already in Johannesburg",
+        "link": "https://4dxsouthafrica.rsvpify.com/?securityToken=bSv6gLLvYgyZpj9AMPnz4PAm5XtnJsS1"
+      },
+      "button2": {
+        "text": "Flying to Johannesburg",
+        "link": "https://4dxinternational2024.rsvpify.com/?securityToken=uzRWkiKf9IRQwWkcAocZirJoOQPIogHC"
+      }
+    },
+    "description": {
+      "line1": "Join us for insightful discussions, networking opportunities,",
+      "line2": "and strategic collaborations shaping the future of technology and innovation across Africa"
+    },
+    "image": "/images/4dx/new/Stacked_4DX_Summit_Updated_LogoTransp.png"
+  },
+  "accommodation": {
+    "heading": "Accommodation",
+    "hotelTitle": "Protea Hotel:The Wanderers",
+    "description1": "Set in the illustrious grounds of the famous Wanderers Club in Illovo. This is the premier destination for a wide range of corporate, sporting and private events.",
+    "description2": "Preferred rates have been negotiated specifically for our group at $97 per night. We highly recommend you book your room as soon as you can.",
+    "address": "Corner Corlette Drive and Rudd Road, Illovo, South Africa, 2196.",
+    "reserveButton": "Reserve your Room Here"
+  },
+  "flights": {
+    "heading": "Flights",
+    "intro": "We recommend you book your flights early to get the best rates. For travel within the continent, we recommend booking on Ethiopian Airlines, Egypt Airlines, Kenya Airways or South African Airlines for the most direct routes. When booking your flight, use the details below for a seamless trip.",
+    "airportTitle": "O.R. TAMBO International Airport, Johannesburg, South Africa.",
+    "arriveDate": "Arrive on Sunday 3rd November",
+    "departDate": "Depart on Wednesday 6th November"
+  },
+  "travelRequirements": {
+    "heading": "Travel Requirements",
+    "intro": "For entry into South Africa, visitors are expected to have the following:",
+    "requirements": [
+      "An international passport with 6 months validity and at least two blank pages.",
+      "A valid visa, if required.",
+      "Sufficient funds to pay for your day-to-day expenses during your stay.",
+      "Yellow fever certificates if your journey starts or entails passing through the yellow fever belt of Africa or South America."
+    ],
+    "visaExemptionsTitle": "Visa Exemptions",
+    "visaExemptionsText": "Passport holders from the following countries: US, UK, Ghana, Kenya, Jordan DO NOT require a visa to enter South Africa.",
+    "visaExemptionsLink": "Full list of VISA exempt countries/passports",
+    "visaRequirementsTitle": "Visa Requirements",
+    "visaRequirementsIntro": "Please apply for your visa now as processing times may vary. We recommend you check your local South African Embassy or Consulate website for timelines and additional information.",
+    "visaRequirementsText": "Passport holders from Nigeria, Egypt, Ivory Coast, Senegal and Sudan countries DO require a visa to enter.",
+    "visaRequirementsDetail": "Click on the link below for more details on the documents required to apply for a visa and the link to the e-visa application process.",
+    "visaApplicationLink": "Details on requirements for visa application",
+    "evisaLink": "E-visa application form"
+  },
+  "weather": {
+    "heading": "Weather",
+    "description1": "The weather in South Africa in November sees a wide range of temperatures across the vast and varied landscape, transitioning into the warm early summer months. On average, the high temperatures range from 25°C to 30°C (77°F-86°F), with minimums dropping to 15°C-20°C (59°F-68°F) in the evening.",
+    "description2": "This range indicates a warm climate throughout the country during this time."
+  },
+  "whatToPack": {
+    "heading": "What to Pack",
+    "description1": "The weather in Johannesburg is getting warmer at this time of the year, please pack business casual outfits with breathable fabrics during the day.",
+    "description2": "Although the weather is warm during the day, it can get chilly at night. It is advisable to pack layers; a light jacket, sweaters and clothes with warmer materials in order to stay comfortable and warm."
+  },
+  "completeRegistration": {
+    "heading": "Complete your registration",
+    "buttonAlreadyIn": "Already in Johannesburg",
+    "buttonFlying": "Flying to Johannesburg"
+  }
+}

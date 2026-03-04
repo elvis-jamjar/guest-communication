@@ -14,34 +14,34 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
     const [speackers, setSpeackers] = useState<Speaker[]>([]);
 
     useEffect(() => {
-        function onInit() {
-            let speakers: Speaker[] = [];
-            schedules.forEach((item) => {
-                if (item.timeLineItems) {
-                    item?.timeLineItems?.forEach((t) => {
-                        if (t?.speakers) {
-                            t?.speakers?.forEach((s) => {
-                                if (s?.visibleOnPage && s?.name) {
-                                    speakers.push(s);
-                                }
-                            });
-                        }
-                        if (t?.moderators) {
-                            t?.moderators.forEach((s) => {
-                                if (s?.visibleOnPage && s?.name) {
-                                    // replace  Moderated by: with empty string
-                                    const _name = s?.name?.replace('Moderated by:', '').replaceAll(':', '')?.trim();
-                                    speakers.push({ ...s, name: _name });
-                                }
-                            });
-                        }
-                    });
-                }
+        function extractUniqueSpeakers(): Speaker[] {
+            const collected: Speaker[] = [];
+            const seen = new Set<string>();
+
+            function addSpeaker(s: Speaker | undefined) {
+                if (!s?.name?.trim()) return;
+                if (s.visibleOnPage === false) return; // respect visibility toggle
+                const normalizedName = s.name.replace(/Moderated by:/gi, '').replace(/:/g, '').trim().toLowerCase();
+                if (!normalizedName || seen.has(normalizedName)) return;
+                seen.add(normalizedName);
+                const cleanName = s.name.replace(/Moderated by:/gi, '').replace(/:/g, '').trim();
+                collected.push({ ...s, name: cleanName });
+            }
+
+            schedules?.forEach((item) => {
+                item?.timeLineItems?.forEach((t) => {
+                    t?.speakers?.forEach(addSpeaker);
+                    if (t?.host) addSpeaker(t.host);
+                    t?.facilitators?.forEach(addSpeaker);
+                    t?.moderators?.forEach(addSpeaker);
+                });
             });
-            setSpeackers([...speakers]);
+
+            return collected;
         }
+
         if (Number(schedules?.length) > 0) {
-            onInit();
+            setSpeackers(extractUniqueSpeakers());
         }
     }, [schedules]);
 
@@ -90,7 +90,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
 
             <AnimatePresence initial={false}>
                 {
-                    isOpen && isLoading && <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-4">
+                    isOpen && isLoading && (!schedules?.length) && <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-4">
                         {Array.from({ length: 8 })?.map((_, index) => (
                             <div key={index} className="flex flex-col items-center space-y-2">
                                 <Skeleton className="h-24 w-24 rounded-full" />
@@ -101,7 +101,7 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                         ))}
                     </div>
                 }
-                {isOpen && !isLoading && <motion.div
+                {isOpen && (!isLoading || schedules?.length) && <motion.div
                     initial="collapsed"
                     animate="open"
                     exit="collapsed"

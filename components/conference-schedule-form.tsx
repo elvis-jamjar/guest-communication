@@ -1,4 +1,4 @@
-'use client';;
+'use client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,9 +20,11 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import SortableList, { SortableItem, SortableKnob } from "react-easy-sort";
 import { ReusableAnimatedAccordion } from './animated-accordion';
+import { mergePageContent } from '@/utils/default-page-content';
+import { PageContentForm } from './page-content-form';
+import { VisibilityConfigForm } from './visibility-config-form';
 import ImageCropper from './ImageCropper';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-
 
 const SpeakerForm = ({ speaker, onChange, onRemove, title }: { speaker: Speaker, onChange: (speaker: Speaker) => void, onRemove: () => void, title: string }) => (
   <div className="space-y-4 p-4 border rounded-md">
@@ -205,6 +207,14 @@ const TimelineItemForm = ({ item, onChange, onRemove }: { item: TimelineItemProp
   const [showHost, setShowHost] = useState(!!item.host)
   const [showFacilitators, setShowFacilitators] = useState(Number(item.facilitators?.length) > 0)
   const [showModerators, setShowModerators] = useState(Number(item.moderators?.length) > 0);
+
+  // Sync visibility toggles when item changes from parent (e.g. undo/redo)
+  useEffect(() => {
+    setShowSpeakers(Number(item.speakers?.length) > 0);
+    setShowHost(!!item.host);
+    setShowFacilitators(Number(item.facilitators?.length) > 0);
+    setShowModerators(Number(item.moderators?.length) > 0);
+  }, [item.speakers?.length, item.host, item.facilitators?.length, item.moderators?.length]);
 
   return (
     <div className="space-y-4 p-4 border rounded-md">
@@ -597,6 +607,13 @@ export function ConferenceScheduleForm(
     timeLineItems: []
   })
 
+  // Sync form state when scheduleDay changes from parent (e.g. undo/redo)
+  useEffect(() => {
+    if (scheduleDay) {
+      setSchedule(scheduleDay);
+    }
+  }, [scheduleDay]);
+
   useEffect(() => {
     onChange(schedule)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -781,6 +798,24 @@ export function ConferenceScheduleForms({ scheduleData, onChange }: { scheduleDa
               children: (<QuickLinksForm
                 data={scheduleData?.quickLinkData || {}}
                 onChnage={(data) => onChange({ ...scheduleData, quickLinkData: data })}
+              />)
+            },
+            {
+              title: <h2 className='text-left'>{"Page Content (CMS)"}</h2>,
+              className: 'p-5 md:px-2 md:pr-10 round-b-none rounded-sm justify-between',
+              iconClassName: 'size-5',
+              children: (<PageContentForm
+                pageContent={mergePageContent(scheduleData?.pageContent)}
+                onChange={(pageContent) => onChange({ ...scheduleData, pageContent })}
+              />)
+            },
+            {
+              title: <h2 className='text-left'>{"Page Visibility"}</h2>,
+              className: 'p-5 md:px-2 md:pr-10 round-b-none rounded-sm justify-between',
+              iconClassName: 'size-5',
+              children: (<VisibilityConfigForm
+                visibilityConfig={scheduleData?.visibilityConfig}
+                onChange={(visibilityConfig) => onChange({ ...scheduleData, visibilityConfig })}
               />)
             }
           ]}

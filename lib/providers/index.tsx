@@ -2,6 +2,7 @@
 
 import React, { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { VisibilityProvider } from "../visibility-provider";
 
 const queryClient = new QueryClient();
 export function Providers(
@@ -9,7 +10,9 @@ export function Providers(
 ) {
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <VisibilityProvider>
+        {children}
+      </VisibilityProvider>
     </QueryClientProvider>
   );
 }

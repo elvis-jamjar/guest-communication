@@ -1,5 +1,6 @@
 import Footer from "@/components/footer";
 import Hero from "@/components/hero";
+import { HeroVisibilityWrapper } from "@/components/hero-visibility-wrapper";
 import { Providers } from "@/lib/providers";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -59,13 +60,14 @@ export default function RootLayout({
         className={cn(``)}>
 
         <Providers>
-          <Hero />
+          <HeroVisibilityWrapper>
+            <Hero />
+          </HeroVisibilityWrapper>
           <Suspense>
             {children}
           </Suspense>
-          {/* Footer */}
+          <Footer />
         </Providers>
-        <Footer />
       </body>
     </html>
   );
