@@ -91,6 +91,7 @@ export interface ConferenceScheduleProps {
 }
 
 export interface ConferenceScheduleData {
+  eventDate?: string;
   schedule: ConferenceScheduleProps[];
   quickLinkData?: QuickLinkData;
   settings?: Settings;
@@ -112,6 +113,7 @@ export interface VisibilityConfig {
   speakers?: boolean;
   accommodation?: boolean;
   flights?: boolean;
+  postFlights?: boolean;
   travelRequirements?: boolean;
   weatherAndPack?: boolean;
   completeRegistration?: boolean;
@@ -150,6 +152,7 @@ export interface PageContent {
   };
   countdown?: {
     intro?: string;
+    targetDate?: string; // ISO datetime e.g. "2024-11-03T17:00:00"
   };
   accommodation?: {
     heading?: string;
@@ -166,6 +169,10 @@ export interface PageContent {
     airportTitle?: string;
     arriveDate?: string;
     departDate?: string;
+  };
+  postFlights?: {
+    heading?: string;
+    content?: string;
   };
   travelRequirements?: {
     heading?: string;

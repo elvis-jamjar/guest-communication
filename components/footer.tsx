@@ -1,5 +1,6 @@
 'use client'
 import { getConferenceSchedule } from "@/app/actions/timeline";
+import { FormattedText } from "@/components/formatted-text";
 import { useSectionVisibility } from "@/lib/visibility-provider";
 import { mergePageContent } from "@/utils/default-page-content";
 import { cn } from "@/lib/utils";
@@ -19,7 +20,7 @@ export default function Footer() {
         <footer
             className={cn("text-white bg-primary-main", !showFooter && "hidden")}>
             <div className="bg-secondary-main mx-auto py-6 px-2">
-                <p className="text-white text-2xl text-center text-pretty tracking-wide font-extrabold">{content.footer?.inquiryText ?? "Send inquiries to info@jamjargh.com"}</p>
+                <p className="text-white text-2xl text-center text-pretty tracking-wide font-extrabold"><FormattedText text={content.footer?.inquiryText ?? "Send inquiries to info@jamjargh.com"} /></p>
             </div>
             <div className="py-20 mx-auto flex flex-wrap md:justify-around justify-center gap-y-6">
                 <div className="flex flex-wrap gap-5 justify-center items-center">
@@ -33,8 +34,8 @@ export default function Footer() {
                             className="size-28 object-contain"
                         />
                     </div>
-                    <p className="text-left text-sm leading-relaxed max-w-xs">
-                        {content.footer?.description ?? "4DX Ventures is a Pan-Africa Focused Venture Capital Firm. Our mission is to connect people, ideas, and capital to create a thriving African continent, and a vibrant global community."}
+                    <p className="text-left text-sm leading-relaxed max-w-xs whitespace-pre-wrap">
+                        <FormattedText text={content.footer?.description ?? "4DX Ventures is a Pan-Africa Focused Venture Capital Firm. Our mission is to connect people, ideas, and capital to create a thriving African continent, and a vibrant global community."} />
                     </p>
                 </div>
                 <div className="flex gap-6 flex-col items-center justify-center">
@@ -46,7 +47,7 @@ export default function Footer() {
                             <Image src="/images/4dx/globe.png" width={200} height={200} alt="twitter" className="w-12 h-12 object-contain" />
                         </a>
                     </div>
-                    <p className="w-fit text-lg font-medium">&copy; {new Date().getFullYear()} 4DX Ventures</p>
+                    <p className="w-fit text-lg font-medium" suppressHydrationWarning>&copy; {new Date().getFullYear()} 4DX Ventures</p>
                 </div>
             </div>
             <Image

@@ -1,4 +1,5 @@
 'use client';;
+import { FormattedText } from "@/components/formatted-text";
 import { cn } from "@/lib/utils";
 import { ConferenceScheduleProps } from "@/types";
 import { ReusableAnimatedAccordion } from "./animated-accordion";
@@ -6,7 +7,7 @@ import { ConferenceSchedule } from "./conference-schedule";
 
 
 export function ScheduleList(
-    { schedules }: { schedules: ConferenceScheduleProps[], columns?: number }
+    { schedules, title }: { schedules: ConferenceScheduleProps[], columns?: number, title?: string }
 ) {
 
     return (
@@ -16,7 +17,7 @@ export function ScheduleList(
                     style={{
                         fontSize: "clamp(1rem, 2vw, 2rem)"
                     }}
-                    className="text-white font-extrabold">3rd - 6th November</h3>
+                    className="text-white font-extrabold">{title || "4th - 7th May"}</h3>
             </div>
 
             <ReusableAnimatedAccordion
@@ -25,19 +26,19 @@ export function ScheduleList(
                         return {
                             title: <div className="flex w-full items-center gap-2">
                                 <p className={cn("md:text-2xl font-extrabold text-lg mr-2  text-primary-main", schedule?.color?.day)}>
-                                    {schedule.day}
+                                    <FormattedText text={schedule.day || ""} />
                                 </p>
                                 <p className={cn("text-secondary-main md:text-lg text-sm font-thin", schedule?.color?.dayTitle)}>
-                                    {schedule?.title}
+                                    <FormattedText text={schedule?.title || ""} />
                                 </p>
                             </div>,
                             children: <div key={"main-" + index} className="flex flex-wrap md:flex-nowrap relative gap-4 ">
                                 <div className="md:max-w-14 w-full hidden md:invisible md:grid">
                                     <h2 className={cn("text-2xl font-bold text-primary-main", schedule?.color?.day)}>
-                                        {schedule?.day}
+                                        <FormattedText text={schedule?.day || ""} />
                                     </h2>
                                     <p className={cn("text-secondary-main font-semibold", schedule?.color?.dayTitle)}>
-                                        {schedule?.title}
+                                        <FormattedText text={schedule?.title || ""} />
                                     </p>
                                 </div>
                                 <div

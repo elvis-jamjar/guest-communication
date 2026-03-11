@@ -3,8 +3,10 @@ import landingPageData from "./landingpagedata.json";
 
 const ld = landingPageData as unknown as {
   hero?: { title?: string; actionButtons?: PageContent["hero"] extends { actionButtons?: infer A } ? A : never };
+  countdown?: PageContent["countdown"];
   accommodation?: PageContent["accommodation"];
   flights?: PageContent["flights"];
+  postFlights?: PageContent["postFlights"];
   travelRequirements?: PageContent["travelRequirements"];
   weather?: PageContent["weather"];
   whatToPack?: PageContent["whatToPack"];
@@ -17,13 +19,16 @@ export const DEFAULT_PAGE_CONTENT: PageContent = {
     actionButtons: ld.hero?.actionButtons,
   },
   countdown: {
-    intro: "Join us for insightful discussions, networking opportunities, and strategic collaborations shaping the future of technology and innovation across Africa.",
+    ...ld.countdown,
+    intro: ld.countdown?.intro ?? "Join us for insightful discussions, networking opportunities, and strategic collaborations shaping the future of technology and innovation across Africa.",
+    targetDate: ld.countdown?.targetDate ?? "2024-11-03T17:00:00",
   },
   accommodation: {
     ...ld.accommodation,
     reserveLink: "https://www.marriott.com/event-reservations/reservation-link.mi?id=1708326594696&key=GRP&app=resvlink",
   },
   flights: ld.flights,
+  postFlights: ld.postFlights ?? {},
   travelRequirements: {
     ...ld.travelRequirements,
     visaExemptionsLinkUrl: "https://www.dha.gov.za/index.php/immigration-services/exempt-countries",
@@ -52,6 +57,7 @@ export function mergePageContent(cms?: PageContent | null): PageContent {
     countdown: { ...DEFAULT_PAGE_CONTENT.countdown, ...cms.countdown },
     accommodation: { ...DEFAULT_PAGE_CONTENT.accommodation, ...cms.accommodation },
     flights: { ...DEFAULT_PAGE_CONTENT.flights, ...cms.flights },
+    postFlights: { ...DEFAULT_PAGE_CONTENT.postFlights, ...cms.postFlights },
     travelRequirements: {
       ...DEFAULT_PAGE_CONTENT.travelRequirements,
       ...cms.travelRequirements,

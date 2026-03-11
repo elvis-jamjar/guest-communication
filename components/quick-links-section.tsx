@@ -1,5 +1,6 @@
 "use client"
 
+import { FormattedText } from "@/components/formatted-text";
 import { cn } from "@/lib/utils";
 import { QuickLinkData } from "@/types";
 import { ArrowUpRight, Link } from "lucide-react";
@@ -44,11 +45,11 @@ export function QuickLinks({ data, isLoading }: { data?: QuickLinkData, isLoadin
                 {data?.links?.map((link, index) => (
                     <Card key={index} className="w-full  gap-0 space-y-2 flex-col flex md:w-[30%] shadow-none border-0">
                         <CardHeader className="p-0">
-                            <h1 className={cn("text-center", data?.style?.title?.color, data?.style?.title?.fontWeights)}>{link.title}</h1>
+                            <h1 className={cn("text-center", data?.style?.title?.color, data?.style?.title?.fontWeights)}><FormattedText text={link.title || ""} /></h1>
                         </CardHeader>
                         {link?.description && <CardContent className="flex-1 p-0">
                             <CardDescription className="text-base p-0 text-center">
-                                <p className="line-clamp-6">{link?.description}</p>
+                                <p className="line-clamp-6 whitespace-pre-wrap"><FormattedText text={link?.description} /></p>
                             </CardDescription>
                         </CardContent>}
                         <CardFooter className="p-0 mt-1">
@@ -59,7 +60,7 @@ export function QuickLinks({ data, isLoading }: { data?: QuickLinkData, isLoadin
                                     }}
                                     variant={"outline"}
                                     className="p-8 w-full hover:bg-secondary-main hover:text-white group text-secondary-main font-extrabold border-secondary-main rounded-full">
-                                    {link?.buttonLabel || "Visit"} <ArrowUpRight className="ml-2" size={16} />
+                                    <FormattedText text={link?.buttonLabel || "Visit"} /> <ArrowUpRight className="ml-2" size={16} />
                                 </Button>
                             </a>
                         </CardFooter>

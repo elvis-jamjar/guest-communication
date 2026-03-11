@@ -13,6 +13,7 @@ const SECTION_LABELS: Record<keyof VisibilityConfig, string> = {
   speakers: "Speakers",
   accommodation: "Accommodation",
   flights: "Flights",
+  postFlights: "Post Flights",
   travelRequirements: "Travel Requirements",
   weatherAndPack: "Weather & What to Pack",
   completeRegistration: "Complete Registration",

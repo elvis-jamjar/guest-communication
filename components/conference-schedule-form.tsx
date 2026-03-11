@@ -743,17 +743,27 @@ export function ConferenceScheduleForms({ scheduleData, onChange }: { scheduleDa
           <PlusCircle className="mr-2 h-4 w-4" /> Add Schedule
         </Button>
       </div>
-      {/* event live mode toggle */}
-      <div className="flex items-center space-x-2 p-4">
-        <Switch
-          id="is-live"
-          checked={scheduleData?.isEventStarted}
-          onCheckedChange={(checked) => onChange({ ...scheduleData, isEventStarted: checked })}
-        />
-        <Label htmlFor="is-live"
-          className='text-sm font-bold'>
-          Event started
-        </Label>
+      {/* event date and live mode */}
+      <div className="space-y-4 p-4">
+        <div className="space-y-2">
+          <Label htmlFor="event-date" className="text-sm font-bold">Event date</Label>
+          <Input
+            id="event-date"
+            placeholder="e.g. 4th - 7th May"
+            value={scheduleData?.eventDate ?? ""}
+            onChange={(e) => onChange({ ...scheduleData, eventDate: e.target.value })}
+          />
+        </div>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="is-live"
+            checked={scheduleData?.isEventStarted}
+            onCheckedChange={(checked) => onChange({ ...scheduleData, isEventStarted: checked })}
+          />
+          <Label htmlFor="is-live" className="text-sm font-bold">
+            Event started
+          </Label>
+        </div>
       </div>
       <div className="space-y-8">
         <Accordion type="single" collapsible>

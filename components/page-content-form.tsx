@@ -147,14 +147,25 @@ export function PageContentForm({ pageContent = {}, onChange }: PageContentFormP
             className: "p-5 md:px-2 md:pr-10 round-b-none rounded-sm justify-between",
             iconClassName: "size-5",
             children: (
-              <div>
-                <Label>Intro text</Label>
-                <Textarea
-                  value={pc.countdown?.intro ?? ""}
-                  onChange={(e) => updateNested("countdown", "intro", e.target.value)}
-                  placeholder="Join us for insightful discussions..."
-                  rows={3}
-                />
+              <div className="space-y-4">
+                <div>
+                  <Label>Intro text</Label>
+                  <Textarea
+                    value={pc.countdown?.intro ?? ""}
+                    onChange={(e) => updateNested("countdown", "intro", e.target.value)}
+                    placeholder="Join us for insightful discussions..."
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label>Target date & time</Label>
+                  <Input
+                    type="datetime-local"
+                    value={pc.countdown?.targetDate ? pc.countdown.targetDate.slice(0, 16) : ""}
+                    onChange={(e) => updateNested("countdown", "targetDate", e.target.value ? `${e.target.value}:00` : "")}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">When the countdown reaches zero</p>
+                </div>
               </div>
             ),
           },
@@ -185,6 +196,17 @@ export function PageContentForm({ pageContent = {}, onChange }: PageContentFormP
                 <div><Label>Airport title</Label><Input value={pc.flights?.airportTitle ?? ""} onChange={(e) => updateNested("flights", "airportTitle", e.target.value)} /></div>
                 <div><Label>Arrive date</Label><Input value={pc.flights?.arriveDate ?? ""} onChange={(e) => updateNested("flights", "arriveDate", e.target.value)} /></div>
                 <div><Label>Depart date</Label><Input value={pc.flights?.departDate ?? ""} onChange={(e) => updateNested("flights", "departDate", e.target.value)} /></div>
+              </div>
+            ),
+          },
+          {
+            title: <h2 className="text-left">Post Flights</h2>,
+            className: "p-5 md:px-2 md:pr-10 round-b-none rounded-sm justify-between",
+            iconClassName: "size-5",
+            children: (
+              <div className="space-y-4">
+                <div><Label>Heading</Label><Input value={pc.postFlights?.heading ?? ""} onChange={(e) => updateNested("postFlights", "heading", e.target.value)} placeholder="Additional Information" /></div>
+                <div><Label>Content</Label><Textarea value={pc.postFlights?.content ?? ""} onChange={(e) => updateNested("postFlights", "content", e.target.value)} rows={4} placeholder="Enter section content..." /></div>
               </div>
             ),
           },

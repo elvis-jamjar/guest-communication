@@ -1,5 +1,9 @@
 {
-  "hero": {
+  "countdown": {
+  "intro": "Join us for insightful discussions, networking opportunities, and strategic collaborations shaping the future of technology and innovation across Africa.",
+  "targetDate": "2024-11-03T17:00:00"
+},
+"hero": {
     "title": "Welcome to the 4DX CEO Summit website. We look forward to engaging sessions with you. Thank you for attending.",
     "actionButtons": {
       "title": "Click below to complete your registration",
@@ -32,6 +36,10 @@
     "airportTitle": "O.R. TAMBO International Airport, Johannesburg, South Africa.",
     "arriveDate": "Arrive on Sunday 3rd November",
     "departDate": "Depart on Wednesday 6th November"
+  },
+  "postFlights": {
+    "heading": "",
+    "content": ""
   },
   "travelRequirements": {
     "heading": "Travel Requirements",

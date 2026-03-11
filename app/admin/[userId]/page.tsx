@@ -11,6 +11,7 @@ import { useUndoRedo } from "@/hooks/use-undo-redo";
 import { ExternalLink, History, Redo2, Save, Send, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { mergePageContent } from "@/utils/default-page-content";
 import { ConferenceScheduleData } from "../../../types";
 import {
     getActivityLog,
@@ -48,6 +49,7 @@ export default function Home() {
 
     const defaultData: ConferenceScheduleData = { schedule: [] };
     const undoRedo = useUndoRedo<ConferenceScheduleData>(defaultData);
+    const { reset: resetUndoRedo } = undoRedo;
     const scheduleData = undoRedo.value;
     const { data: activityLog, refetch: refetchActivityLog, isLoading: isActivityLogLoading } = useQuery({
         queryKey: ["activity-log"],
@@ -84,9 +86,14 @@ export default function Home() {
 
     useEffect(() => {
         if (data) {
-            undoRedo.reset(data);
+            // Merge pageContent with defaults so new fields (e.g. postFlights) are included when saving
+            const merged: ConferenceScheduleData = {
+                ...data,
+                pageContent: mergePageContent(data?.pageContent),
+            };
+            resetUndoRedo(merged);
         }
-    }, [data, undoRedo.reset]);
+    }, [data, resetUndoRedo]);
 
     const handleUndo = useCallback(() => undoRedo.undo(), [undoRedo]);
     const handleRedo = useCallback(() => undoRedo.redo(), [undoRedo]);
@@ -113,6 +120,11 @@ export default function Home() {
             const payload: ConferenceScheduleData = {
                 ...scheduleData,
                 schedule: scheduleData?.schedule ?? [],
+                eventDate: scheduleData?.eventDate,
+                pageContent: scheduleData?.pageContent,
+                visibilityConfig: scheduleData?.visibilityConfig,
+                isEventStarted: scheduleData?.isEventStarted,
+                quickLinkData: scheduleData?.quickLinkData,
             };
             await saveDraftMutation.mutateAsync(payload);
             alert("Draft saved successfully");
@@ -127,6 +139,11 @@ export default function Home() {
             const payload: ConferenceScheduleData = {
                 ...scheduleData,
                 schedule: scheduleData?.schedule ?? [],
+                eventDate: scheduleData?.eventDate,
+                pageContent: scheduleData?.pageContent,
+                visibilityConfig: scheduleData?.visibilityConfig,
+                isEventStarted: scheduleData?.isEventStarted,
+                quickLinkData: scheduleData?.quickLinkData,
             };
             await saveDraftMutation.mutateAsync(payload);
             const result = await publishMutation.mutateAsync();

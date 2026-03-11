@@ -46,6 +46,7 @@ export default function Home() {
     speakers: useSectionVisibility("speakers"),
     accommodation: useSectionVisibility("accommodation"),
     flights: useSectionVisibility("flights"),
+    postFlights: useSectionVisibility("postFlights"),
     travelRequirements: useSectionVisibility("travelRequirements"),
     weatherAndPack: useSectionVisibility("weatherAndPack"),
     completeRegistration: useSectionVisibility("completeRegistration"),

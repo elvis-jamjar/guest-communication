@@ -1,3 +1,4 @@
+import { FormattedText } from "@/components/formatted-text";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -12,7 +13,7 @@ export function HeadingText({ text, icon, iconNode, containerClassName, classNam
             {iconNode && iconNode}
             <h1
                 className="text-center text-2xl leading-tight md:text-4xl lg:text-5xl items-center justify-center text-secondary-main font-extrabold ">
-                {text}
+                <FormattedText text={text} />
             </h1>
         </div>
     )

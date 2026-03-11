@@ -1,4 +1,5 @@
 'use client';
+import { FormattedText } from "@/components/formatted-text";
 import { cn } from "@/lib/utils";
 import { ConferenceScheduleProps, Speaker } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
@@ -132,9 +133,9 @@ export default function AllSpeakerList({ isAdmin = false, schedules, isLoading }
                                                 />
                                             </div>
                                             <div className="w-full space-y-0 flex-col font-semibold text-pretty leading-snug">
-                                                <p className="text-primary-main text-base text-center font-semibold">{speaker?.name?.replace(':', '')}</p>
-                                                <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(0)}</p>
-                                                <p className="text-secondary-main text-base text-pretty text-center">{speaker?.title?.split(',')?.at(1)}</p>
+                                                <p className="text-primary-main text-base text-center font-semibold"><FormattedText text={speaker?.name?.replace(':', '') || ''} /></p>
+                                                <p className="text-secondary-main text-base text-pretty text-center"><FormattedText text={speaker?.title?.split(',')?.at(0) || ''} /></p>
+                                                <p className="text-secondary-main text-base text-pretty text-center"><FormattedText text={speaker?.title?.split(',')?.at(1) || ''} /></p>
                                             </div>
                                         </CardContent>
                                     </Card>

@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+Support for all 7 combinations is in place. Supported formats:
+
+| Format                      | Syntax                                       | Example                |
+| --------------------------- | -------------------------------------------- | ---------------------- |
+| Bold                        | `*text*`                                     | _bold_                 |
+| Italic                      | `_text_`                                     | _italic_               |
+| Highlighted                 | `#text#`                                     | #highlighted#          |
+| Bold + Italic               | `*_text_*` or `_*text*_`                     | **_bold italic_**      |
+| Bold + Highlighted          | `*#text#*`                                   | _#bold highlighted#_   |
+| Italic + Highlighted        | `_#text#_`                                   | _#italic highlighted#_ |
+| Bold + Italic + Highlighted | `*_#text#_*` or `_*#text#*_` or `#*_text_*#` | **_*#all three#*_**    |
+
+Combine by nesting delimiters: `*_#all three#_*` applies bold, italic, and highlighted together.

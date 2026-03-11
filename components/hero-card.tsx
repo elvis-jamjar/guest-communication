@@ -1,6 +1,7 @@
 'use client'
 
 import { getConferenceSchedule } from "@/app/actions/timeline"
+import { FormattedText } from "@/components/formatted-text"
 import { ConferenceScheduleData } from "@/types"
 import { mergePageContent } from "@/utils/default-page-content"
 import { cn } from "@/lib/utils"
@@ -52,11 +53,11 @@ export function HeroCard({ previewData }: HeroCardProps = {}) {
                             <span>an exclusive annual event hosted</span>
                             <span>by 4DX Ventures.</span> */}
                             <h1 className="text-center max-w-md">
-                                {content.hero?.title ?? "Welcome to the 4DX CEO Summit website. We look forward to engaging sessions with you. Thank you for attending."}
+                                <FormattedText text={content.hero?.title ?? "Welcome to the 4DX CEO Summit website. We look forward to engaging sessions with you. Thank you for attending."} />
                             </h1>
                         </div>
                         {!isLoading && !data?.isEventStarted && <div className="flex-col flex gap-4">
-                            <p className="text-secondary-main text-center pb-2 text-sm md:text-xl font-extrabold">{content.hero?.actionButtons?.title ?? "Click below to complete your registration"}</p>
+                            <p className="text-secondary-main text-center pb-2 text-sm md:text-xl font-extrabold"><FormattedText text={content.hero?.actionButtons?.title ?? "Click below to complete your registration"} /></p>
                             <div className="flex flex-col items-center space-y-5 md:px-16">
                                 <a target="_blank" rel="noreferrer" href={content.hero?.actionButtons?.button1?.link ?? "#"} className="w-full">
                                     <Button
@@ -65,7 +66,7 @@ export function HeroCard({ previewData }: HeroCardProps = {}) {
                                         }}
                                         variant={"outline"}
                                         className="p-8 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
-                                    >{content.hero?.actionButtons?.button1?.text ?? "Already in Johannesburg"}</Button>
+                                    ><FormattedText text={content.hero?.actionButtons?.button1?.text ?? "Already in Johannesburg"} /></Button>
                                 </a>
                                 <a target="_blank" rel="noreferrer" href={content.hero?.actionButtons?.button2?.link ?? "#"} className="w-full">
                                     <Button
@@ -74,7 +75,7 @@ export function HeroCard({ previewData }: HeroCardProps = {}) {
                                         }}
                                         variant={"outline"}
                                         className="p-8 w-full hover:bg-secondary-main hover:text-white text-secondary-main font-extrabold border-secondary-main rounded-full"
-                                    >{content.hero?.actionButtons?.button2?.text ?? "Flying to Johannesburg"}</Button>
+                                    ><FormattedText text={content.hero?.actionButtons?.button2?.text ?? "Flying to Johannesburg"} /></Button>
                                 </a>
                             </div>
 

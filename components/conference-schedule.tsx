@@ -1,4 +1,5 @@
 'use client';;
+import { FormattedText } from '@/components/formatted-text';
 import { cn } from '@/lib/utils';
 import { ConferenceScheduleProps, Speaker, TimelineItemProps } from '@/types';
 import {
@@ -80,7 +81,7 @@ function TimelineItem({ time, isFirst, isTrack, moderators, title, description, 
         {
           title && <ul className={cn("list-none list-outside ", isTrack && 'list-disc md:pl-12 pl-4')}>
             <li className={cn(color?.title, fontWeights?.title)}>
-              {title}
+              <FormattedText text={title} />
             </li>
           </ul>
         }
@@ -88,7 +89,7 @@ function TimelineItem({ time, isFirst, isTrack, moderators, title, description, 
           {/* {sectionTitle && <p className={cn("font-mono", color?.sectionTitle)}>
             {sectionTitle}
           </p>} */}
-          {description && <p className={cn(color?.description, fontWeights?.description,)}>{description}</p>}
+          {description && <p className={cn("whitespace-pre-wrap", color?.description, fontWeights?.description)}><FormattedText text={description} /></p>}
           <SpeakerList speakers={speakers || []} title='Speaker' />
           <SpeakerList speakers={moderators || []} title='' />
         </div>
@@ -106,8 +107,8 @@ function SpeakerList({ speakers }: { speakers: Array<Speaker>, title: string }) 
       </h2>} */}
       {speakers.map((person, index) => (
         <div key={index} className="text-secondary-main flex items-start">
-          <span>
-            {person?.name} {person?.title || ''} {person?.bio}
+          <span className="whitespace-pre-wrap">
+            <FormattedText text={[person?.name, person?.title, person?.bio].filter(Boolean).join(' ')} />
           </span>
           {/* <Avatar className="h-10 w-10 bg-secondary-main/5  rounded-full flex items-center justify-center">
             <AvatarImage src={person?.photo} alt={person?.name} />

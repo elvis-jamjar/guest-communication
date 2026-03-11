@@ -6,8 +6,10 @@ interface CountdownProps {
   targetDate: Date
 }
 
+const INITIAL_TIME_LEFT = { days: 0, hours: 0, minutes: 0, seconds: 0 }
+
 const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
+  const [timeLeft, setTimeLeft] = useState(INITIAL_TIME_LEFT)
 
   function calculateTimeLeft() {
     const difference = +targetDate - +new Date()
@@ -44,13 +46,10 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
     }
   }
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('timer')
-      setTimeLeft(calculateTimeLeft())
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  })
+    setTimeLeft(calculateTimeLeft())
+    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000)
+    return () => clearInterval(timer)
+  }, [targetDate])
 
   const timeComponents = Object.keys(timeLeft)?.map((interval) => {
 
@@ -85,9 +84,14 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
   )
 }
 
-export function CountdownTimer() {
-  // Set the target date to 12 days from now
-  const targetDate = new Date("2024-11-03T17:00:00")
+const DEFAULT_TARGET = "2024-11-03T17:00:00";
+
+interface CountdownTimerProps {
+  targetDate?: string; // ISO datetime e.g. "2024-11-03T17:00:00"
+}
+
+export function CountdownTimer({ targetDate: targetDateStr }: CountdownTimerProps) {
+  const targetDate = new Date(targetDateStr || DEFAULT_TARGET);
 
   return <Countdown targetDate={targetDate} />
 }
