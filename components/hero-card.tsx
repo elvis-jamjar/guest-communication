@@ -35,12 +35,12 @@ export function HeroCard({ previewData }: HeroCardProps = {}) {
                 <div className="flex flex-wrap md:flex-nowrap w-full justify-center items-center gap-5 md:gap-12 min-w-0">
                     <div className="flex flex-1 min-w-0 flex-col justify-center items-center md:basis-0">
                         <Image
-                            src={"/images/4dx/new/stacked w venue_4dx summit logo.png"}
+                            src={"/images/4dx/26/3721x4300 pxl-01.jpeg"}
                             width={600}
                             height={600}
                             priority
                             alt="4dx"
-                            className="md:size-80 size-60 object-contain"
+                            className="md:size-80 size-60 object-cover"
                         />
                     </div>
                     <div className="w-full md:w-auto md:shrink-0 md:py-8 flex justify-center self-stretch">

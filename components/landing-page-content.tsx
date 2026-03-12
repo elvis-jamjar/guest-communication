@@ -152,14 +152,13 @@ export function LandingPageContent({
       {showSection(vc, "programme") && (hasContent("programme", content, data) || (isLoading && !data)) && (
         <section
           style={{
-            background: "url('/images/4dx/parttern_1.png')",
+            background: "url('/images/4dx/26/2915x915-03.jpeg')",
             backgroundRepeat: "no-repeat",
             backgroundSize: "contain",
-            backgroundPosition: "right",
-            backgroundAttachment: "local",
+            backgroundPosition: "right bottom",
           }}
           id="programme"
-          className={cn("bg-right bg-contain py-10 md:mt-8")}
+          className={cn("bg-right-bottom bg-contain py-10 md:mt-8")}
         >
           <div className="container mx-auto">
             <HeadingText text="Program Outline" icon="/images/4dx/program_icon.png" />
@@ -197,13 +196,13 @@ export function LandingPageContent({
       {showSection(vc, "accommodation") && hasContent("accommodation", content, data) && (
         <section
           style={{
-            background: "url('/images/4dx/parttern_2.png')",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
+            background: "url('/images/4dx/26/2915x915-02.jpeg') no-repeat left bottom",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "calc(0vw) bottom",
           }}
-          className="bg-left-bottom bg-contain bg-no-repeat py-8 space-y-10 container mx-auto"
+          className="py-8 space-y-10 w-full"
         >
-          <div className="mx-auto">
+          <div className="container mx-auto">
             <HeadingText text={content.accommodation?.heading ?? "Accommodation"} icon="/images/4dx/accomodation_icon.png" className="md:size-16" />
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="flex flex-1 flex-col gap-1 text-pretty leading-relaxed tracking-normal">
@@ -218,7 +217,7 @@ export function LandingPageContent({
                 </div>
               </div>
               <div className="flex justify-center md:justify-end md:items-end items-center">
-                <Image src="/images/4dx/protea@2x.png" width={900} height={900} priority alt="4dx" className="md:size-64 size-40 object-cover" />
+                <Image src="https://pyramidsparkresort.com/wp-content/uploads/2025/12/Pyramids-park-LOGO-PNG.png" quality={100} width={900} height={900} priority alt="Pyramid Hotel" className="md:size-64 size-40 object-contain" />
               </div>
               <div className="w-fit pt-8 md:col-span-2 md:min-w-[300px] mx-auto md:mx-0">
                 <a target="_blank" rel="noreferrer" href={content.accommodation?.reserveLink ?? "#"} className="w-full">
@@ -265,13 +264,13 @@ export function LandingPageContent({
       {showSection(vc, "travelRequirements") && hasContent("travelRequirements", content, data) && (
         <section
           style={{
-            background: "url('/images/4dx/parttern_3.png')",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
-            backgroundPosition: "right",
-            backgroundAttachment: "local",
+            backgroundImage: "url('/images/4dx/26/2915x915-01.jpeg'), url('/images/4dx/26/950x1072-03.jpeg')",
+            backgroundRepeat: "no-repeat, no-repeat",
+            backgroundSize: "auto 65%, auto 50%",
+            backgroundPosition: "right center, center",
+            backgroundAttachment: "local, local",
           }}
-          className="bg-right py-8 mt-8"
+          className="py-8 mt-8"
         >
           <div className="container mx-auto space-y-8 leading-relaxed tracking-normal">
             <HeadingText text={content.travelRequirements?.heading ?? "Travel Requirements"} icon="/images/4dx/visa_icon.png" />

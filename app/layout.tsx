@@ -2,7 +2,6 @@ import Footer from "@/components/footer";
 import Hero from "@/components/hero";
 import { HeroVisibilityWrapper } from "@/components/hero-visibility-wrapper";
 import { Providers } from "@/lib/providers";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
@@ -48,16 +47,8 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
-      <body
-        // style={{
-        //   backgroundAttachment: "local",
-        //   // backgroundPosition: "fixed",
-        //   // backgroundRepeat: "repeat",
-        //   // backgroundSize: "cover",
-        //   backgroundImage: "url('/images/4dx/parttern_2.png')",
-        // }}
-        className={cn(``)}>
+    <html lang="en" className="scroll-smooth">
+      <body>
 
         <Providers>
           <HeroVisibilityWrapper>
