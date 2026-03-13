@@ -126,9 +126,14 @@ export function LandingPageContent({
         <section
           id="hero-section"
           className="text-white bg-center md:p-0 p-2 bg-cover bg-repeat w-full min-h-[400px] py-12 flex items-center justify-center relative"
+          // style={{
+          //   backgroundImage: "url('/images/4dx/background.png')",
+          //   backgroundSize: "97%",
+          // }}
           style={{
-            backgroundImage: "url('/images/4dx/background.png')",
-            backgroundSize: "97%",
+            backgroundImage: "url('/images/4dx/26/1920x1080_final_01.jpeg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
         >
           <HeroCard previewData={data} />
